@@ -1,0 +1,28 @@
+.ColorSizeModel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: 0;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  &__main {
+    position: relative;
+    width: 550px;
+    padding: 1.5rem;
+    border-radius: 0.3rem;
+
+    background-color: #fff;
+    font-size: 1.05rem;
+  }
+}

@@ -1,0 +1,65 @@
+.EmployeeViewModel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: 0;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+
+  &__main {
+    position: relative;
+    width: 800px;
+    padding: 1rem;
+    border-radius: 0.3rem;
+
+    background-color: #fff;
+    color: black;
+    font-weight: 500;
+  }
+
+  & img {
+    display: block;
+    margin: 0 auto;
+    width: 200px;
+    height: 200px;
+    vertical-align: middle;
+  }
+
+  &__list li {
+    display: flex;
+  }
+
+  &__list div {
+    word-break: break-all;
+  }
+
+  &__list li div:first-child {
+    font-weight: bold;
+    width: 50%;
+  }
+
+  &__list li div:last-child {
+    width: 50%;
+    font-weight: 300;
+  }
+
+  &__address {
+    padding: 0.35em 0.65em;
+    font-size: 0.85rem;
+    line-height: 1;
+    color: #fff;
+    border-radius: 0.25rem;
+    word-break: break-all;
+  }
+}

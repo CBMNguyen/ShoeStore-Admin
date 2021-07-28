@@ -1,0 +1,50 @@
+.ProductViewModel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: 0;
+
+  background-color: rgba(0, 0, 0, 0.5);
+
+  &__main {
+    position: relative;
+    width: 1024px;
+    padding: 1.5rem;
+    border-radius: 0.3rem;
+    background-color: #fff;
+  }
+
+  & img {
+    width: 100%;
+    height: 25rem;
+    vertical-align: middle;
+  }
+
+  &__list li {
+    display: flex;
+  }
+
+  &__list div {
+    word-break: break-all;
+  }
+
+  &__list li div:first-child {
+    font-weight: bold;
+    width: 50%;
+  }
+
+  &__list li div:last-child {
+    width: 50%;
+    font-weight: 300;
+  }
+}

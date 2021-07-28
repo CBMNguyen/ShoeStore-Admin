@@ -1,27 +1,33 @@
 @import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
 .Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: #fafbfc;
-  padding: 0.5rem;
 
-  & nav {
-    padding: 0;
-  }
-
-  & div i {
-    margin: 0.3rem 1rem 0 1rem;
-
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
-
-  &__link {
-    font-size: 1.5rem;
-    font-family: "Pacifico", cursive;
-    text-decoration: none;
+  &__admin {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
     color: black;
+
+    & img {
+      border: 1px solid deeppink;
+    }
   }
 
-  &__link:hover {
+  &__title {
+    font-family: "Pacifico", cursive;
+    font-size: 26px;
+    margin-left: 4rem;
+
+    text-decoration: none;
+    line-height: 70px;
+    transition: 0.5s;
+  }
+
+  &__title a {
+    text-decoration: none;
     color: black;
   }
 }

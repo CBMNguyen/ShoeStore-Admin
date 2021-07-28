@@ -1,53 +1,56 @@
 .SideBar {
-  width: 15%;
-  height: 92.2vh;
-  padding-left: 1.5rem;
-  background-color: #fff;
+  position: fixed;
+  left: -280px;
+  background-color: #042331;
+  width: 280px;
+  height: 100%;
+  transition: all 0.5s ease;
 
-  float: left;
+  & header {
+    font-family: "Pacifico", cursive;
+    font-size: 26px;
+    padding-left: 32px;
+    line-height: 70px;
 
-  &__title {
-    padding: 0.5rem 0;
-    font-weight: bold;
-    color: #3f6ad8;
+    background-color: #165979;
+    color: white;
+    user-select: none;
   }
 
-  &__link {
-    display: block;
-    width: 100%;
-    padding: 5px 10px;
-    border-radius: 0.2rem;
-    text-decoration: none;
-    color: #343a40;
-  }
-
-  &__manage {
+  & ul {
     list-style-type: none;
-    margin-left: 0.3rem;
     padding: 0;
-    border-left: 3px solid #e0f3ff;
+  }
 
-    & li {
-      margin: 0 0.5rem;
-      color: #343a40;
-    }
+  & ul li a {
+    display: block;
+    height: 100%;
+    width: 100%;
+    padding-left: 40px;
 
-    & li i {
-      margin-right: 1rem;
-      font-size: 1.4rem;
-      opacity: 0.4;
-    }
+    line-height: 65px;
+    font-size: 20px;
+    text-decoration: none;
 
-    & li:hover {
-      background-color: #e0f3ff;
-      color: #3f6ad8;
-      cursor: pointer;
-    }
+    color: white;
+    box-sizing: border-box;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid black;
+
+    transition: 0.4s;
+  }
+
+  & ul li:hover a {
+    padding-left: 50px;
+  }
+
+  & ul li a i {
+    margin-right: 16px;
   }
 }
 
 .active {
-  background-color: #e0f3ff;
-  color: #3f6ad8;
+  background-color: #053044;
+  color: deeppink !important;
   font-weight: bold;
 }

@@ -1,26 +1,25 @@
-import React, { useState } from "react";
-import { Navbar, NavbarToggler, NavbarBrand } from "reactstrap";
+import React from "react";
 import { Link } from "react-router-dom";
 import "./header.scss";
 
 const Header = (props) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggle = () => setIsOpen(!isOpen);
-
   return (
-    <div className="Header">
-      <Navbar light expand="md">
+    <div className="Header shadow rounded">
+      <div className="Header__title">
+        <Link to="/">🧦 Shoes Store</Link>
+      </div>
+      <div className="Header__admin">
         <div>
-          <i className="zmdi zmdi-menu"></i>
+          <img
+            className="rounded-circle me-2"
+            width={38}
+            height={38}
+            src={process.env.REACT_APP_API_URL + "/uploads/avt.jpg"}
+            alt="admin"
+          />
         </div>
-        <NavbarBrand>
-          <Link className="Header__link" to="/">
-            Shoes Store
-          </Link>
-        </NavbarBrand>
-        <NavbarToggler onClick={toggle} />
-      </Navbar>
+        <div>Hiếu Nguyễn</div>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,20 @@
+.Sccp {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+  background-color: white;
+  height: auto;
+
+  & h2 {
+    font-family: "Pacifico", cursive;
+    text-align: center;
+  }
+
+  & table {
+    background-color: transparent;
+  }
+
+  & .col {
+    flex-grow: 1;
+  }
+}

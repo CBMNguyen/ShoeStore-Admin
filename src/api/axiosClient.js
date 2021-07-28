@@ -9,9 +9,14 @@ const axiosClient = axios.create({
   paramsSerializer: (params) => queryString.stringify(params),
 });
 
-axiosClient.interceptors.request.use(async (config) => {
-  return config;
-});
+axiosClient.interceptors.request.use(
+  async (config) => {
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 axiosClient.interceptors.response.use(
   (response) => {
@@ -22,8 +27,7 @@ axiosClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Handle errors
-    throw error;
+    return Promise.reject(error.response.data);
   }
 );
 

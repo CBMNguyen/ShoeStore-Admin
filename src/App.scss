@@ -1,8 +1,13 @@
 .App {
+  position: relative;
+  background-color: #eceff1;
+  height: 100vh;
 }
 
 .main {
-  width: 85%;
-  float: left;
-  background-color: #eceff1;
+  transition: all 0.5s;
+}
+
+.MainPage {
+  padding: 1.2rem;
 }

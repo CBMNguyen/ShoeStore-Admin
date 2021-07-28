@@ -1,0 +1,22 @@
+table {
+  background-color: #fff;
+  border-bottom-left-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+  width: 100%;
+}
+
+table td {
+  vertical-align: middle;
+}
+
+table i {
+  cursor: pointer;
+  font-size: 1.2rem !important;
+}
+table,
+tbody,
+tr,
+td {
+  position: relative;
+  z-index: 0;
+}
