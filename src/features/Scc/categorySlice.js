@@ -61,6 +61,9 @@ const categorySlice = createSlice({
   reducers: {},
   extraReducers: {
     // handle fetch categories
+    [fetchCategory.pending]: (state) => {
+      state.loading = true;
+    },
     [fetchCategory.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
@@ -104,6 +107,9 @@ const categorySlice = createSlice({
     },
 
     // handle delete category
+    [deleteCategory.pending]: (state) => {
+      state.loading = true;
+    },
     [deleteCategory.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;

@@ -1,3 +1,4 @@
+import TableFooter from "components/TableFooter";
 import TableHeader from "components/TableHeader";
 import EmployeeAddModel from "features/Employee/components/EmployeeAddModel";
 import EmployeeDeleteModel from "features/Employee/components/EmployeeDeleteModel";
@@ -11,7 +12,7 @@ import {
 } from "features/Employee/employeeSlice";
 import { fetchPosition } from "features/Scc/positionSlice";
 import useModel from "hooks/useModel";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   capitalizeFirstLetter,
@@ -21,19 +22,26 @@ import {
 
 function MainPage(props) {
   const dispatch = useDispatch();
+  const [filter, setFilter] = useState({
+    page: 1,
+    age: 0,
+    position: "",
+    name: "",
+  });
+
   useEffect(() => {
-    const fetchData = async () => {
-      await showToastSuccess(dispatch(fetchEmployee()));
-      await showToastSuccess(dispatch(fetchPosition()));
-    };
-    fetchData();
+    dispatch(fetchEmployee(filter));
+  }, [dispatch, filter]);
+
+  useEffect(() => {
+    dispatch(fetchPosition());
   }, [dispatch]);
 
   const employeeState = useSelector((state) => state.employee);
   const positions = useSelector((state) => state.position.position);
 
   const employees = employeeState.employee;
-  const { error, loading } = employeeState;
+  const { loading, pagination } = employeeState;
 
   const POSITION_OPTIONS = positions.map((position) => ({
     value: position["_id"],
@@ -62,6 +70,8 @@ function MainPage(props) {
     if (!model.data) {
       try {
         await showToastSuccess(dispatch(createEmployee(formData)));
+        closeModel();
+        setFilter({ ...filter });
       } catch (error) {
         showToastError(error);
       }
@@ -70,6 +80,7 @@ function MainPage(props) {
         await showToastSuccess(
           dispatch(updateEmployee({ _id: model.data._id, employee: formData }))
         );
+        closeModel();
       } catch (error) {
         showToastError(error);
       }
@@ -79,25 +90,54 @@ function MainPage(props) {
   const handleEmployeeDelete = async (employeeId) => {
     try {
       await showToastSuccess(dispatch(deleteEmployee(employeeId)));
+      removeModel.closeModel();
+      setFilter({ ...filter });
     } catch (error) {
       showToastError(error);
     }
   };
 
+  const handlePageChange = (page) => {
+    setFilter({ ...filter, page });
+  };
+
+  const handleNameChange = (name) => {
+    setFilter({ ...filter, page: 1, name });
+  };
+
+  const handlePositionChange = (position) => {
+    setFilter({ ...filter, page: 1, position });
+  };
+
+  const handleAgeChange = (age) => {
+    setFilter({ ...filter, age });
+  };
+
   return (
     <div className="MainPage">
-      <TableHeader showModel={showModel} />
+      <TableHeader
+        showModel={showModel}
+        options={POSITION_OPTIONS}
+        onOptionsChange={handlePositionChange}
+        name="Position"
+        onNameChange={handleNameChange}
+      />
+
       <EmployeeList
-        employees={employees}
         showEditModel={showModel}
         showRemoveModel={removeModel.showModel}
         showViewModel={viewModel.showModel}
+        employees={employees}
+        age={filter.age}
+        onAgeChange={handleAgeChange}
+        pagination={pagination}
       />
+
+      <TableFooter pagination={pagination} onPageChange={handlePageChange} />
 
       {model.show ? (
         <EmployeeAddModel
           loading={loading}
-          error={error}
           onSubmit={handleEmployeeAddForm}
           model={model}
           closeModel={closeModel}
@@ -107,8 +147,9 @@ function MainPage(props) {
 
       {removeModel.model.show && (
         <EmployeeDeleteModel
-          onDeleteClick={handleEmployeeDelete}
+          loading={loading}
           data={removeModel.model.data}
+          onRemoveClick={handleEmployeeDelete}
           closeModel={removeModel.closeModel}
         />
       )}

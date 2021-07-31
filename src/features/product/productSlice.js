@@ -3,18 +3,23 @@ import productApi from "api/product";
 
 const initialState = {
   products: [],
+  pagination: {
+    page: 1,
+    limit: 1,
+    totalRow: 1,
+  },
   error: "",
   loading: false,
 };
 
 export const fetchProduct = createAsyncThunk(
   "product/fetchProduct",
-  async (NULL, { rejectWithValue, fulfillWithValue }) => {
+  async (data, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const products = await productApi.getAll();
+      const products = await productApi.getAll(data);
       return fulfillWithValue(products);
     } catch (error) {
-      rejectWithValue(error);
+      return rejectWithValue(error);
     }
   }
 );
@@ -50,7 +55,7 @@ export const deleteProduct = createAsyncThunk(
       const data = await productApi.delete(productId);
       return fulfillWithValue({ productId, message: data.message });
     } catch (error) {
-      rejectWithValue(error);
+      return rejectWithValue(error);
     }
   }
 );
@@ -61,14 +66,18 @@ const productSlice = createSlice({
   reducers: {},
   extraReducers: {
     // handle fetch products
+    [fetchProduct.pending]: (state) => {
+      state.loading = true;
+    },
     [fetchProduct.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     },
     [fetchProduct.fulfilled]: (state, action) => {
-      const { products } = action.payload;
+      const { products, pagination } = action.payload;
       state.loading = false;
       state.products = products;
+      state.pagination = pagination;
     },
 
     // handle create new product
@@ -79,10 +88,8 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
     },
-    [createProduct.fulfilled]: (state, action) => {
-      const { productCreated } = action.payload;
+    [createProduct.fulfilled]: (state) => {
       state.loading = false;
-      state.products.push(productCreated);
       state.error = "";
     },
 
@@ -105,18 +112,17 @@ const productSlice = createSlice({
       state.error = "";
     },
 
-    // hanle delete product
+    // handle delete product
+    [deleteProduct.pending]: (state) => {
+      state.loading = true;
+    },
     [deleteProduct.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     },
-    [deleteProduct.fulfilled]: (state, action) => {
-      const { productId } = action.payload;
+    [deleteProduct.fulfilled]: (state) => {
       state.loading = false;
-      const index = state.products.findIndex(
-        (product) => product._id === productId
-      );
-      state.products.splice(index, 1);
+      state.error = "";
     },
   },
 });

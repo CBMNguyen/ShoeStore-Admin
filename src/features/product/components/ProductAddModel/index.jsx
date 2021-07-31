@@ -1,4 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { STYLE_MODEL } from "constants/globals";
 import CheckBoxField from "custom-fields/CheckBoxField";
 import InputField from "custom-fields/InputField";
 import SelectField from "custom-fields/SelectField";
@@ -39,13 +40,12 @@ ProductAddForm.defaultProps = {
 
 function ProductAddForm(props) {
   const {
+    loading,
     withModel,
-    onFormSubmit,
     categoryOptions,
     sizeOptions,
     colorOptions,
-    loading,
-    error,
+    onFormSubmit,
   } = props;
 
   const { closeModel, model } = withModel;
@@ -119,18 +119,16 @@ function ProductAddForm(props) {
     control,
     setValue,
     register,
-    formState: { errors, isSubmitSuccessful, isSubmitting },
+    formState: { errors },
   } = useForm({ defaultValues, resolver: yupResolver(schema) });
 
-  const onSubmit = async (data) => {
+  const onSubmit = (data) => {
     if (!onFormSubmit) return;
-    await onFormSubmit(data);
+    onFormSubmit(data);
   };
 
-  isSubmitSuccessful && !error && closeModel();
-
   return (
-    <div className="ProductAddForm">
+    <div className="ProductAddForm" style={STYLE_MODEL}>
       <Form onSubmit={handleSubmit(onSubmit)}>
         {/* Form Header */}
         <FormHeader closeModel={closeModel} />
@@ -267,7 +265,7 @@ function ProductAddForm(props) {
         </Row>
         <button
           className="ProductAddForm__btn mt-4"
-          disabled={isSubmitting}
+          disabled={loading}
           type="submit"
         >
           {loading && (

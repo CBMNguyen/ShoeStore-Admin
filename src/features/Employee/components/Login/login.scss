@@ -1,0 +1,21 @@
+.Login {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+
+  &__form {
+    width: 500px;
+    height: 300px;
+    margin-top: 10rem;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 0.2rem;
+
+    & header {
+      font-size: 2rem;
+      text-align: center;
+
+      user-select: none;
+    }
+  }
+}

@@ -1,6 +1,7 @@
 .FormHeader {
   & h4 {
     font-family: "Pacifico", cursive;
+    user-select: none;
   }
 
   &__close {

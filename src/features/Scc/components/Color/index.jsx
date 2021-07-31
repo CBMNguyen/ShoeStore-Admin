@@ -14,15 +14,13 @@ import SccModel from "../SccModel";
 
 function Color(props) {
   const dispatch = useDispatch();
+
   useEffect(() => {
-    const fetchData = async () => {
-      await showToastSuccess(dispatch(fetchColor()));
-    };
-    fetchData();
+    dispatch(fetchColor());
   }, [dispatch]);
 
   const colorState = useSelector((state) => state.color);
-  const { color, loading, error } = colorState;
+  const { color, loading } = colorState;
 
   const addModel = useModel();
   const removeModel = useModel();
@@ -42,6 +40,7 @@ function Color(props) {
   const handleColorRemove = async (colorId) => {
     try {
       await showToastSuccess(dispatch(deleteColor(colorId)));
+      removeModel.closeModel();
     } catch (error) {
       showToastError(error);
     }
@@ -51,7 +50,8 @@ function Color(props) {
     data.color = data.color.toLowerCase();
     if (!addModel.model.data) {
       try {
-        await showToastSuccess(await dispatch(createColor(data)));
+        await showToastSuccess(dispatch(createColor(data)));
+        addModel.closeModel();
       } catch (error) {
         showToastError(error);
       }
@@ -65,6 +65,7 @@ function Color(props) {
             })
           )
         );
+        addModel.closeModel();
       } catch (error) {
         showToastError(error);
       }
@@ -116,9 +117,8 @@ function Color(props) {
       </Table>
       {addModel.model.show ? (
         <SccModel
-          loading={loading}
-          error={error}
           name="color"
+          loading={loading}
           addModel={addModel}
           onSubmit={handleFormSubmit}
         />
@@ -126,9 +126,10 @@ function Color(props) {
 
       {removeModel.model.show ? (
         <DeleteModel
+          name="color"
+          loading={loading}
           data={removeModel.model.data}
           closeModel={removeModel.closeModel}
-          name="color"
           onRemoveClick={handleColorRemove}
         />
       ) : null}

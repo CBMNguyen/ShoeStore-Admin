@@ -1,5 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormHeader from "components/FormHeader";
+import { STYLE_MODEL } from "constants/globals";
 import InputField from "custom-fields/InputField";
 import PropTypes from "prop-types";
 import React from "react";
@@ -12,14 +13,13 @@ import "./sccmodel.scss";
 
 SccModel.propTypes = {
   loading: PropTypes.bool.isRequired,
-  error: PropTypes.string.isRequired,
   addModel: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 
 function SccModel(props) {
-  let { addModel, name, onSubmit, loading, error } = props;
+  let { addModel, name, onSubmit, loading } = props;
   if (name === "category") name = "name";
 
   let defaultValues = {};
@@ -41,7 +41,7 @@ function SccModel(props) {
   const {
     handleSubmit,
     control,
-    formState: { errors, isSubmitSuccessful, isSubmitting },
+    formState: { errors },
   } = useForm({ defaultValues, resolver: yupResolver(schema) });
 
   const handleCloseModelClick = () => {
@@ -49,15 +49,13 @@ function SccModel(props) {
     addModel.closeModel();
   };
 
-  const onFormSubmit = async (data) => {
+  const onFormSubmit = (data) => {
     if (!onSubmit) return;
-    await onSubmit(data);
+    onSubmit(data);
   };
 
-  isSubmitSuccessful && !error && addModel.closeModel(); // check close model
-
   return (
-    <div className="ColorSizeModel">
+    <div className="ColorSizeModel" style={STYLE_MODEL}>
       <Form
         onSubmit={handleSubmit(onFormSubmit)}
         className="ColorSizeModel__main"
@@ -75,11 +73,11 @@ function SccModel(props) {
               : ""
           }
         />
+
         <ActionButton
           model={addModel.model}
           loading={loading}
           onCloseModelClick={handleCloseModelClick}
-          isSubmitting={isSubmitting}
         />
       </Form>
     </div>

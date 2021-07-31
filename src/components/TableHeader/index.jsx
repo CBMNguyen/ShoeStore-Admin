@@ -1,30 +1,78 @@
+import classNames from "classnames";
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import Select from "react-select";
 import { Input } from "reactstrap";
 import "./tableheader.scss";
 
 TableHeader.propTypes = {
-  showModel: PropTypes.func.isRequired,
+  showModel: PropTypes.func,
+  onOptionsChange: PropTypes.func,
+  onNameChange: PropTypes.func,
+  options: PropTypes.array,
+  name: PropTypes.string.isRequired,
+};
+
+TableHeader.defaultProps = {
+  showModel: null,
+  onNameChange: null,
+  onOptionsChange: null,
+  options: [],
 };
 
 function TableHeader(props) {
-  const { showModel } = props;
+  const [value, setValue] = useState("");
+  const { register } = useForm();
+
+  const { onOptionsChange, onNameChange, options, showModel, name } = props;
+  const typingTimeoutRef = useRef(null);
 
   const handleModelClick = () => {
     if (!showModel) return;
     showModel();
   };
 
+  const handleNameChange = (e) => {
+    const text = e.target.value;
+    setValue(text);
+
+    if (!onNameChange) return;
+
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+
+    typingTimeoutRef.current = setTimeout(() => {
+      onNameChange(text);
+    }, 300);
+  };
+
+  const handleOptionsChange = (category) => {
+    if (!onOptionsChange) return;
+    onOptionsChange(category);
+  };
+
   return (
     <div className="TableHeader">
-      <div onClick={handleModelClick}>
-        <i className="zmdi zmdi-plus-circle" />
+      <div className="TableHeader__add">
+        <i onClick={handleModelClick} className="zmdi zmdi-plus-circle" />
       </div>
-      <Input
-        className="w-25"
-        name="name"
-        placeholder="Search name product..."
-      />
+      <div className="TableHeader__filter">
+        <Input
+          className={classNames("w-50 me-2", { "w-75 m-auto": !options })}
+          name="name"
+          placeholder="Search Name ..."
+          value={value}
+          onChange={handleNameChange}
+        />
+        {options && (
+          <Select
+            {...register(name)}
+            options={[{ label: "All", value: "all" }, ...options]}
+            placeholder={`Search ${name} ...`}
+            onChange={(option) => handleOptionsChange(option.label)}
+          />
+        )}
+      </div>
     </div>
   );
 }

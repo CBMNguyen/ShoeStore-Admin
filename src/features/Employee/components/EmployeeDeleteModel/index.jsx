@@ -1,59 +1,36 @@
+import ActionsButton from "components/ActionsButton";
+import { STYLE_MODEL } from "constants/globals";
 import PropTypes from "prop-types";
 import React from "react";
-import { Badge, Button } from "reactstrap";
+import { Badge } from "reactstrap";
 import FormHeader from "../../../../components/FormHeader";
 import "./employeedeletemodel.scss";
 
 EmployeeDeleteModel.propTypes = {
-  closeModel: PropTypes.func,
   data: PropTypes.object.isRequired,
-  onDeleteClick: PropTypes.func,
-};
-
-EmployeeDeleteModel.defaultProps = {
-  closeModel: null,
-  onDeleteClick: null,
+  closeModel: PropTypes.func.isRequired,
+  onRemoveClick: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 function EmployeeDeleteModel(props) {
-  const { closeModel, data, onDeleteClick } = props;
-
-  const handleCloseModelClick = () => {
-    if (!closeModel) return;
-    closeModel();
-  };
-
-  const handleDeleteClick = async (employeeId) => {
-    if (!onDeleteClick) return;
-    await onDeleteClick(employeeId);
-    closeModel();
-  };
-
+  const { closeModel, data, onRemoveClick, loading } = props;
   return (
-    <div className="EmployeeDeleteModel">
+    <div className="EmployeeDeleteModel" style={STYLE_MODEL}>
       <div className="EmployeeDeleteModel__main">
-        <FormHeader closeModel={handleCloseModelClick} />
+        <FormHeader closeModel={closeModel} />
         <h6>
           {`Are you sure you want delete `}
           <Badge className="bg-danger">{`${data.firstname} ${data.lastname}`}</Badge>
           {` employee ?`}
         </h6>
-        <div className="EmployeeDeleteModel__actions">
-          <Button
-            onClick={handleCloseModelClick}
-            color="secondary"
-            className="text-light"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => handleDeleteClick(data._id)}
-            color="primary"
-            className="ms-2 text-light"
-          >
-            Confirm
-          </Button>{" "}
-        </div>
+
+        <ActionsButton
+          loading={loading}
+          data={data}
+          onCloseModelClick={closeModel}
+          onRemoveClick={onRemoveClick}
+        />
       </div>
     </div>
   );

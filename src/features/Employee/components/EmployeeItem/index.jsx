@@ -9,11 +9,12 @@ import {
 } from "utils/common";
 
 EmployeeItem.propTypes = {
-  index: PropTypes.number.isRequired,
-  employee: PropTypes.object.isRequired,
   showEditModel: PropTypes.func,
   showRemoveModel: PropTypes.func,
   showViewModel: PropTypes.func,
+  index: PropTypes.number.isRequired,
+  employee: PropTypes.object.isRequired,
+  pagination: PropTypes.object.isRequired,
 };
 
 EmployeeItem.defaultProps = {
@@ -23,8 +24,16 @@ EmployeeItem.defaultProps = {
 };
 
 function EmployeeItem(props) {
-  const { index, employee, showEditModel, showRemoveModel, showViewModel } =
-    props;
+  const {
+    showEditModel,
+    showRemoveModel,
+    showViewModel,
+    index,
+    employee,
+    pagination,
+  } = props;
+
+  const { page, limit } = pagination;
 
   const birthDate = new Date(employee.birthdate);
 
@@ -48,7 +57,7 @@ function EmployeeItem(props) {
 
   return (
     <tr>
-      <th>{index}</th>
+      <th>{index + 1 + (page - 1) * limit}</th>
       <td>
         <Badge className="bg-dark">{`${employee.firstname}  ${employee.lastname}`}</Badge>
       </td>

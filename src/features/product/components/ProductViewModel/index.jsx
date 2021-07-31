@@ -1,4 +1,5 @@
 import { ArrowDirection } from "components/ArrowDirection";
+import { STYLE_MODEL } from "constants/globals";
 import PropTypes from "prop-types";
 import React from "react";
 import Slider from "react-slick";
@@ -28,7 +29,7 @@ function ProductViewModel(props) {
     prevArrow: <ArrowDirection />,
   };
   return (
-    <div className="ProductViewModel">
+    <div className="ProductViewModel" style={STYLE_MODEL}>
       <div className="ProductViewModel__main">
         <FormHeader closeModel={closeModel} />
         <Row>

@@ -9,7 +9,7 @@ function Employee(props) {
   const match = useRouteMatch();
   return (
     <Switch>
-      <Route path={match.url} component={MainPage} />
+      <Route exact path={match.url} component={MainPage} />
       <Route component={NotFound} />
     </Switch>
   );

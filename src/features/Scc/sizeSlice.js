@@ -61,6 +61,9 @@ const sizeSlice = createSlice({
   reducers: {},
   extraReducers: {
     // handle fetch sizes
+    [fetchSize.pending]: (state) => {
+      state.loading = true;
+    },
     [fetchSize.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
@@ -104,6 +107,9 @@ const sizeSlice = createSlice({
     },
 
     // handle delete size
+    [deleteSize.pending]: (state) => {
+      state.loading = true;
+    },
     [deleteSize.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;

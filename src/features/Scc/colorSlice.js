@@ -61,6 +61,9 @@ const colorSlice = createSlice({
   reducers: {},
   extraReducers: {
     // handle fetch colors
+    [fetchColor.pending]: (state) => {
+      state.loading = true;
+    },
     [fetchColor.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
@@ -104,6 +107,9 @@ const colorSlice = createSlice({
     },
 
     // handle delete color
+    [deleteColor.pending]: (state) => {
+      state.loading = true;
+    },
     [deleteColor.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;

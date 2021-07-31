@@ -18,17 +18,15 @@ import PositionModel from "../PositionModel";
 
 function Position(props) {
   const dispatch = useDispatch();
+
   useEffect(() => {
-    const fetchData = async () => {
-      await showToastSuccess(dispatch(fetchPosition()));
-    };
-    fetchData();
+    dispatch(fetchPosition());
   }, [dispatch]);
 
   const positionState = useSelector((state) => state.position);
 
   const positions = positionState.position;
-  const { loading, error } = positionState;
+  const { loading } = positionState;
 
   const addModel = useModel();
   const removeModel = useModel();
@@ -50,6 +48,7 @@ function Position(props) {
   const handlePositionRemove = async (positionId) => {
     try {
       await showToastSuccess(dispatch(deletePosition(positionId)));
+      removeModel.closeModel();
     } catch (error) {
       showToastError(error);
     }
@@ -61,6 +60,7 @@ function Position(props) {
     if (!model.data) {
       try {
         await showToastSuccess(dispatch(createPosition(data)));
+        addModel.closeModel();
       } catch (error) {
         showToastError(error);
       }
@@ -75,6 +75,7 @@ function Position(props) {
             })
           )
         );
+        addModel.closeModel();
       } catch (error) {
         showToastError(error);
       }
@@ -122,7 +123,6 @@ function Position(props) {
       {model.show ? (
         <PositionModel
           loading={loading}
-          error={error}
           onSubmit={handleFormSubmit}
           closeModel={closeModel}
           model={model}
@@ -131,9 +131,10 @@ function Position(props) {
 
       {removeModel.model.show ? (
         <DeleteModel
+          name="position"
+          loading={loading}
           data={removeModel.model.data}
           closeModel={removeModel.closeModel}
-          name="position"
           onRemoveClick={handlePositionRemove}
         />
       ) : null}

@@ -1,3 +1,4 @@
+import TableFooter from "components/TableFooter";
 import TableHeader from "components/TableHeader";
 import ProductAddModel from "features/product/components/ProductAddModel";
 import ProductDeleteModel from "features/product/components/ProductDeleteModel";
@@ -13,7 +14,7 @@ import { fetchCategory } from "features/Scc/categorySlice";
 import { fetchColor } from "features/Scc/colorSlice";
 import { fetchSize } from "features/Scc/sizeSlice";
 import useModel from "hooks/useModel";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   capitalizeFirstLetter,
@@ -21,25 +22,35 @@ import {
   showToastError,
   showToastSuccess,
 } from "utils/common";
-import "./main.scss";
-
-MainPage.propTypes = {};
 
 function MainPage(props) {
   const dispatch = useDispatch();
+  const [filter, setFilter] = useState({
+    page: 1,
+    name: "",
+    category: "",
+    price: 0,
+    quantity: 0,
+  });
 
   useEffect(() => {
-    const fetchData = async () => {
-      await showToastSuccess(dispatch(fetchProduct()));
-      await showToastSuccess(dispatch(fetchSize()));
-      await showToastSuccess(dispatch(fetchColor()));
-      await showToastSuccess(dispatch(fetchCategory()));
-    };
-    fetchData();
+    dispatch(fetchProduct(filter));
+  }, [dispatch, filter]);
+
+  useEffect(() => {
+    dispatch(fetchSize());
   }, [dispatch]);
 
-  const productState = useSelector((state) => state.products) || [];
-  const { error, loading, products } = productState;
+  useEffect(() => {
+    dispatch(fetchColor());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchCategory());
+  }, [dispatch]);
+
+  const productState = useSelector((state) => state.products);
+  const { loading, products, pagination } = productState;
   const { size } = useSelector((state) => state.size);
   const { color } = useSelector((state) => state.color);
   const { category } = useSelector((state) => state.category);
@@ -64,7 +75,7 @@ function MainPage(props) {
   }));
 
   const addModel = useModel();
-  const deleteModel = useModel();
+  const removeModel = useModel();
   const viewModel = useModel();
 
   const handleFormSubmit = async (data) => {
@@ -95,6 +106,8 @@ function MainPage(props) {
     if (!addModel.model.data) {
       try {
         await showToastSuccess(dispatch(createProduct(formData)));
+        addModel.closeModel();
+        setFilter({ ...filter });
       } catch (error) {
         showToastError(error);
       }
@@ -105,6 +118,7 @@ function MainPage(props) {
             updateProduct({ id: addModel.model.data._id, formData: formData })
           )
         );
+        addModel.closeModel();
       } catch (error) {
         showToastError(error);
       }
@@ -114,38 +128,75 @@ function MainPage(props) {
   const handleProductDelete = async (productId) => {
     try {
       await showToastSuccess(dispatch(deleteProduct(productId)));
+      removeModel.closeModel();
+      setFilter({ ...filter });
     } catch (error) {
       showToastError(error);
     }
   };
 
+  const handlePageChange = (page) => {
+    setFilter({ ...filter, page });
+  };
+
+  const handleNameChange = (name) => {
+    setFilter({ ...filter, page: 1, name });
+  };
+
+  const handleCategoryChange = (category) => {
+    setFilter({ ...filter, page: 1, category });
+  };
+
+  const handlePriceChange = (price) => {
+    setFilter({ ...filter, price });
+  };
+
+  const handleQuantityChange = (quantity) => {
+    setFilter({ ...filter, quantity });
+  };
+
   return (
     <div className="MainPage">
-      <TableHeader showModel={addModel.showModel} />
+      <TableHeader
+        name="Brand"
+        showModel={addModel.showModel}
+        pagination={pagination}
+        onNameChange={handleNameChange}
+        onOptionsChange={handleCategoryChange}
+        options={PRODUCT_CATEGORY_OPTIONS}
+      />
+
       <ProductList
-        products={products}
-        showDeleteModel={deleteModel.showModel}
+        showDeleteModel={removeModel.showModel}
         showUpdateModel={addModel.showModel}
         showViewModel={viewModel.showModel}
+        products={products}
+        page={pagination.page}
+        price={filter.price}
+        onPriceChange={handlePriceChange}
+        onQuantityChange={handleQuantityChange}
+        quantity={filter.quantity}
       />
+
+      <TableFooter onPageChange={handlePageChange} pagination={pagination} />
 
       {addModel.model.show ? (
         <ProductAddModel
-          error={error}
           loading={loading}
+          withModel={addModel}
           categoryOptions={PRODUCT_CATEGORY_OPTIONS}
           sizeOptions={PRODUCT_SIZE_OPTIONS}
           colorOptions={PRODUCT_COLOR_OPTIONS}
-          withModel={addModel}
           onFormSubmit={handleFormSubmit}
         />
       ) : null}
 
-      {deleteModel.model.show ? (
+      {removeModel.model.show ? (
         <ProductDeleteModel
-          closeModel={deleteModel.closeModel}
-          data={deleteModel.model.data}
-          onDeleteProductClick={handleProductDelete}
+          loading={loading}
+          closeModel={removeModel.closeModel}
+          data={removeModel.model.data}
+          onRemoveClick={handleProductDelete}
         />
       ) : null}
 

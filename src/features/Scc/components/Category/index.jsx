@@ -18,16 +18,14 @@ import SccModel from "../SccModel";
 
 function Category(props) {
   const dispatch = useDispatch();
+
   useEffect(() => {
-    const fetchData = async () => {
-      await showToastSuccess(dispatch(fetchCategory()));
-    };
-    fetchData();
+    dispatch(fetchCategory());
   }, [dispatch]);
 
   const categoryState = useSelector((state) => state.category);
   const categories = categoryState.category;
-  const { loading, error } = categoryState;
+  const { loading } = categoryState;
 
   const addModel = useModel();
   const removeModel = useModel();
@@ -40,13 +38,14 @@ function Category(props) {
     addModel.showModel(data);
   };
 
-  const handleRemoveClick = async (data) => {
+  const handleRemoveClick = (data) => {
     removeModel.showModel(data);
   };
 
   const handleCategoryRemove = async (categoryId) => {
     try {
       await showToastSuccess(dispatch(deleteCategory(categoryId)));
+      removeModel.closeModel();
     } catch (error) {
       showToastError(error);
     }
@@ -57,6 +56,7 @@ function Category(props) {
     if (!addModel.model.data) {
       try {
         await showToastSuccess(dispatch(createCategory(data)));
+        addModel.closeModel();
       } catch (error) {
         showToastError(error);
       }
@@ -70,6 +70,7 @@ function Category(props) {
             })
           )
         );
+        addModel.closeModel();
       } catch (error) {
         showToastError(error);
       }
@@ -113,9 +114,8 @@ function Category(props) {
       </Table>
       {addModel.model.show ? (
         <SccModel
-          loading={loading}
-          error={error}
           name="category"
+          loading={loading}
           addModel={addModel}
           onSubmit={handleFormSubmit}
         />
@@ -123,9 +123,10 @@ function Category(props) {
 
       {removeModel.model.show ? (
         <DeleteModel
+          name="name"
+          loading={loading}
           data={removeModel.model.data}
           closeModel={removeModel.closeModel}
-          name="name"
           onRemoveClick={handleCategoryRemove}
         />
       ) : null}

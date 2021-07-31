@@ -3,33 +3,48 @@ import userApi from "api/user";
 
 const initialState = {
   user: [],
+  pagination: {
+    page: 1,
+    limit: 1,
+    totalRow: 1,
+  },
   error: "",
   loading: true,
 };
 
-export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
-  const user = await userApi.getAll();
-  return user;
-});
-
-export const createUser = createAsyncThunk("user/createUser", async (user) => {
-  const { userCreated } = await userApi.create(user);
-  return userCreated;
-});
+export const fetchUser = createAsyncThunk(
+  "user/fetchUser",
+  async (data, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const user = await userApi.getAll(data);
+      return fulfillWithValue(user);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
 export const updateUser = createAsyncThunk(
   "user/updateUser",
-  async ({ _id, user }) => {
-    const { userUpdated } = await userApi.update(_id, user);
-    return userUpdated;
+  async ({ _id, user }, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const { userUpdated } = await userApi.update(_id, user);
+      return fulfillWithValue(userUpdated);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
 );
 
 export const deleteUser = createAsyncThunk(
   "user/deleteUser",
-  async (userId) => {
-    await userApi.delete(userId);
-    return userId;
+  async (userId, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const data = await userApi.delete(userId);
+      return fulfillWithValue(data);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
 );
 
@@ -39,6 +54,9 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: {
     // handle fetch users
+    [fetchUser.pending]: (state) => {
+      state.loading = false;
+    },
     [fetchUser.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.error;
@@ -46,39 +64,20 @@ const userSlice = createSlice({
     [fetchUser.fulfilled]: (state, action) => {
       state.loading = false;
       state.user = action.payload.users;
+      state.pagination = action.payload.pagination;
     },
-    // handle create new user
-    [createUser.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.error;
-    },
-    [createUser.fulfilled]: (state, action) => {
-      state.loading = false;
-      state.user.push(action.payload);
-    },
-    // handle update user
-    [updateUser.rejected]: (state, action) => {
-      state.loading = false;
-      state.error = action.error;
-    },
-    [updateUser.fulfilled]: (state, action) => {
-      state.loading = false;
-      const index = state.user.findIndex(
-        (user) => user._id === action.payload._id
-      );
-      if (index === -1) return;
-      state.user[index] = action.payload;
-    },
+
     // handle delete user
+    [deleteUser.pending]: (state) => {
+      state.loading = true;
+    },
     [deleteUser.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.error;
     },
     [deleteUser.fulfilled]: (state, action) => {
       state.loading = false;
-      const index = state.user.findIndex((s) => s._id === action.payload);
-      if (index === -1) return;
-      state.user.splice(index, 1);
+      state.error = "";
     },
   },
 });

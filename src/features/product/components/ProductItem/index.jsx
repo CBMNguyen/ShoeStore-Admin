@@ -8,17 +8,25 @@ ProductItem.propTypes = {
   showDeleteModel: PropTypes.func.isRequired,
   showUpdateModel: PropTypes.func.isRequired,
   showViewModel: PropTypes.func.isRequired,
+  page: PropTypes.number,
 };
 
 ProductItem.defaultProps = {
   showDeleteModel: null,
   showUpdateModel: null,
   showViewModel: null,
+  page: 0,
 };
 
 function ProductItem(props) {
-  const { index, product, showDeleteModel, showUpdateModel, showViewModel } =
-    props;
+  const {
+    index,
+    product,
+    showDeleteModel,
+    showUpdateModel,
+    showViewModel,
+    page,
+  } = props;
 
   const handleShowDeleteModel = (product) => {
     if (!showDeleteModel) return;
@@ -38,26 +46,26 @@ function ProductItem(props) {
   return (
     <tr>
       <td style={{ verticalAlign: "middle" }}>
-        <Badge className="bg-secondary">{index}</Badge>
+        <Badge className="bg-secondary">{index + 1 + (page - 1) * 8}</Badge>
       </td>
       <td>
         <Badge className="bg-dark">{product.name}</Badge>
       </td>
       <td>
         <img
-          width={56}
-          height={56}
+          width={58}
+          height={58}
           src={`${process.env.REACT_APP_API_URL}/${product.images[0]}`}
           alt={product._id}
         />
       </td>
       <td>
-        <Badge style={{ backgroundColor: "cyan" }}>
+        <Badge style={{ backgroundColor: "deeppink" }}>
           {capitalizeFirstLetter(product.category.name)}
         </Badge>
       </td>
       <td className="ps-4">
-        <Badge style={{ backgroundColor: "deeppink" }}>
+        <Badge style={{ backgroundColor: "cyan" }}>
           {product.quantityStock}
         </Badge>
       </td>

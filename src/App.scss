@@ -11,3 +11,25 @@
 .MainPage {
   padding: 1.2rem;
 }
+
+table {
+  background-color: #fff;
+  border-bottom-left-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+  width: 100%;
+  margin-bottom: 0 !important;
+}
+
+table td {
+  vertical-align: middle;
+}
+
+th span {
+  position: relative;
+  margin-left: 0.4rem;
+}
+
+table i {
+  cursor: pointer;
+  font-size: 1.2rem !important;
+}

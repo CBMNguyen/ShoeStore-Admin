@@ -1,58 +1,35 @@
+import ActionsButton from "components/ActionsButton";
 import PropTypes from "prop-types";
 import React from "react";
-import { Badge, Button } from "reactstrap";
+import { Badge } from "reactstrap";
 import FormHeader from "../../../../components/FormHeader";
 import "./userdeletemodel.scss";
 
 UserDeleteModel.propTypes = {
-  closeModel: PropTypes.func,
+  loading: PropTypes.bool.isRequired,
   data: PropTypes.object.isRequired,
-  onDeleteClick: PropTypes.func,
-};
-
-UserDeleteModel.defaultProps = {
-  closeModel: null,
-  onDeleteClick: null,
+  closeModel: PropTypes.func,
+  onRemoveClick: PropTypes.func,
 };
 
 function UserDeleteModel(props) {
-  const { closeModel, data, onDeleteClick } = props;
-
-  const handleCloseModelClick = () => {
-    if (!closeModel) return;
-    closeModel();
-  };
-
-  const handleDeleteClick = (UserId) => {
-    if (!onDeleteClick) return;
-    onDeleteClick(UserId);
-  };
+  const { closeModel, data, onRemoveClick, loading } = props;
 
   return (
     <div className="UserDeleteModel">
       <div className="UserDeleteModel__main">
-        <FormHeader closeModel={handleCloseModelClick} />
+        <FormHeader closeModel={closeModel} />
         <h6>
           {`Are you sure you want delete `}
           <Badge className="bg-danger">{`${data.firstname} ${data.lastname}`}</Badge>
           {` user ?`}
         </h6>
-        <div className="UserDeleteModel__actions">
-          <Button
-            onClick={handleCloseModelClick}
-            color="secondary"
-            className="text-light"
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={() => handleDeleteClick(data._id)}
-            color="primary"
-            className="ms-2 text-light"
-          >
-            Confirm
-          </Button>{" "}
-        </div>
+        <ActionsButton
+          loading={loading}
+          data={data}
+          onRemoveClick={onRemoveClick}
+          onCloseModelClick={closeModel}
+        />
       </div>
     </div>
   );

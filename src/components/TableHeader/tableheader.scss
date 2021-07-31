@@ -7,16 +7,32 @@
   border-top-left-radius: 0.3rem;
   border-top-right-radius: 0.3rem;
   background-color: rgba(255, 255, 255, 0.45);
-}
 
-.TableHeader i {
-  font-weight: bold;
-  font-size: 2rem;
+  &__add {
+    flex-grow: 1;
+  }
 
-  transition: all 0.25s ease-in-out 0s;
-}
+  &__filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 500px;
+    box-sizing: border-box;
+  }
 
-.TableHeader i:hover {
-  transform: scale(1.1);
-  cursor: pointer;
+  & i {
+    font-weight: bold;
+    font-size: 2rem;
+
+    transition: all 0.25s ease-in-out 0s;
+  }
+
+  & i:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+  }
+
+  & .css-2b097c-container {
+    width: 50%;
+  }
 }

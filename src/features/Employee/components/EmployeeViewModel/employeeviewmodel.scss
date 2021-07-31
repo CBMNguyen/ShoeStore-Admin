@@ -1,22 +1,4 @@
 .EmployeeViewModel {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1050;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  outline: 0;
-
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #fff;
-
   &__main {
     position: relative;
     width: 800px;
@@ -24,7 +6,6 @@
     border-radius: 0.3rem;
 
     background-color: #fff;
-    color: black;
     font-weight: 500;
   }
 

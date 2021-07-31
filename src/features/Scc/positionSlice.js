@@ -61,6 +61,9 @@ const positionSlice = createSlice({
   reducers: {},
   extraReducers: {
     // handle fetch position
+    [fetchPosition.pending]: (state) => {
+      state.loading = true;
+    },
     [fetchPosition.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
@@ -103,6 +106,9 @@ const positionSlice = createSlice({
     },
 
     // handle delete position
+    [deletePosition.pending]: (state) => {
+      state.loading = true;
+    },
     [deletePosition.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;

@@ -1,4 +1,5 @@
 import FormHeader from "components/FormHeader";
+import { STYLE_MODEL } from "constants/globals";
 import PropTypes from "prop-types";
 import React from "react";
 import { Badge, Col, ListGroup, ListGroupItem, Row } from "reactstrap";
@@ -13,7 +14,7 @@ EmployeeViewModel.propTypes = {
 function EmployeeViewModel(props) {
   const { data, closeModel } = props;
   return (
-    <div className="EmployeeViewModel">
+    <div className="EmployeeViewModel" style={STYLE_MODEL}>
       <div className="EmployeeViewModel__main">
         <FormHeader closeModel={closeModel} />
         <Row>

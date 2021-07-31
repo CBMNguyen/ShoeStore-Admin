@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import FormHeader from "components/FormHeader";
-import { GENDER_OPTIONS } from "constants/globals";
+import { GENDER_OPTIONS, STYLE_MODEL } from "constants/globals";
 import DateInputField from "custom-fields/DateInputField";
 import InputField from "custom-fields/InputField";
 import SelectField from "custom-fields/SelectField";
@@ -26,7 +26,6 @@ EmployeeAddModel.propTypes = {
   onSubmit: PropTypes.func,
   model: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired,
-  error: PropTypes.string.isRequired,
 };
 
 EmployeeAddModel.defaultProps = {
@@ -35,8 +34,7 @@ EmployeeAddModel.defaultProps = {
 };
 
 function EmployeeAddModel(props) {
-  const { model, closeModel, onSubmit, positionOptions, loading, error } =
-    props;
+  const { model, closeModel, onSubmit, positionOptions, loading } = props;
   const defaultValues = !model.data
     ? {
         firstname: "",
@@ -91,7 +89,7 @@ function EmployeeAddModel(props) {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { errors },
     setValue,
     register,
   } = useForm({ defaultValues, resolver: yupResolver(schema) });
@@ -100,10 +98,9 @@ function EmployeeAddModel(props) {
     if (!onSubmit) return;
     await onSubmit(data);
   };
-  isSubmitSuccessful && !error && closeModel();
 
   return (
-    <div className="EmployeeAddModel">
+    <div className="EmployeeAddModel" style={STYLE_MODEL}>
       <Form onSubmit={handleSubmit(onFormSubmit)}>
         <FormHeader closeModel={closeModel} />
         <Row>
@@ -177,7 +174,7 @@ function EmployeeAddModel(props) {
 
           <Col md={6}>
             <FormGroup className="mt-1">
-              <Label className="d-block">Avartar</Label>
+              <Label className="d-block">Avatar</Label>
               <Input
                 className="mt-1"
                 {...register("image")}
@@ -203,7 +200,7 @@ function EmployeeAddModel(props) {
         <button
           className="ProductAddForm__btn mt-4"
           type="submit"
-          disabled={isSubmitting}
+          disabled={loading}
         >
           {loading && (
             <Spinner

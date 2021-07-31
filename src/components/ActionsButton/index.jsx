@@ -1,32 +1,44 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { Button, Spinner } from "reactstrap";
-import "./actionbutton.scss";
+import "./actionsbutton.scss";
 
-ActionButton.propTypes = {
-  onCloseModelClick: PropTypes.func.isRequired,
+ActionsButton.propTypes = {
   loading: PropTypes.bool.isRequired,
-  model: PropTypes.object.isRequired,
+  data: PropTypes.object.isRequired,
+  onCloseModelClick: PropTypes.func.isRequired,
+  onRemoveClick: PropTypes.func,
 };
 
-function ActionButton(props) {
-  const { onCloseModelClick, loading, model } = props;
+ActionsButton.defaultProps = {
+  onRemoveClick: null,
+};
+
+function ActionsButton(props) {
+  const { loading, onCloseModelClick, onRemoveClick, data } = props;
+
+  const handleRemoveClick = (id) => {
+    if (!onRemoveClick) return;
+    onRemoveClick(id);
+  };
+
   return (
-    <div className="ActionButton">
+    <div className="ActionsButton">
       <Button
-        onClick={onCloseModelClick}
         color="secondary"
         className="text-light"
         disabled={loading}
+        onClick={onCloseModelClick}
         style={{ position: "relative", padding: "0.4rem 1.5rem" }}
       >
         Cancel
       </Button>
       <Button
-        type="submit"
         color="primary"
         className="ms-2 text-light"
+        onClick={() => handleRemoveClick(data._id)}
         disabled={loading}
+        type="submit"
         style={{ position: "relative", padding: "0.4rem 1.5rem" }}
       >
         {loading && (
@@ -42,10 +54,10 @@ function ActionButton(props) {
             {" "}
           </Spinner>
         )}
-        {!model.data ? "Add" : "Update"}
+        Confirm
       </Button>{" "}
     </div>
   );
 }
 
-export default ActionButton;
+export default ActionsButton;

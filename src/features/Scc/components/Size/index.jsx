@@ -14,16 +14,14 @@ import SccModel from "../SccModel";
 
 function Size(props) {
   const dispatch = useDispatch();
+
   useEffect(() => {
-    const fetchData = async () => {
-      await showToastSuccess(dispatch(fetchSize()));
-    };
-    fetchData();
+    dispatch(fetchSize());
   }, [dispatch]);
 
   const sizeState = useSelector((state) => state.size) || [];
 
-  const { size, loading, error } = sizeState;
+  const { size, loading } = sizeState;
 
   const addModel = useModel();
   const removeModel = useModel();
@@ -43,6 +41,7 @@ function Size(props) {
   const handleSizeRemove = async (sizeId) => {
     try {
       await showToastSuccess(dispatch(deleteSize(sizeId)));
+      removeModel.closeModel();
     } catch (error) {
       showToastError(error);
     }
@@ -53,6 +52,7 @@ function Size(props) {
     if (!addModel.model.data) {
       try {
         await showToastSuccess(dispatch(createSize(data)));
+        addModel.closeModel();
       } catch (error) {
         showToastError(error);
       }
@@ -66,6 +66,7 @@ function Size(props) {
             })
           )
         );
+        addModel.closeModel();
       } catch (error) {
         showToastError(error);
       }
@@ -114,7 +115,6 @@ function Size(props) {
         <SccModel
           name="size"
           loading={loading}
-          error={error}
           addModel={addModel}
           onSubmit={handleFormSubmit}
         />
@@ -122,9 +122,10 @@ function Size(props) {
 
       {removeModel.model.show ? (
         <DeleteModel
+          name="size"
+          loading={loading}
           data={removeModel.model.data}
           closeModel={removeModel.closeModel}
-          name="size"
           onRemoveClick={handleSizeRemove}
         />
       ) : null}

@@ -1,4 +1,5 @@
 import FormHeader from "components/FormHeader";
+import { STYLE_MODEL } from "constants/globals";
 import InputField from "custom-fields/InputField";
 import PropTypes from "prop-types";
 import React from "react";
@@ -9,7 +10,6 @@ import "./positionmodel.scss";
 
 PositionModel.propTypes = {
   loading: PropTypes.bool.isRequired,
-  error: PropTypes.string.isRequired,
   onSubmit: PropTypes.func,
   closeModel: PropTypes.func,
   model: PropTypes.object.isRequired,
@@ -21,7 +21,7 @@ PositionModel.defaultProps = {
 };
 
 function PositionModel(props) {
-  let { closeModel, model, onSubmit, loading, error } = props;
+  let { closeModel, model, onSubmit, loading } = props;
   const { data } = model;
 
   const defaultValues = !data
@@ -34,7 +34,7 @@ function PositionModel(props) {
   const {
     handleSubmit,
     control,
-    formState: { errors, isSubmitSuccessful, isSubmitting },
+    formState: { errors },
   } = useForm({ defaultValues });
 
   const handleCloseModelClick = () => {
@@ -47,10 +47,8 @@ function PositionModel(props) {
     await onSubmit(data);
   };
 
-  isSubmitSuccessful && !error && closeModel();
-
   return (
-    <div className="ColorSizeModel">
+    <div className="ColorSizeModel" style={STYLE_MODEL}>
       <Form
         onSubmit={handleSubmit(onFormSubmit)}
         className="ColorSizeModel__main"
@@ -73,10 +71,9 @@ function PositionModel(props) {
         />
 
         <ActionButton
+          loading={loading}
           onCloseModelClick={handleCloseModelClick}
           model={model}
-          isSubmitting={isSubmitting}
-          loading={loading}
         />
       </Form>
     </div>

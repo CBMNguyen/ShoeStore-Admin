@@ -1,6 +1,11 @@
 import axiosClient from "./axiosClient";
 
 const employeeApi = {
+  login: (data) => {
+    const url = `/employee/login`;
+    return axiosClient.post(url, data);
+  },
+
   getAll: (params) => {
     const url = "/employee";
     return axiosClient.get(url, { params });

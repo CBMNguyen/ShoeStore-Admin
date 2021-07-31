@@ -1,10 +1,12 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { Badge } from "reactstrap";
 import { getAge } from "utils/common";
 
 UserItem.propTypes = {
   index: PropTypes.number.isRequired,
-  employee: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  pagination: PropTypes.object.isRequired,
   showRemoveModel: PropTypes.func,
   showViewModel: PropTypes.func,
 };
@@ -15,7 +17,9 @@ UserItem.defaultProps = {
 };
 
 function UserItem(props) {
-  const { index, user, showRemoveModel, showViewModel } = props;
+  const { index, user, showRemoveModel, showViewModel, pagination } = props;
+
+  const { page, limit } = pagination;
 
   const birthDate = new Date(user.birthdate);
 
@@ -31,12 +35,20 @@ function UserItem(props) {
 
   return (
     <tr>
-      <th>{index}</th>
-      <td>{`${user.firstname}  ${user.lastname}`}</td>
-      <td>{user.email}</td>
-      <td>{user.phone}</td>
+      <th>{index + 1 + (page - 1) * limit}</th>
       <td>
-        <span className="ps-2">{getAge(birthDate)}</span>
+        <Badge className="bg-dark">{`${user.firstname}  ${user.lastname}`}</Badge>
+      </td>
+      <td>
+        <Badge style={{ backgroundColor: "deeppink" }}>{user.email}</Badge>
+      </td>
+      <td>
+        <Badge style={{ backgroundColor: "cyan" }}>{user.phone}</Badge>
+      </td>
+      <td>
+        <span className="ps-2">
+          <Badge className="bg-warning">{getAge(birthDate)}</Badge>
+        </span>
       </td>
       <td>
         {" "}
