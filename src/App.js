@@ -10,6 +10,7 @@ import { ToastContainer } from "react-toastify";
 import "./App.scss";
 import jwt from "jsonwebtoken";
 import { Suspense } from "react";
+import Loading from "components/Loading";
 
 function App() {
   const { token } = useSelector((state) => state.employee.auth);
@@ -24,11 +25,11 @@ function App() {
   const User = React.lazy(() => import("./features/User"));
   const Employee = React.lazy(() => import("./features/Employee"));
   return (
-    <BrowserRouter>
-      {isExpire && <Login />}
+    <Suspense fallback={<Loading />}>
+      <BrowserRouter>
+        {isExpire && <Login />}
 
-      {!isExpire && (
-        <Suspense fallback={<div> Loading... </div>}>
+        {!isExpire && (
           <div className="App">
             <IconControl />
             <SideBar />
@@ -43,10 +44,10 @@ function App() {
               </Switch>
             </div>
           </div>
-        </Suspense>
-      )}
-      <ToastContainer />
-    </BrowserRouter>
+        )}
+        <ToastContainer />
+      </BrowserRouter>
+    </Suspense>
   );
 }
 

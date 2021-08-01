@@ -1,3 +1,4 @@
+import Loading from "components/Loading";
 import TableFooter from "components/TableFooter";
 import TableHeader from "components/TableHeader";
 import ProductAddModel from "features/product/components/ProductAddModel";
@@ -24,36 +25,33 @@ import {
 } from "utils/common";
 
 function MainPage(props) {
-  const dispatch = useDispatch();
   const [filter, setFilter] = useState({
     page: 1,
+    limit: 8,
+
     name: "",
     category: "",
     price: 0,
     quantity: 0,
   });
 
-  useEffect(() => {
-    dispatch(fetchProduct(filter));
-  }, [dispatch, filter]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(fetchProduct());
     dispatch(fetchSize());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(fetchColor());
-  }, [dispatch]);
-
-  useEffect(() => {
     dispatch(fetchCategory());
   }, [dispatch]);
 
   const productState = useSelector((state) => state.products);
-  const { loading, products, pagination } = productState;
+  const { loading, products } = productState;
+
   const { size } = useSelector((state) => state.size);
   const { color } = useSelector((state) => state.color);
   const { category } = useSelector((state) => state.category);
+
+  // Options React-Select
 
   const PRODUCT_SIZE_OPTIONS = size
     .slice()
@@ -74,9 +72,74 @@ function MainPage(props) {
     label: capitalizeFirstLetter(c.name),
   }));
 
+  // Pagination and filter product equal redux
+
+  const filterProducts = products.filter((product) => {
+    return (
+      product.name.toLowerCase().indexOf(filter["name"].toLowerCase()) !== -1 &&
+      product.category.name
+        .toLowerCase()
+        .indexOf(filter["category"].toLowerCase()) !== -1
+    );
+  });
+
+  let sortProducts = filterProducts;
+  // sort product increase price
+  filter["price"] === 1 &&
+    (sortProducts = filterProducts.sort(
+      (a, b) => a.originalPrice - b.originalPrice
+    ));
+
+  // sort product decrease price
+  filter["price"] === -1 &&
+    (sortProducts = filterProducts.sort(
+      (a, b) => b.originalPrice - a.originalPrice
+    ));
+
+  // sort product increase quantity
+  filter["quantity"] === 1 &&
+    (sortProducts = filterProducts.sort(
+      (a, b) => a.quantityStock - b.quantityStock
+    ));
+
+  // sort product decrease quantity
+  filter["quantity"] === -1 &&
+    (sortProducts = filterProducts.sort(
+      (a, b) => b.quantityStock - a.quantityStock
+    ));
+
+  const start = (filter["page"] - 1) * filter["limit"];
+  const end = filter["page"] * filter["limit"];
+
+  // handle Change Pagination and filter
+
+  const handlePageChange = (page) => {
+    setFilter({ ...filter, page });
+  };
+
+  const handleNameChange = (name) => {
+    setFilter({ ...filter, page: 1, name });
+  };
+
+  const handleCategoryChange = (category) => {
+    category = category === "All" ? "" : category;
+    setFilter({ ...filter, page: 1, category });
+  };
+
+  const handlePriceChange = (price) => {
+    setFilter({ ...filter, price });
+  };
+
+  const handleQuantityChange = (quantity) => {
+    setFilter({ ...filter, quantity });
+  };
+
+  //========================================//
   const addModel = useModel();
   const removeModel = useModel();
   const viewModel = useModel();
+
+  // handle add update delete product
 
   const handleFormSubmit = async (data) => {
     const formData = new FormData();
@@ -107,7 +170,6 @@ function MainPage(props) {
       try {
         await showToastSuccess(dispatch(createProduct(formData)));
         addModel.closeModel();
-        setFilter({ ...filter });
       } catch (error) {
         showToastError(error);
       }
@@ -129,56 +191,38 @@ function MainPage(props) {
     try {
       await showToastSuccess(dispatch(deleteProduct(productId)));
       removeModel.closeModel();
-      setFilter({ ...filter });
     } catch (error) {
       showToastError(error);
     }
   };
 
-  const handlePageChange = (page) => {
-    setFilter({ ...filter, page });
-  };
-
-  const handleNameChange = (name) => {
-    setFilter({ ...filter, page: 1, name });
-  };
-
-  const handleCategoryChange = (category) => {
-    setFilter({ ...filter, page: 1, category });
-  };
-
-  const handlePriceChange = (price) => {
-    setFilter({ ...filter, price });
-  };
-
-  const handleQuantityChange = (quantity) => {
-    setFilter({ ...filter, quantity });
-  };
-
-  return (
+  return products.length === 0 ? (
+    <Loading />
+  ) : (
     <div className="MainPage">
       <TableHeader
         name="Brand"
         showModel={addModel.showModel}
-        pagination={pagination}
-        onNameChange={handleNameChange}
-        onOptionsChange={handleCategoryChange}
         options={PRODUCT_CATEGORY_OPTIONS}
+        onOptionsChange={handleCategoryChange}
+        onNameChange={handleNameChange}
       />
 
       <ProductList
+        filter={filter}
+        products={sortProducts.slice(start, end)}
         showDeleteModel={removeModel.showModel}
         showUpdateModel={addModel.showModel}
         showViewModel={viewModel.showModel}
-        products={products}
-        page={pagination.page}
-        price={filter.price}
         onPriceChange={handlePriceChange}
         onQuantityChange={handleQuantityChange}
-        quantity={filter.quantity}
       />
 
-      <TableFooter onPageChange={handlePageChange} pagination={pagination} />
+      <TableFooter
+        onPageChange={handlePageChange}
+        filter={filter}
+        totalRow={products.length}
+      />
 
       {addModel.model.show ? (
         <ProductAddModel

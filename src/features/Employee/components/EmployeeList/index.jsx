@@ -11,7 +11,7 @@ EmployeeList.propTypes = {
   showViewModel: PropTypes.func.isRequired,
   employees: PropTypes.array,
   onAgeChange: PropTypes.func,
-  pagination: PropTypes.object.isRequired,
+  filter: PropTypes.object.isRequired,
 };
 
 EmployeeList.defaultProps = {
@@ -25,10 +25,11 @@ function EmployeeList(props) {
     showRemoveModel,
     showViewModel,
     employees,
-    age,
     onAgeChange,
-    pagination,
+    filter,
   } = props;
+
+  const { age } = filter;
 
   const handleAgeChange = (age) => {
     if (!onAgeChange) return;
@@ -75,7 +76,7 @@ function EmployeeList(props) {
             showViewModel={showViewModel}
             employee={employee}
             index={index}
-            pagination={pagination}
+            filter={filter}
           />
         ))}
       </tbody>

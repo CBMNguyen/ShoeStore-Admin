@@ -3,20 +3,15 @@ import productApi from "api/product";
 
 const initialState = {
   products: [],
-  pagination: {
-    page: 1,
-    limit: 1,
-    totalRow: 1,
-  },
   error: "",
   loading: false,
 };
 
 export const fetchProduct = createAsyncThunk(
   "product/fetchProduct",
-  async (data, { rejectWithValue, fulfillWithValue }) => {
+  async (NULL, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const products = await productApi.getAll(data);
+      const products = await productApi.getAll();
       return fulfillWithValue(products);
     } catch (error) {
       return rejectWithValue(error);
@@ -52,8 +47,8 @@ export const deleteProduct = createAsyncThunk(
   "product/deleteProduct",
   async (productId, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const data = await productApi.delete(productId);
-      return fulfillWithValue({ productId, message: data.message });
+      const { message } = await productApi.delete(productId);
+      return fulfillWithValue({ productId, message });
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -66,18 +61,15 @@ const productSlice = createSlice({
   reducers: {},
   extraReducers: {
     // handle fetch products
-    [fetchProduct.pending]: (state) => {
-      state.loading = true;
-    },
     [fetchProduct.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     },
     [fetchProduct.fulfilled]: (state, action) => {
-      const { products, pagination } = action.payload;
+      const { products } = action.payload;
       state.loading = false;
       state.products = products;
-      state.pagination = pagination;
+      state.error = "";
     },
 
     // handle create new product
@@ -88,8 +80,10 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
     },
-    [createProduct.fulfilled]: (state) => {
+    [createProduct.fulfilled]: (state, action) => {
+      const { productCreated } = action.payload;
       state.loading = false;
+      state.products.push(productCreated);
       state.error = "";
     },
 
@@ -120,13 +114,18 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
     },
-    [deleteProduct.fulfilled]: (state) => {
+    [deleteProduct.fulfilled]: (state, action) => {
+      const { productId } = action.payload;
       state.loading = false;
+      const index = state.products.findIndex(
+        (product) => product._id === productId
+      );
+      if (index === -1) return;
+      state.products.splice(index, 1);
       state.error = "";
     },
   },
 });
 
 const { reducer } = productSlice;
-
 export default reducer;

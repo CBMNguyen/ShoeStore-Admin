@@ -30,7 +30,7 @@ function Login(props) {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({ defaultValues, resolver: yupResolver(schema) });
   const onSubmit = async (data) => {
     try {
@@ -63,7 +63,7 @@ function Login(props) {
         <Button
           className="d-block w-50 m-auto mt-4 rounded"
           color="primary"
-          disabled={isSubmitting}
+          disabled={loading}
           style={{ position: "relative" }}
         >
           {loading && (

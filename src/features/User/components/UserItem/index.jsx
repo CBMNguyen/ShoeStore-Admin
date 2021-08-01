@@ -6,7 +6,7 @@ import { getAge } from "utils/common";
 UserItem.propTypes = {
   index: PropTypes.number.isRequired,
   user: PropTypes.object.isRequired,
-  pagination: PropTypes.object.isRequired,
+  filter: PropTypes.object.isRequired,
   showRemoveModel: PropTypes.func,
   showViewModel: PropTypes.func,
 };
@@ -17,9 +17,9 @@ UserItem.defaultProps = {
 };
 
 function UserItem(props) {
-  const { index, user, showRemoveModel, showViewModel, pagination } = props;
+  const { index, user, showRemoveModel, showViewModel, filter } = props;
 
-  const { page, limit } = pagination;
+  const { page, limit } = filter;
 
   const birthDate = new Date(user.birthdate);
 

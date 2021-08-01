@@ -7,11 +7,11 @@ import { Input } from "reactstrap";
 import "./tableheader.scss";
 
 TableHeader.propTypes = {
-  showModel: PropTypes.func,
-  onOptionsChange: PropTypes.func,
+  name: PropTypes.string.isRequired,
   onNameChange: PropTypes.func,
   options: PropTypes.array,
-  name: PropTypes.string.isRequired,
+  onOptionsChange: PropTypes.func,
+  showModel: PropTypes.func,
 };
 
 TableHeader.defaultProps = {
@@ -26,6 +26,7 @@ function TableHeader(props) {
   const { register } = useForm();
 
   const { onOptionsChange, onNameChange, options, showModel, name } = props;
+
   const typingTimeoutRef = useRef(null);
 
   const handleModelClick = () => {
@@ -43,7 +44,7 @@ function TableHeader(props) {
 
     typingTimeoutRef.current = setTimeout(() => {
       onNameChange(text);
-    }, 300);
+    }, 500);
   };
 
   const handleOptionsChange = (category) => {

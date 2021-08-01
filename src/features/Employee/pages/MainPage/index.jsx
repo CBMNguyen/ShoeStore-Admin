@@ -1,3 +1,4 @@
+import Loading from "components/Loading";
 import TableFooter from "components/TableFooter";
 import TableHeader from "components/TableHeader";
 import EmployeeAddModel from "features/Employee/components/EmployeeAddModel";
@@ -16,24 +17,25 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   capitalizeFirstLetter,
+  getAge,
   showToastError,
   showToastSuccess,
 } from "utils/common";
 
 function MainPage(props) {
-  const dispatch = useDispatch();
   const [filter, setFilter] = useState({
     page: 1,
+    limit: 12,
+
     age: 0,
     position: "",
     name: "",
   });
 
-  useEffect(() => {
-    dispatch(fetchEmployee(filter));
-  }, [dispatch, filter]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(fetchEmployee());
     dispatch(fetchPosition());
   }, [dispatch]);
 
@@ -41,7 +43,9 @@ function MainPage(props) {
   const positions = useSelector((state) => state.position.position);
 
   const employees = employeeState.employee;
-  const { loading, pagination } = employeeState;
+  const { loading } = employeeState;
+
+  // Options React - Select
 
   const POSITION_OPTIONS = positions.map((position) => ({
     value: position["_id"],
@@ -54,9 +58,60 @@ function MainPage(props) {
 
   const { closeModel, showModel, model } = addModel;
 
+  // handle Pagination and filter equal redux
+
+  const filterEmployees = employees.filter((employee) => {
+    return (
+      employee.position["position"]
+        .toLowerCase()
+        .indexOf(filter["position"].toLowerCase()) !== -1 &&
+      (employee.firstname
+        .toLowerCase()
+        .indexOf(filter["name"].toLowerCase()) !== -1 ||
+        employee.lastname
+          .toLowerCase()
+          .indexOf(filter["name"].toLowerCase()) !== -1)
+    );
+  });
+
+  let sortEmployees = filterEmployees;
+
+  // sort employee increase age
+  filter["age"] === 1 &&
+    (sortEmployees = filterEmployees.sort(
+      (a, b) => getAge(new Date(a.birthdate)) - getAge(new Date(b.birthdate))
+    ));
+
+  // sort employee decrease age
+  filter["age"] === -1 &&
+    (sortEmployees = filterEmployees.sort(
+      (a, b) => getAge(new Date(b.birthdate)) - getAge(new Date(a.birthdate))
+    ));
+
+  const start = (filter["page"] - 1) * filter["limit"];
+  const end = filter["page"] * filter["limit"];
+
+  // handle Change Pagination and filter
+
+  const handlePageChange = (page) => {
+    setFilter({ ...filter, page });
+  };
+
+  const handleNameChange = (name) => {
+    setFilter({ ...filter, page: 1, name });
+  };
+
+  const handlePositionChange = (position) => {
+    position = position === "All" ? "" : position;
+    setFilter({ ...filter, page: 1, position });
+  };
+
+  const handleAgeChange = (age) => {
+    setFilter({ ...filter, age });
+  };
+
   const handleEmployeeAddForm = async (data) => {
     const formData = new FormData();
-
     formData.append("firstname", data.firstname);
     formData.append("lastname", data.lastname);
     formData.append("email", data.email);
@@ -71,7 +126,6 @@ function MainPage(props) {
       try {
         await showToastSuccess(dispatch(createEmployee(formData)));
         closeModel();
-        setFilter({ ...filter });
       } catch (error) {
         showToastError(error);
       }
@@ -91,49 +145,38 @@ function MainPage(props) {
     try {
       await showToastSuccess(dispatch(deleteEmployee(employeeId)));
       removeModel.closeModel();
-      setFilter({ ...filter });
     } catch (error) {
       showToastError(error);
     }
   };
 
-  const handlePageChange = (page) => {
-    setFilter({ ...filter, page });
-  };
-
-  const handleNameChange = (name) => {
-    setFilter({ ...filter, page: 1, name });
-  };
-
-  const handlePositionChange = (position) => {
-    setFilter({ ...filter, page: 1, position });
-  };
-
-  const handleAgeChange = (age) => {
-    setFilter({ ...filter, age });
-  };
-
-  return (
+  return employees.length === 0 ? (
+    <Loading />
+  ) : (
     <div className="MainPage">
       <TableHeader
-        showModel={showModel}
-        options={POSITION_OPTIONS}
-        onOptionsChange={handlePositionChange}
+        filter={filter}
         name="Position"
         onNameChange={handleNameChange}
+        options={POSITION_OPTIONS}
+        onOptionsChange={handlePositionChange}
+        showModel={showModel}
       />
 
       <EmployeeList
+        filter={filter}
+        employees={sortEmployees.slice(start, end)}
         showEditModel={showModel}
         showRemoveModel={removeModel.showModel}
         showViewModel={viewModel.showModel}
-        employees={employees}
-        age={filter.age}
         onAgeChange={handleAgeChange}
-        pagination={pagination}
       />
 
-      <TableFooter pagination={pagination} onPageChange={handlePageChange} />
+      <TableFooter
+        onPageChange={handlePageChange}
+        filter={filter}
+        totalRow={employees.length}
+      />
 
       {model.show ? (
         <EmployeeAddModel

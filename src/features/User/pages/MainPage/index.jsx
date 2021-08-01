@@ -1,3 +1,4 @@
+import Loading from "components/Loading";
 import TableFooter from "components/TableFooter";
 import TableHeader from "components/TableHeader";
 import UserDeleteModel from "features/User/components/UserDeleteModel";
@@ -7,38 +8,59 @@ import { deleteUser, fetchUser } from "features/User/userSlice";
 import useModel from "hooks/useModel";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { showToastError, showToastSuccess } from "utils/common";
+import { getAge, showToastError, showToastSuccess } from "utils/common";
 
 function MainPage(props) {
-  const dispatch = useDispatch();
-
   const [filter, setFilter] = useState({
     page: 1,
+    limit: 12,
+
     name: "",
     age: 0,
   });
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(fetchUser(filter));
-  }, [dispatch, filter]);
+    dispatch(fetchUser());
+  }, [dispatch]);
 
   const userState = useSelector((state) => state.user);
+
   const users = userState.user;
-  const { loading, pagination } = userState;
+  const { loading } = userState;
 
   const removeModel = useModel();
   const viewModel = useModel();
 
-  const handleUserDelete = async (userId) => {
-    try {
-      await showToastSuccess(dispatch(deleteUser(userId)));
-      removeModel.closeModel();
-      setFilter({ ...filter });
-    } catch (error) {
-      showToastError(error);
-    }
-  };
+  // handle Pagination and filter equal redux
 
+  const filterUsers = users.filter((user) => {
+    return (
+      user.firstname.toLowerCase().indexOf(filter["name"].toLowerCase()) !==
+        -1 ||
+      user.lastname.toLowerCase().indexOf(filter["name"].toLowerCase()) !== -1
+    );
+  });
+
+  let sortUsers = filterUsers;
+
+  // sort user increase age
+  filter["age"] === 1 &&
+    (sortUsers = filterUsers.sort(
+      (a, b) => getAge(new Date(a.birthdate)) - getAge(new Date(b.birthdate))
+    ));
+
+  // sort user decrease age
+  filter["age"] === -1 &&
+    (sortUsers = filterUsers.sort(
+      (a, b) => getAge(new Date(b.birthdate)) - getAge(new Date(a.birthdate))
+    ));
+
+  const start = (filter["page"] - 1) * filter["limit"];
+  const end = filter["page"] * filter["limit"];
+
+  // handle change pagiantion and filter
   const handleNameChange = (name) => {
     setFilter({ ...filter, page: 1, name });
   };
@@ -51,25 +73,40 @@ function MainPage(props) {
     setFilter({ ...filter, age });
   };
 
-  return (
+  const handleUserDelete = async (userId) => {
+    try {
+      await showToastSuccess(dispatch(deleteUser(userId)));
+      removeModel.closeModel();
+    } catch (error) {
+      showToastError(error);
+    }
+  };
+
+  return users.length === 0 ? (
+    <Loading />
+  ) : (
     <div className="MainPage">
       <TableHeader
-        showModel={null}
+        filter={filter}
         name="User"
         onNameChange={handleNameChange}
         options={null}
+        showModel={null}
       />
 
       <UserList
-        users={users}
-        age={filter.age}
+        filter={filter}
+        users={sortUsers.slice(start, end)}
         onAgeChange={handleAgeChange}
         showRemoveModel={removeModel.showModel}
         showViewModel={viewModel.showModel}
-        pagination={pagination}
       />
 
-      <TableFooter pagination={pagination} onPageChange={handlePageChange} />
+      <TableFooter
+        filter={filter}
+        totalRow={users.length}
+        onPageChange={handlePageChange}
+      />
 
       {removeModel.model.show && (
         <UserDeleteModel

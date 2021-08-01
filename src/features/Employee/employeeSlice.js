@@ -4,11 +4,6 @@ import jwt from "jsonwebtoken";
 
 const initialState = {
   employee: [],
-  pagination: {
-    page: 1,
-    limit: 1,
-    totalRow: 1,
-  },
   error: "",
   auth: null,
   loading: false,
@@ -28,9 +23,9 @@ export const employeeLogin = createAsyncThunk(
 
 export const fetchEmployee = createAsyncThunk(
   "employee/fetchEmployee",
-  async (data, { rejectWithValue, fulfillWithValue }) => {
+  async (NULL, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const employee = await employeeApi.getAll(data);
+      const employee = await employeeApi.getAll();
       return fulfillWithValue(employee);
     } catch (error) {
       return rejectWithValue(error);
@@ -66,8 +61,8 @@ export const deleteEmployee = createAsyncThunk(
   "employee/deleteEmployee",
   async (employeeId, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const data = await employeeApi.delete(employeeId);
-      return fulfillWithValue(data);
+      const { message } = await employeeApi.delete(employeeId);
+      return fulfillWithValue({ message, employeeId });
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -102,18 +97,14 @@ const employeeSlice = createSlice({
     },
 
     // handle fetch employees
-    [fetchEmployee.pending]: (state) => {
-      state.loading = true;
-    },
     [fetchEmployee.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     },
     [fetchEmployee.fulfilled]: (state, action) => {
-      const { employees, pagination } = action.payload;
+      const { employees } = action.payload;
       state.loading = false;
       state.employee = employees;
-      state.pagination = pagination;
     },
 
     // handle create new employee
@@ -124,8 +115,10 @@ const employeeSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
     },
-    [createEmployee.fulfilled]: (state) => {
+    [createEmployee.fulfilled]: (state, action) => {
+      const { employeeCreated } = action.payload;
       state.loading = false;
+      state.employee.push(employeeCreated);
       state.error = "";
     },
 
@@ -156,7 +149,14 @@ const employeeSlice = createSlice({
       state.loading = false;
       state.error = action.payload.message;
     },
-    [deleteEmployee.fulfilled]: (state) => {
+    [deleteEmployee.fulfilled]: (state, action) => {
+      const { employeeId } = action.payload;
+      const index = state.employee.findIndex(
+        (employee) => employee._id === employeeId
+      );
+
+      if (!index) return;
+      state.employee.splice(index, 1);
       state.loading = false;
       state.error = "";
     },

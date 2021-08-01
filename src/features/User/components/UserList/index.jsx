@@ -6,12 +6,11 @@ import UserItem from "../UserItem";
 import "./userlist.scss";
 
 UserList.propTypes = {
+  filter: PropTypes.object.isRequired,
   employees: PropTypes.array,
-  age: PropTypes.number.isRequired,
   onAgeChange: PropTypes.func,
   showRemoveModel: PropTypes.func.isRequired,
   showViewModel: PropTypes.func.isRequired,
-  pagination: PropTypes.object.isRequired,
 };
 
 UserList.defaultProps = {
@@ -19,14 +18,9 @@ UserList.defaultProps = {
 };
 
 function UserList(props) {
-  const {
-    users,
-    age,
-    onAgeChange,
-    showRemoveModel,
-    showViewModel,
-    pagination,
-  } = props;
+  const { users, filter, onAgeChange, showRemoveModel, showViewModel } = props;
+
+  const { age } = filter;
 
   const handleAgeChange = (age) => {
     if (!onAgeChange) return;
@@ -71,7 +65,7 @@ function UserList(props) {
             user={user}
             showRemoveModel={showRemoveModel}
             showViewModel={showViewModel}
-            pagination={pagination}
+            filter={filter}
           />
         ))}
       </tbody>

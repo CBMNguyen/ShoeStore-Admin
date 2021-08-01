@@ -5,7 +5,7 @@ import { Button } from "reactstrap";
 import classNames from "classnames";
 
 Pagination.propTypes = {
-  pagination: PropTypes.object.isRequired,
+  filter: PropTypes.object.isRequired,
   onPageChange: PropTypes.func,
 };
 
@@ -14,8 +14,8 @@ Pagination.defaultProps = {
 };
 
 function Pagination(props) {
-  const { pagination, onPageChange } = props;
-  const { page, limit, totalRow } = pagination;
+  const { filter, onPageChange } = props;
+  const { page, limit, totalRow } = filter;
 
   const totalPage = Math.ceil(totalRow / limit);
 

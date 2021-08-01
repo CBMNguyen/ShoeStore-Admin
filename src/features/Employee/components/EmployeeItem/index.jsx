@@ -14,7 +14,7 @@ EmployeeItem.propTypes = {
   showViewModel: PropTypes.func,
   index: PropTypes.number.isRequired,
   employee: PropTypes.object.isRequired,
-  pagination: PropTypes.object.isRequired,
+  filter: PropTypes.object.isRequired,
 };
 
 EmployeeItem.defaultProps = {
@@ -30,10 +30,10 @@ function EmployeeItem(props) {
     showViewModel,
     index,
     employee,
-    pagination,
+    filter,
   } = props;
 
-  const { page, limit } = pagination;
+  const { page, limit } = filter;
 
   const birthDate = new Date(employee.birthdate);
 

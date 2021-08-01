@@ -7,33 +7,29 @@ import "./productlist.scss";
 
 ProductList.propTypes = {
   products: PropTypes.array,
+  filter: PropTypes.object.isRequired,
   showDeleteModel: PropTypes.func.isRequired,
   showUpdateModel: PropTypes.func.isRequired,
   showViewModel: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
   onQuantityChange: PropTypes.func,
   onPriceChange: PropTypes.func,
-  price: PropTypes.number,
 };
 
 ProductList.defaultProps = {
   products: [],
   onPriceChange: null,
   onQuantityChange: null,
-  price: 0,
 };
 
 function ProductList(props) {
   const {
     products,
+    filter,
     showDeleteModel,
     showUpdateModel,
     showViewModel,
-    page,
     onPriceChange,
     onQuantityChange,
-    price,
-    quantity,
   } = props;
 
   const handlePriceChange = (price) => {
@@ -61,14 +57,14 @@ function ProductList(props) {
                 onClick={() => handleQuantityChange(1)}
                 className={classNames(
                   "ProductList__increase  zmdi zmdi-caret-up",
-                  { "ProductList__increase--active": quantity === 1 }
+                  { "ProductList__increase--active": filter["quantity"] === 1 }
                 )}
               />
               <i
                 onClick={() => handleQuantityChange(-1)}
                 className={classNames(
                   "ProductList__decrease  zmdi zmdi-caret-down",
-                  { "ProductList__decrease--active": quantity === -1 }
+                  { "ProductList__decrease--active": filter["quantity"] === -1 }
                 )}
               />
             </span>
@@ -80,14 +76,14 @@ function ProductList(props) {
                 onClick={() => handlePriceChange(1)}
                 className={classNames(
                   "ProductList__increase  zmdi zmdi-caret-up",
-                  { "ProductList__increase--active": price === 1 }
+                  { "ProductList__increase--active": filter["price"] === 1 }
                 )}
               />
               <i
                 onClick={() => handlePriceChange(-1)}
                 className={classNames(
                   "ProductList__decrease  zmdi zmdi-caret-down",
-                  { "ProductList__decrease--active": price === -1 }
+                  { "ProductList__decrease--active": filter["price"] === -1 }
                 )}
               />
             </span>
@@ -100,11 +96,11 @@ function ProductList(props) {
           <ProductItem
             index={index}
             key={product._id}
+            product={product}
+            page={filter["page"]}
             showDeleteModel={showDeleteModel}
             showUpdateModel={showUpdateModel}
             showViewModel={showViewModel}
-            product={product}
-            page={page}
           />
         ))}
       </tbody>
