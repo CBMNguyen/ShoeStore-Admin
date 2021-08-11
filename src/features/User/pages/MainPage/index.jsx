@@ -8,6 +8,7 @@ import { deleteUser, fetchUser } from "features/User/userSlice";
 import useModel from "hooks/useModel";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { getAge, showToastError, showToastSuccess } from "utils/common";
 
 function MainPage(props) {
@@ -127,4 +128,4 @@ function MainPage(props) {
   );
 }
 
-export default MainPage;
+export default withRouter(MainPage);

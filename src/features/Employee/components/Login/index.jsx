@@ -9,6 +9,7 @@ import * as yup from "yup";
 import { showToastError, showToastSuccess } from "utils/common";
 import { employeeLogin } from "features/Employee/employeeSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const defaultValues = { email: "", password: "" };
 
@@ -25,6 +26,7 @@ const schema = yup.object().shape({
 
 function Login(props) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { loading } = useSelector((state) => state.employee);
 
   const {
@@ -35,13 +37,14 @@ function Login(props) {
   const onSubmit = async (data) => {
     try {
       await showToastSuccess(dispatch(employeeLogin(data)));
+      history.push("/");
     } catch (error) {
       showToastError(error);
     }
   };
 
   return (
-    <div className="Login">
+    <div className="Login shadow-lg">
       <Form className="Login__form" onSubmit={handleSubmit(onSubmit)}>
         <header>Login</header>
         <InputField

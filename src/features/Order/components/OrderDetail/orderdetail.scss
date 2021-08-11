@@ -1,0 +1,49 @@
+.OrderDetail {
+  position: relative;
+  width: 850px;
+  height: 500px;
+  padding: 1.2rem;
+  background-color: white;
+  border-radius: 1rem;
+  overflow: scroll;
+
+  & input,
+  & textarea {
+    user-select: none;
+    pointer-events: none;
+    margin-bottom: 0.4rem;
+  }
+
+  & textarea {
+    height: 4.5rem;
+  }
+
+  & label {
+    margin-bottom: 0.2rem;
+    font-weight: bold;
+  }
+
+  &__btn {
+    width: 210px;
+    display: block;
+    margin-left: auto;
+
+    & > button {
+      position: relative;
+      width: 100px;
+      border: none;
+      font-weight: bold;
+    }
+
+    & button:first-child {
+      background-color: orange;
+    }
+    & button:last-child {
+      background-color: green;
+    }
+  }
+}
+
+.OrderDetail::-webkit-scrollbar {
+  display: none;
+}

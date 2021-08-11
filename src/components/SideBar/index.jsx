@@ -9,7 +9,7 @@ const SideBar = (props) => {
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(logout());
-    localStorage.removeItem("accessToken");
+    console.log(localStorage.getItem("accessToken"));
   };
   return (
     <div className="SideBar">

@@ -17,6 +17,7 @@ import { fetchSize } from "features/Scc/sizeSlice";
 import useModel from "hooks/useModel";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { withRouter } from "react-router-dom";
 import {
   capitalizeFirstLetter,
   colourNameToHex,
@@ -254,4 +255,4 @@ function MainPage(props) {
   );
 }
 
-export default MainPage;
+export default withRouter(MainPage);

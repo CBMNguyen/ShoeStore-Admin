@@ -198,7 +198,7 @@ function EmployeeAddModel(props) {
           </Col>
         </Row>
         <button
-          className="ProductAddForm__btn mt-4"
+          className="EmployeeAddModel__btn mt-4"
           type="submit"
           disabled={loading}
         >

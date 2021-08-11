@@ -15,6 +15,7 @@ import { fetchPosition } from "features/Scc/positionSlice";
 import useModel from "hooks/useModel";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { withRouter } from "react-router-dom";
 import {
   capitalizeFirstLetter,
   getAge,
@@ -207,4 +208,4 @@ function MainPage(props) {
   );
 }
 
-export default MainPage;
+export default withRouter(MainPage);

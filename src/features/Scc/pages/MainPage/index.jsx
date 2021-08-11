@@ -3,6 +3,7 @@ import Color from "features/Scc/components/Color";
 import Position from "features/Scc/components/Position";
 import Size from "features/Scc/components/Size";
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { Col, Row } from "reactstrap";
 import "./main.scss";
 
@@ -31,4 +32,4 @@ function MainPage(props) {
   );
 }
 
-export default MainPage;
+export default withRouter(MainPage);

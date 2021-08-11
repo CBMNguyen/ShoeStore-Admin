@@ -1,0 +1,36 @@
+.OrderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background-color: transparent;
+
+  & header h2 {
+    font-weight: bold;
+  }
+
+  &__filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 480px;
+    box-sizing: border-box;
+
+    & div:first-child input {
+      width: 100%;
+      padding-left: 1.8rem;
+    }
+
+    & div:first-child i {
+      position: absolute;
+      padding: 0.7rem 0.5rem;
+      margin-right: 5px;
+      font-size: 1.2rem;
+      color: #999;
+    }
+  }
+}
+
+.css-2b097c-container {
+  width: 50%;
+}

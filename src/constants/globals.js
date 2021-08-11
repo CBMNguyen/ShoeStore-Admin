@@ -5,6 +5,12 @@ export const GENDER_OPTIONS = [
   { value: "female", label: "Female" },
 ];
 
+export const ORDER_STATE_OPTIONS = [
+  { value: "pending", label: "Pending" },
+  { value: "processing", label: "Processing" },
+  { value: "delivered", label: "Delivered" },
+];
+
 export const PRODUCT_TOAST_OPTIONS = {
   autoClose: 2000,
   hideProgressBar: true,

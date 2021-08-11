@@ -33,3 +33,14 @@ table i {
   cursor: pointer;
   font-size: 1.2rem !important;
 }
+
+input[type="file"]::file-selector-button {
+  border: 1px solid black;
+  border-radius: 0.2em;
+  transition: 1s;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: #81ecec;
+  border: 2px solid #00cec9;
+}

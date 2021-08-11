@@ -18,6 +18,7 @@ import colorReducer from "../features/Scc/colorSlice";
 import positionReducer from "../features/Scc/positionSlice";
 import sizeReducer from "../features/Scc/sizeSlice";
 import userReducer from "../features/User/userSlice";
+import orderReducer from "../features/Order/orderSlice";
 
 const persistConfig = {
   key: "shoesStore",
@@ -40,6 +41,7 @@ const rootReducer = combineReducers({
   employee: persistReducer(employeePersistConfig, employeeReducer),
   user: userReducer,
   position: positionReducer,
+  order: orderReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
