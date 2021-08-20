@@ -194,6 +194,95 @@ export function dataURLtoFile(dataurl, filename) {
   return new File([u8arr], filename, { type: mime });
 }
 
+// handle total price order
+
+export const orderPriceTotal = (order) => {
+  return order.products.reduce(
+    (sum, product) =>
+      sum +
+      product.originalPrice *
+        product.selectedQuantity *
+        (1 - product.promotionPercent),
+    0
+  );
+};
+
+// handle total order every month
+
+export const monthlyIncome = (orders) => {
+  let [
+    january,
+    february,
+    march,
+    april,
+    may,
+    june,
+    july,
+    august,
+    september,
+    october,
+    november,
+    december,
+  ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  orders.forEach((order) => {
+    if (order.state === "deliveried") {
+      const date = new Date(order.createdAt);
+      switch (date.getMonth()) {
+        case 0:
+          january += orderPriceTotal(order);
+          break;
+        case 1:
+          february += orderPriceTotal(order);
+          break;
+        case 2:
+          march += orderPriceTotal(order);
+          break;
+        case 3:
+          april += orderPriceTotal(order);
+          break;
+        case 4:
+          may += orderPriceTotal(order);
+          break;
+        case 5:
+          june += orderPriceTotal(order);
+          break;
+        case 6:
+          july += orderPriceTotal(order);
+          break;
+        case 7:
+          august += orderPriceTotal(order);
+          break;
+        case 8:
+          september += orderPriceTotal(order);
+          break;
+        case 9:
+          october += orderPriceTotal(order);
+          break;
+        case 10:
+          november += orderPriceTotal(order);
+          break;
+        default:
+          december += orderPriceTotal(order);
+          break;
+      }
+    }
+  });
+  return [
+    january.toFixed(2),
+    february.toFixed(2),
+    march.toFixed(2),
+    april.toFixed(2),
+    may.toFixed(2),
+    june.toFixed(2),
+    july.toFixed(2),
+    august.toFixed(2),
+    september.toFixed(2),
+    october.toFixed(2),
+    november.toFixed(2),
+    december.toFixed(2),
+  ];
+};
+
 // Show Toast Success
 
 export const showToastSuccess = async (asyncAction) => {

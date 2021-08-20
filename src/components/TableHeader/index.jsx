@@ -59,7 +59,7 @@ function TableHeader(props) {
       </div>
       <div className="TableHeader__filter">
         <Input
-          className={classNames("w-50 me-2", { "w-75 m-auto": !options })}
+          className={classNames("w-50 me-2", { "m-auto": !options })}
           name="name"
           placeholder="Search Name ..."
           value={value}

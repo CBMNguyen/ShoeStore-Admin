@@ -6,7 +6,7 @@ import ProtectedRoute from "components/ProtectedRoute";
 import SideBar from "components/SideBar";
 import Login from "features/Employee/components/Login";
 import React, { Suspense } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "./App.scss";
 
@@ -16,6 +16,7 @@ function App() {
   const User = React.lazy(() => import("./features/User"));
   const Employee = React.lazy(() => import("./features/Employee"));
   const Order = React.lazy(() => import("./features/Order"));
+  const DashBoard = React.lazy(() => import("./features/DashBoard"));
 
   return (
     <Suspense fallback={<Loading />}>
@@ -26,6 +27,8 @@ function App() {
           <div className="main">
             <Header />
             <Switch>
+              <Redirect exact from="/" to="/dashboard" />
+              <ProtectedRoute path="/dashboard" component={DashBoard} />
               <ProtectedRoute path="/products" component={Product} />
               <ProtectedRoute path="/scc" component={Scc} />
               <ProtectedRoute path="/employee" component={Employee} />

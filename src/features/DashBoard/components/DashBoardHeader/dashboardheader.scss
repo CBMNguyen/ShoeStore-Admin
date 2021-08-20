@@ -1,0 +1,86 @@
+.DashBoardHeader {
+  width: 100%;
+  margin-top: 1rem;
+  padding-left: 1rem;
+
+  & a {
+    text-decoration: none;
+    color: #000;
+  }
+
+  &__income,
+  &__employee,
+  &__user,
+  &__product {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.8rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+
+    & div:first-child div {
+      font-size: 2rem;
+    }
+
+    & div:last-child i {
+      font-size: 2.5rem;
+      padding: 0.6rem 0.8rem;
+    }
+  }
+
+  &__income i,
+  &__employee i,
+  &__user i,
+  &__product i {
+    border-radius: 0.65rem;
+  }
+
+  &__income {
+    border-left: 4px solid #3f6ad8;
+    transition: all 0.2s ease-in-out 0s;
+  }
+  &__income i {
+    color: #3f6ad8;
+    background-color: rgba(63, 106, 216, 0.2);
+  }
+
+  &__employee {
+    border-left: 4px solid #3ac47d;
+    transition: all 0.2s ease-in-out 0s;
+  }
+  &__employee i {
+    color: #3ac47d;
+    background-color: rgba(58, 196, 125, 0.2);
+  }
+
+  &__user {
+    border-left: 4px solid orange;
+    transition: all 0.2s ease-in-out 0s;
+  }
+  &__user i {
+    color: orange;
+    background-color: hsla(39, 100%, 50%, 0.2);
+    transition: all 0.2s ease-in-out 0s;
+  }
+
+  &__product {
+    border-left: 4px solid #d92550;
+    transition: all 0.2s ease-in-out 0s;
+  }
+  &__product i {
+    color: #d92550;
+    background-color: rgba(217, 37, 80, 0.2);
+  }
+
+  &__income:hover,
+  &__employee:hover,
+  &__user:hover,
+  &__product:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+  }
+}
