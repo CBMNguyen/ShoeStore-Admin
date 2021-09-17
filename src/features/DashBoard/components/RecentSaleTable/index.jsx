@@ -13,9 +13,9 @@ RecentSaleTable.propTypes = {
 function RecentSaleTable(props) {
   const { order } = props;
 
-  const sortOrderByDate = order.slice(0, 7).sort((a, b) => {
+  const sortOrderByDate = order.slice().sort((a, b) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
+  }).slice(0, 7);
 
   return (
     <div className="RecentSaleTable shadow">
