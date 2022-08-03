@@ -288,7 +288,7 @@ export const monthlyIncome = (orders) => {
 export const showToastSuccess = async (asyncAction) => {
   const result = await asyncAction;
   if (!unwrapResult(result)) return;
-  toast.success("🧦 " + result.payload.message, {
+  toast(result.payload.message, {
     ...PRODUCT_TOAST_OPTIONS,
   });
 };
@@ -296,7 +296,59 @@ export const showToastSuccess = async (asyncAction) => {
 // Show Toast Error
 
 export const showToastError = (error) => {
-  toast.error("🧦 " + error.message, {
+  toast(error.message, {
     ...PRODUCT_TOAST_OPTIONS,
   });
 };
+
+export const screenMode = {
+  view: "view",
+  addEdit: "add",
+};
+
+// =================================================================
+let getImageBlob = function (url) {
+  return new Promise(async (resolve) => {
+    let resposne = await fetch(url);
+    let blob = resposne.blob();
+    resolve(blob);
+  });
+};
+
+// convert a blob to base64
+let blobToBase64 = function (blob) {
+  return new Promise((resolve) => {
+    let reader = new FileReader();
+    reader.onload = function () {
+      let dataUrl = reader.result;
+      resolve(dataUrl);
+    };
+    reader.readAsDataURL(blob);
+  });
+};
+
+// combine the previous two functions to return a base64 encode image from url
+let getBase64Image = async function (url) {
+  let blob = await getImageBlob(url);
+  let base64 = await blobToBase64(blob);
+  return base64;
+};
+
+export const getImageUrlToFile = async (images) => {
+  let imageUrlToArray = null;
+  let fileName = [];
+  imageUrlToArray = await Promise.all(
+    images.map((item, index) => {
+      fileName[index] = item
+        .split("/")
+        [item.split("/").length - 1].split(".")[0];
+      return getBase64Image(item);
+    })
+  );
+  imageUrlToArray = await Promise.all(
+    imageUrlToArray.map((item, index) => dataURLtoFile(item, fileName[index]))
+  );
+
+  return imageUrlToArray;
+};
+// =================================================================

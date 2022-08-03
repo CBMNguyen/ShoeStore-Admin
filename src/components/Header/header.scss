@@ -17,15 +17,26 @@
   }
 
   &__title {
-    font-family: "Pacifico", cursive;
-    font-size: 26px;
-    margin-left: 4rem;
+    & h2 {
+      font-family: "Pacifico", cursive;
+      font-size: 26px;
+      margin-left: 4rem;
+      margin-bottom: 0;
 
-    text-decoration: none;
-    line-height: 70px;
-    user-select: none;
-    pointer-events: none;
+      text-decoration: none;
+      line-height: 70px;
+      user-select: none;
+      pointer-events: none;
+    }
     transition: 0.5s;
+
+    & img {
+      position: relative;
+      top: -4px;
+      width: 32px;
+      height: 32px;
+      object-fit: cover;
+    }
   }
 
   &__title a {

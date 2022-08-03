@@ -1,6 +1,6 @@
-import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import brandLogo from "../../assets/images/brandLogo.png";
 import "./header.scss";
 
 const Header = (props) => {
@@ -8,7 +8,11 @@ const Header = (props) => {
   return (
     <div className="Header shadow rounded">
       <div className="Header__title">
-        <Link to="/">🧦 Shoes Store</Link>
+        <Link to="/">
+          <h2>
+            Shoes Store <img src={brandLogo} alt="brandLogo" />
+          </h2>{" "}
+        </Link>
       </div>
       <div className="Header__admin">
         <div>
@@ -16,7 +20,7 @@ const Header = (props) => {
             className="rounded-circle me-2"
             width={38}
             height={38}
-            src={process.env.REACT_APP_API_URL + `/${data.imageUrl}`}
+            src={data.imageUrl}
             alt="admin"
           />
         </div>

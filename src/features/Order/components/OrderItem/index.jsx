@@ -33,7 +33,7 @@ function OrderItem(props) {
         <div className="OrderItem__person">
           <img
             className="rounded-circle"
-            src={`${process.env.REACT_APP_API_URL}/${item.user.image}`}
+            src={item.user.image}
             alt={item.user._id}
             width={38}
             height={38}

@@ -19,7 +19,8 @@ function TableFooter(props) {
         limit * page
       } of ${totalRow} entries`}</div>
       <Pagination
-        filter={{ ...filter, totalRow }}
+        totalRow={totalRow}
+        filter={filter}
         onPageChange={onPageChange}
       />
     </div>

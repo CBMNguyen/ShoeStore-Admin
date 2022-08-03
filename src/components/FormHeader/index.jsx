@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import "./formheader.scss";
+import brandLogo from "../../assets/images/brandLogo.png";
 
 FormHeader.propTypes = {
   closeModel: PropTypes.func,
@@ -19,9 +20,10 @@ function FormHeader(props) {
 
   return (
     <div className="FormHeader">
-      <h4>Shoes Store🧦</h4>
+      <h4>
+        Shoes Store <img src={brandLogo} alt="brandLogo" />
+      </h4>{" "}
       <hr />
-
       <div onClick={handCloseModelClick} className="FormHeader__close">
         <i className="zmdi zmdi-close" />
       </div>

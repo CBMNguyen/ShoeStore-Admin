@@ -15,7 +15,7 @@ import { fetchCategory } from "features/Scc/categorySlice";
 import { fetchColor } from "features/Scc/colorSlice";
 import { fetchSize } from "features/Scc/sizeSlice";
 import useModel from "hooks/useModel";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import {
@@ -26,7 +26,7 @@ import {
 } from "utils/common";
 
 function MainPage(props) {
-  const [filter, setFilter] = useState({
+  const initialFilter = {
     page: 1,
     limit: 8,
 
@@ -34,7 +34,8 @@ function MainPage(props) {
     category: "",
     price: 0,
     quantity: 0,
-  });
+  };
+  const [filter, setFilter] = useState(initialFilter);
 
   const dispatch = useDispatch();
 
@@ -53,7 +54,6 @@ function MainPage(props) {
   const { category } = useSelector((state) => state.category);
 
   // Options React-Select
-
   const PRODUCT_SIZE_OPTIONS = size
     .slice()
     .sort((a, b) => a.size - b.size)
@@ -135,6 +135,10 @@ function MainPage(props) {
     setFilter({ ...filter, quantity });
   };
 
+  const handleResetFilter = () => {
+    setFilter(initialFilter);
+  };
+
   //========================================//
   const addModel = useModel();
   const removeModel = useModel();
@@ -144,27 +148,29 @@ function MainPage(props) {
 
   const handleFormSubmit = async (data) => {
     const formData = new FormData();
+    let quantityStock = 0;
+    data.productDetail.forEach((item) => {
+      item.sizeAndQuantity.forEach((s) => {
+        quantityStock += s.quantity;
+      });
+    });
+
     formData.append("category", data.category.value);
     formData.append("description", data.description);
     formData.append("isFreeShip", data.isFreeShip);
     formData.append("name", data.name);
     formData.append("originalPrice", data.originalPrice);
     formData.append("promotionPercent", data.promotionPercent);
-    formData.append("quantityStock", data.quantityStock);
+    formData.append("quantityStock", quantityStock);
+    formData.append("productDetail", JSON.stringify(data.productDetail));
 
-    const images = Array.from(data.images);
+    let images = [];
+    data.productDetail.forEach((item) => {
+      images = [...images, ...item.images];
+    });
+
     images.forEach((img) => {
       formData.append("images", img);
-    });
-
-    data.size = data.size.map((s) => s.value);
-    data.size.forEach((s) => {
-      formData.append("size", s);
-    });
-
-    data.color = data.color.map((c) => c.value);
-    data.color.forEach((s) => {
-      formData.append("color", s);
     });
 
     if (!addModel.model.data) {
@@ -207,6 +213,7 @@ function MainPage(props) {
         options={PRODUCT_CATEGORY_OPTIONS}
         onOptionsChange={handleCategoryChange}
         onNameChange={handleNameChange}
+        onResetFilter={handleResetFilter}
       />
 
       <ProductList
@@ -222,7 +229,7 @@ function MainPage(props) {
       <TableFooter
         onPageChange={handlePageChange}
         filter={filter}
-        totalRow={products.length}
+        totalRow={sortProducts.length}
       />
 
       {addModel.model.show ? (

@@ -50,6 +50,7 @@ function InputField(props) {
               className={className}
               id={name}
               type={type}
+              min={type === "number" ? 0 : {}}
               disabled={disabled}
               placeholder={placeholder}
               invalid={showError}

@@ -3,6 +3,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import "./sidebar.scss";
+import brandLogo from "../../assets/images/brandLogo.png";
 
 const SideBar = (props) => {
   const href = "";
@@ -14,7 +15,12 @@ const SideBar = (props) => {
   return (
     <div className="SideBar">
       <ul>
-        <header>🧦 Shoes Store</header>
+        <header>
+          {" "}
+          <h2>
+            Shoes Store <img src={brandLogo} alt="brandLogo" />
+          </h2>{" "}
+        </header>
         <li>
           <NavLink className="SideBar__link" to="/dashboard">
             <i className="zmdi zmdi-view-dashboard" />

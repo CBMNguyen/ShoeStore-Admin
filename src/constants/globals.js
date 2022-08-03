@@ -13,7 +13,6 @@ export const ORDER_STATE_OPTIONS = [
 
 export const PRODUCT_TOAST_OPTIONS = {
   autoClose: 2000,
-  hideProgressBar: true,
   transition: Zoom,
 };
 

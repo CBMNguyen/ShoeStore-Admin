@@ -2,8 +2,17 @@ import chroma from "chroma-js";
 import PropTypes from "prop-types";
 import React from "react";
 import { Controller } from "react-hook-form";
-import Select from "react-select";
+import BaseSelect from "react-select";
 import { FormFeedback, FormGroup, Label } from "reactstrap";
+import FixRequiredSelect from "utils/FixedRequireReactSelect";
+
+const Select = (props) => (
+  <FixRequiredSelect
+    {...props}
+    SelectComponent={BaseSelect}
+    options={props.options}
+  />
+);
 
 const dot = (color = "#ccc") => ({
   alignItems: "center",
@@ -33,13 +42,16 @@ const colourStyles = {
         : isFocused
         ? color.alpha(0.1).css()
         : null,
-      color: isDisabled
-        ? "#ccc"
-        : isSelected
-        ? chroma.contrast(color, "white") > 2
-          ? "white"
-          : "black"
-        : data.color,
+      color:
+        data.color === "#ffffff"
+          ? "#eee"
+          : isDisabled
+          ? "#ccc"
+          : isSelected
+          ? chroma.contrast(color, "white") > 2
+            ? "white"
+            : "black"
+          : data.color,
       cursor: isDisabled ? "not-allowed" : "default",
 
       ":active": {
@@ -110,6 +122,7 @@ function SelectFieldCustom(props) {
       control={control}
       name={name}
       render={({ field }) => {
+        const { value } = field;
         const showError = !!errors[name];
         return (
           <FormGroup className="mb-1 mt-1">
@@ -119,6 +132,7 @@ function SelectFieldCustom(props) {
               </Label>
             )}
             <Select
+              required={value.length === 0}
               isMulti={isMulti}
               defaultValue={defaultValue}
               className={showError ? "text-dark is-invalid" : ""}

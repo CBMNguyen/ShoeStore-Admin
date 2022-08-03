@@ -52,12 +52,23 @@ function ProductItem(props) {
         <Badge className="bg-dark">{product.name}</Badge>
       </td>
       <td>
-        <img
-          width={58}
-          height={58}
-          src={`${process.env.REACT_APP_API_URL}/${product.images[0]}`}
-          alt={product._id}
-        />
+        <div style={{ width: "58px", height: "58px", overflow: "hidden" }}>
+          {product.productDetail[0].images[0] ? (
+            <img
+              width="100%"
+              height="100%"
+              style={{
+                objectFit: "cover",
+                position: "relative",
+                top: "-16px",
+              }}
+              src={`${product.productDetail[0].images[0]}`}
+              alt={product._id}
+            />
+          ) : (
+            <></>
+          )}
+        </div>
       </td>
       <td>
         <Badge style={{ backgroundColor: "deeppink" }}>
@@ -65,9 +76,7 @@ function ProductItem(props) {
         </Badge>
       </td>
       <td className="ps-4">
-        <Badge style={{ backgroundColor: "cyan" }}>
-          {product.quantityStock}
-        </Badge>
+        <Badge className="bg-success">{product.quantityStock}</Badge>
       </td>
       <td>
         <Badge className="bg-warning">{product.originalPrice}$</Badge>

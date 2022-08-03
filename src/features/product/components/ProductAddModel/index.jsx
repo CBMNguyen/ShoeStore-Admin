@@ -1,22 +1,15 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import SelectSizeAndQuantityList from "components/SelectSizeAndQuantityList";
 import { STYLE_MODEL } from "constants/globals";
 import CheckBoxField from "custom-fields/CheckBoxField";
 import InputField from "custom-fields/InputField";
 import SelectField from "custom-fields/SelectField";
 import SelectFieldCustom from "custom-fields/SelectFieldCustom";
 import PropTypes from "prop-types";
-import React from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  Col,
-  Form,
-  FormFeedback,
-  FormGroup,
-  Input,
-  Row,
-  Spinner,
-} from "reactstrap";
+import { Col, Form, Row, Spinner } from "reactstrap";
 import { capitalizeFirstLetter, colourNameToHex } from "utils/common";
 import * as yup from "yup";
 import FormHeader from "../../../../components/FormHeader";
@@ -57,7 +50,6 @@ function ProductAddForm(props) {
         originalPrice: 100,
         promotionPercent: 0,
         isFreeShip: false,
-        size: null,
         color: [
           {
             label: "Black",
@@ -65,9 +57,7 @@ function ProductAddForm(props) {
             color: "#000000",
           },
         ],
-        quantityStock: 1,
         description: "",
-        images: null,
       }
     : {
         name: model.data.name,
@@ -78,58 +68,72 @@ function ProductAddForm(props) {
         originalPrice: model.data.originalPrice,
         promotionPercent: model.data.promotionPercent,
         isFreeShip: model.data.isFreeShip,
-        size: model.data.size.map((s) => ({ value: s._id, label: s.size })),
-        color: model.data.color.map((c) => ({
-          label: capitalizeFirstLetter(c.color),
-          value: c._id,
-          color: colourNameToHex(c.color),
+        color: model.data.productDetail.map(({ color }) => ({
+          label: capitalizeFirstLetter(color.color),
+          value: color._id,
+          color: colourNameToHex(color.color),
         })),
-        quantityStock: model.data.quantityStock,
         description: model.data.description,
-        images: null,
       };
 
   const schema = yup.object().shape({
-    name: yup.string().required("This field is require."),
-    category: yup.object().required("This field is require.").nullable(),
-    originalPrice: yup.number().positive().required("This field is require."),
+    name: yup.string().required("This field is required."),
+    category: yup.object().required("This field is required.").nullable(),
+    originalPrice: yup.number().positive().required("This field is required."),
     promotionPercent: yup
       .number()
       .positive()
       .integer()
       .min(0)
       .max(100)
-      .required("This field is require."),
+      .required("This field is required."),
     isFreeShip: yup.bool().default(false),
-    size: yup.array().required("This field is require.").nullable(),
-    color: yup.array().required("This field is require.").nullable(),
-    quantityStock: yup
-      .number()
-      .positive()
-      .integer()
-      .min(1)
-      .max(99)
-      .required("This field is require."),
-    images: yup.mixed().required("This file is required"),
-    description: yup.string().required("This field is require."),
+
+    color: yup.array().required("This field is required.").nullable(),
+    description: yup.string().required("This field is required."),
   });
 
   const {
     handleSubmit,
     control,
     setValue,
-    register,
     formState: { errors },
+    watch,
   } = useForm({ defaultValues, resolver: yupResolver(schema) });
+
+  const colors = watch("color");
+
+  const [productDetail, setProductDetail] = useState([]);
+  const handleSaveSelectSizeAndQuantityList = (
+    color,
+    images,
+    sizeAndQuantity
+  ) => {
+    const index = productDetail.findIndex((item) => item.color === color);
+    const newProductDetail = { color, images, sizeAndQuantity };
+    if (index < 0) {
+      setProductDetail([...productDetail, newProductDetail]);
+    } else {
+      const updatedProductDetail = [...productDetail];
+      updatedProductDetail[index] = { color, images, sizeAndQuantity };
+      setProductDetail(updatedProductDetail);
+    }
+  };
+
+  const handleClearSelectSizeAndQuantityList = (color) => {
+    setProductDetail(productDetail.filter((item) => item.color !== color));
+  };
 
   const onSubmit = (data) => {
     if (!onFormSubmit) return;
+    data.productDetail = productDetail;
     onFormSubmit(data);
   };
 
   return (
     <div className="ProductAddForm" style={STYLE_MODEL}>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      (
+      <Form className="ProductAddForm__form" onSubmit={handleSubmit(onSubmit)}>
         {/* Form Header */}
         <FormHeader closeModel={closeModel} />
         <Row>
@@ -156,7 +160,9 @@ function ProductAddForm(props) {
               options={categoryOptions}
             />
           </Col>
+        </Row>
 
+        <Row>
           {/* Product - Input Price */}
           <Col md={6}>
             <InputField
@@ -164,7 +170,7 @@ function ProductAddForm(props) {
               errors={errors}
               name="originalPrice"
               label="Price"
-              type="Number"
+              type="number"
               placeholder="Enter number"
             />
           </Col>
@@ -178,9 +184,12 @@ function ProductAddForm(props) {
               label="Promotion Percent"
               type="number"
               placeholder="Enter Promotion Percent"
+              min={1}
             />
           </Col>
+        </Row>
 
+        <Row>
           {/* Product - CheckBox FreeShip */}
           <Col md={6} className="mt-4">
             <div className="d-flex">
@@ -193,35 +202,7 @@ function ProductAddForm(props) {
                 type="checkbox"
                 className="me-1"
               />
-
-              {/* Product File upload */}
-              <FormGroup>
-                <Input
-                  className="mt-1"
-                  {...register("images")}
-                  type="file"
-                  onChange={(e) => setValue("images", e.target.files)}
-                  multiple
-                  invalid={!!errors["images"]}
-                />
-                {errors["images"] && (
-                  <FormFeedback>{errors["images"]["message"]}</FormFeedback>
-                )}
-              </FormGroup>
             </div>
-          </Col>
-
-          {/* Product - CheckBox Sizes */}
-          <Col md={6}>
-            <SelectField
-              isMulty={true}
-              control={control}
-              errors={errors}
-              name="size"
-              label="Size"
-              placeholder="Select size ..."
-              options={sizeOptions}
-            />
           </Col>
 
           {/* Product - Input Color */}
@@ -238,19 +219,37 @@ function ProductAddForm(props) {
               options={colorOptions}
             />
           </Col>
+        </Row>
 
-          {/* Product - Input Quantity */}
-          <Col md={6}>
-            <InputField
-              control={control}
-              errors={errors}
-              name="quantityStock"
-              label="Quantity"
-              type="number"
-              placeholder="Enter quantity"
-            />
-          </Col>
+        <div className="ProductAddForm__detail">
+          {colors.map((color, index) => (
+            <div key={index}>
+              {/* Handle Select Size And Quantity */}
+              <SelectSizeAndQuantityList
+                data={
+                  model.data && model.data.productDetail[index]
+                    ? model.data.productDetail[index].sizeAndQuantity
+                    : null
+                }
+                currentImages={
+                  model.data && model.data.productDetail[index]
+                    ? model.data.productDetail[index].images
+                    : null
+                }
+                color={color}
+                onSaveSelectSizeAndQuantityList={
+                  handleSaveSelectSizeAndQuantityList
+                }
+                onClearSelectSizeAndQuantityList={
+                  handleClearSelectSizeAndQuantityList
+                }
+                sizeOptions={sizeOptions}
+              />
+            </div>
+          ))}
+        </div>
 
+        <Row>
           {/* Product - Textarea */}
           <Col md={12}>
             <InputField
@@ -263,6 +262,7 @@ function ProductAddForm(props) {
             />
           </Col>
         </Row>
+
         <button
           className="ProductAddForm__btn mt-4"
           disabled={loading}
@@ -281,6 +281,7 @@ function ProductAddForm(props) {
           {!model.data ? "Submit" : "Update"}
         </button>
       </Form>
+      )
     </div>
   );
 }

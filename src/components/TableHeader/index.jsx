@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
-import { Input } from "reactstrap";
+import { Button, Input } from "reactstrap";
 import "./tableheader.scss";
 
 TableHeader.propTypes = {
@@ -11,6 +11,7 @@ TableHeader.propTypes = {
   onNameChange: PropTypes.func,
   options: PropTypes.array,
   onOptionsChange: PropTypes.func,
+  onResetFilter: PropTypes.func,
   showModel: PropTypes.func,
 };
 
@@ -25,7 +26,14 @@ function TableHeader(props) {
   const [value, setValue] = useState("");
   const { register } = useForm();
 
-  const { onOptionsChange, onNameChange, options, showModel, name } = props;
+  const {
+    onOptionsChange,
+    onNameChange,
+    onResetFilter,
+    options,
+    showModel,
+    name,
+  } = props;
 
   const typingTimeoutRef = useRef(null);
 
@@ -52,6 +60,11 @@ function TableHeader(props) {
     onOptionsChange(category);
   };
 
+  const handleResetFilter = () => {
+    if (!onResetFilter) return;
+    onResetFilter();
+  };
+
   return (
     <div className="TableHeader">
       <div className="TableHeader__add">
@@ -59,7 +72,7 @@ function TableHeader(props) {
       </div>
       <div className="TableHeader__filter">
         <Input
-          className={classNames("w-50 me-2", { "m-auto": !options })}
+          className={classNames("w-50", { "m-auto": !options })}
           name="name"
           placeholder="Search Name ..."
           value={value}
@@ -67,12 +80,17 @@ function TableHeader(props) {
         />
         {options && (
           <Select
+            className="mx-2"
             {...register(name)}
             options={[{ label: "All", value: "all" }, ...options]}
             placeholder={`Search ${name} ...`}
             onChange={(option) => handleOptionsChange(option.label)}
           />
         )}
+
+        <Button onClick={handleResetFilter} className="btn btn-dark p-1 px-2">
+          Reset
+        </Button>
       </div>
     </div>
   );

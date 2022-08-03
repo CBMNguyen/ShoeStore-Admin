@@ -7,14 +7,25 @@
   transition: all 0.5s ease;
 
   & header {
-    font-family: "Pacifico", cursive;
-    font-size: 26px;
-    padding-left: 32px;
-    line-height: 70px;
+    & h2 {
+      font-family: "Pacifico", cursive;
+      font-size: 26px;
+      margin-bottom: 0;
+      padding-left: 32px;
+      line-height: 70px;
 
-    background-color: #165979;
-    color: white;
-    user-select: none;
+      background-color: #165979;
+      color: white;
+      user-select: none;
+    }
+
+    & img {
+      position: relative;
+      top: -4px;
+      width: 32px;
+      height: 32px;
+      object-fit: cover;
+    }
   }
 
   & ul {

@@ -22,7 +22,7 @@ function TopProductSeling(props) {
         <tbody>
           {products
             .slice(0, 5)
-            .sort((a, b) => a.originalPrice - b.originalPrice)
+            .sort((a, b) => a.salePrice - b.salePrice)
             .map((product) => (
               <tr key={product._id}>
                 <td>
@@ -31,7 +31,7 @@ function TopProductSeling(props) {
                       className="rounded"
                       width={45}
                       height={45}
-                      src={`${process.env.REACT_APP_API_URL}/${product.images[0]}`}
+                      src={`${product.productDetail[0].images[0]}`}
                       alt={product._id}
                     />
                     <div className="ms-3">{product.name}</div>

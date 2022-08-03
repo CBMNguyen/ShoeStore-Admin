@@ -29,25 +29,32 @@ function ProductViewModel(props) {
     prevArrow: <ArrowDirection />,
   };
   return (
-    <div className="ProductViewModel" style={STYLE_MODEL}>
+    <div className="ProductViewModel animation-fade-in" style={STYLE_MODEL}>
       <div className="ProductViewModel__main">
         <FormHeader closeModel={closeModel} />
         <Row>
           <Col md={5}>
-            <div>
-              <Slider className="p-1" {...settings}>
-                {data.images.map((image) => (
-                  <img
-                    key={image.toString()}
-                    className="img-fluid img-thumbnail rounded"
-                    src={`${process.env.REACT_APP_API_URL}/${image}`}
-                    alt={image}
-                  />
-                ))}
-              </Slider>
-            </div>
-            <div className="mt-4 text-center">
-              <cite>{data.name}</cite>
+            <div style={{ border: "1px solid #dedede" }} className="rounded">
+              <div>
+                <Slider className="p-1" {...settings}>
+                  {data.productDetail
+                    .reduce(
+                      (initialValue, item) => initialValue.concat(item.images),
+                      []
+                    )
+                    .map((image) => (
+                      <img
+                        key={image}
+                        className="img-fluid"
+                        src={image}
+                        alt={image}
+                      />
+                    ))}
+                </Slider>
+              </div>
+              <div className="mt-4 text-center">
+                <cite>{data.name}</cite>
+              </div>
             </div>
           </Col>
           <Col md={7}>
@@ -65,7 +72,7 @@ function ProductViewModel(props) {
               <ListGroupItem>
                 <div>Sale Price:</div>
                 <div>
-                  <Badge className="bg-warning">{data.originalPrice}$</Badge>
+                  <Badge className="bg-warning">{data.salePrice}$</Badge>
                 </div>{" "}
               </ListGroupItem>
 
@@ -81,7 +88,7 @@ function ProductViewModel(props) {
               <ListGroupItem>
                 <div>Quantity: </div>
                 <div>
-                  <Badge className="bg-info rounded-circle">
+                  <Badge className="bg-info rounded p-2">
                     {data.quantityStock}
                   </Badge>
                 </div>
@@ -90,7 +97,7 @@ function ProductViewModel(props) {
               <ListGroupItem>
                 <div>Promotion Percent:</div>
                 <div>
-                  <Badge className="bg-light text-dark">
+                  <Badge className="bg-secondary text-light">
                     {data.promotionPercent} %
                   </Badge>
                 </div>
@@ -98,16 +105,17 @@ function ProductViewModel(props) {
 
               <ListGroupItem>
                 <div>Color: </div>
-                {data.color.map((c) => (
+                {data.productDetail.map(({ color }) => (
                   <div
-                    key={c._id}
+                    key={color._id}
+                    className="shadow"
                     style={{
                       width: "24px",
                       height: "24px",
-                      border: "1px solid #000",
+                      border: "1px solid #ccc",
                       borderRadius: "50%",
                       margin: "0 5px",
-                      backgroundColor: `${c.color}`,
+                      backgroundColor: `${color.color}`,
                     }}
                   />
                 ))}
@@ -115,18 +123,56 @@ function ProductViewModel(props) {
 
               <ListGroupItem>
                 <div>Size: </div>
-                {data.size
-                  .slice()
-                  .sort((a, b) => a.size - b.size)
-                  .map((s) => (
-                    <Badge
-                      key={s.size}
-                      className="me-2"
-                      style={{ backgroundColor: "deeppink" }}
-                    >
-                      {s.size}
-                    </Badge>
-                  ))}
+                <div style={{ maxHeight: "80px", overflowY: "scroll" }}>
+                  <table style={{ fontSize: "0.8rem", textAlign: "center" }}>
+                    <thead>
+                      <tr>
+                        <th>Color</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {data.productDetail.map(({ color, sizeAndQuantity }) =>
+                        sizeAndQuantity
+                          .slice()
+                          .sort((a, b) => a.size.size - b.size.size)
+                          .map(({ size, quantity }, index) => (
+                            <tr key={index}>
+                              <td>
+                                {index === 0 && (
+                                  <div
+                                    className="m-auto rounded shadow"
+                                    style={{
+                                      backgroundColor: color.color,
+                                      width: "32px",
+                                      height: "16px",
+                                      border: "1px solid #ccc",
+                                    }}
+                                  />
+                                )}
+                              </td>
+                              <td style={{ fontWeight: 500 }}>{size.size}</td>
+                              <td
+                                style={{
+                                  color:
+                                    quantity < 10
+                                      ? "red"
+                                      : quantity < 50
+                                      ? "orange"
+                                      : "green",
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {quantity}
+                              </td>
+                            </tr>
+                          ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </ListGroupItem>
 
               <ListGroupItem>

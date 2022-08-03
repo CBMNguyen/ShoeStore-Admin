@@ -1,5 +1,5 @@
 .ProductAddForm {
-  & form {
+  &__form {
     position: relative;
     width: 800px;
     padding: 1rem;
@@ -11,6 +11,11 @@
 
   &__textarea {
     resize: none;
+  }
+
+  &__detail {
+    max-height: 320px;
+    overflow-y: scroll;
   }
 
   &__btn {
