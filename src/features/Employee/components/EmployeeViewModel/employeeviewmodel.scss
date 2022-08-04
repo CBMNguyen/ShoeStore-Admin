@@ -9,12 +9,12 @@
     font-weight: 500;
   }
 
-  & img {
+  &__avatar {
     display: block;
     margin: 0 auto;
     width: 200px;
     height: 200px;
-    vertical-align: middle;
+    object-fit: cover;
   }
 
   &__list li {

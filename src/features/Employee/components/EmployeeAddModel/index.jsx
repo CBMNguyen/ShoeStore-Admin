@@ -77,8 +77,8 @@ function EmployeeAddModel(props) {
       .required("This field is require."),
     phone: yup
       .string()
-      .matches(/^0[0-9]{9}$/, "Please enter correct phone number!")
-      .required("this field is require."),
+      .required("this field is require.")
+      .matches(/^0[0-9]{9}$/, "Please enter correct phone number!"),
     gender: yup.object().required("This field is require.").nullable(),
     birthdate: yup.date().required("This field is require."),
     position: yup.object().required("This field is require.").nullable(),
@@ -95,6 +95,7 @@ function EmployeeAddModel(props) {
   } = useForm({ defaultValues, resolver: yupResolver(schema) });
 
   const onFormSubmit = async (data) => {
+    data.birthdate.setDate(data.birthdate.getDate() + 1);
     if (!onSubmit) return;
     await onSubmit(data);
   };

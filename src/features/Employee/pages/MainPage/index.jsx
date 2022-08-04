@@ -24,14 +24,16 @@ import {
 } from "utils/common";
 
 function MainPage(props) {
-  const [filter, setFilter] = useState({
+  const initialFilter = {
     page: 1,
     limit: 12,
 
     age: 0,
     position: "",
     name: "",
-  });
+  };
+
+  const [filter, setFilter] = useState(initialFilter);
 
   const dispatch = useDispatch();
 
@@ -151,12 +153,17 @@ function MainPage(props) {
     }
   };
 
+  const handleResetFilter = () => {
+    setFilter(initialFilter);
+  };
+
   return employees.length === 0 ? (
     <Loading />
   ) : (
     <div className="MainPage">
       <TableHeader
         filter={filter}
+        onResetFilter={handleResetFilter}
         name="Position"
         onNameChange={handleNameChange}
         options={POSITION_OPTIONS}
@@ -176,7 +183,7 @@ function MainPage(props) {
       <TableFooter
         onPageChange={handlePageChange}
         filter={filter}
-        totalRow={employees.length}
+        totalRow={sortEmployees.length}
       />
 
       {model.show ? (

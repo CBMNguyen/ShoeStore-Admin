@@ -20,8 +20,8 @@ function EmployeeViewModel(props) {
         <Row>
           <Col md="4">
             <img
-              className="img-thumbnail rounded img-fluid"
-              src={`${process.env.REACT_APP_API_URL}/${data.image}`}
+              className="img-thumbnail rounded img-fluid EmployeeViewModel__avatar"
+              src={data.image}
               alt={data._id}
             />
           </Col>
