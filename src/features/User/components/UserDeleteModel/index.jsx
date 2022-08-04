@@ -1,4 +1,5 @@
 import ActionsButton from "components/ActionsButton";
+import { STYLE_MODEL } from "constants/globals";
 import PropTypes from "prop-types";
 import React from "react";
 import { Badge } from "reactstrap";
@@ -16,7 +17,7 @@ function UserDeleteModel(props) {
   const { closeModel, data, onRemoveClick, loading } = props;
 
   return (
-    <div className="UserDeleteModel">
+    <div className="UserDeleteModel animation-fade-in" style={STYLE_MODEL}>
       <div className="UserDeleteModel__main">
         <FormHeader closeModel={closeModel} />
         <h6>

@@ -114,7 +114,7 @@ function ProductViewModel(props) {
                       height: "24px",
                       border: "1px solid #ccc",
                       borderRadius: "50%",
-                      margin: "0 5px",
+                      marginRight: "5px",
                       backgroundColor: `${color.color}`,
                     }}
                   />
@@ -122,8 +122,14 @@ function ProductViewModel(props) {
               </ListGroupItem>
 
               <ListGroupItem>
-                <div>Size: </div>
-                <div style={{ maxHeight: "80px", overflowY: "scroll" }}>
+                <div style={{ width: "45%" }}>Size: </div>
+                <div
+                  style={{
+                    maxHeight: "80px",
+                    overflowY: "scroll",
+                    width: "55%",
+                  }}
+                >
                   <table style={{ fontSize: "0.8rem", textAlign: "center" }}>
                     <thead>
                       <tr>
@@ -186,6 +192,8 @@ function ProductViewModel(props) {
                     color: "black",
                     padding: "0 0.4rem",
                     fontWeight: "400",
+                    maxHeight: "240px",
+                    overflowY: "scroll",
                   }}
                 >
                   {data.description}

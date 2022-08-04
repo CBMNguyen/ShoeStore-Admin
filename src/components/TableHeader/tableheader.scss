@@ -9,14 +9,14 @@
   background-color: rgba(255, 255, 255, 0.45);
 
   &__add {
-    flex-grow: 1;
+    flex: 1;
   }
 
   &__filter {
+    flex: 1;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 500px;
+    justify-content: flex-end;
     box-sizing: border-box;
   }
 

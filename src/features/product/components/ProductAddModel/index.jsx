@@ -131,7 +131,7 @@ function ProductAddForm(props) {
   };
 
   return (
-    <div className="ProductAddForm" style={STYLE_MODEL}>
+    <div className="ProductAddForm animation-fade-in" style={STYLE_MODEL}>
       (
       <Form className="ProductAddForm__form" onSubmit={handleSubmit(onSubmit)}>
         {/* Form Header */}

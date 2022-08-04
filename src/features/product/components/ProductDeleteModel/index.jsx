@@ -17,7 +17,7 @@ function ProductDeleteModel(props) {
   const { closeModel, data, onRemoveClick, loading } = props;
 
   return (
-    <div className="ProductDeleteModel" style={STYLE_MODEL}>
+    <div className="ProductDeleteModel animation-fade-in" style={STYLE_MODEL}>
       <div className="ProductDeleteModel__main">
         <FormHeader closeModel={closeModel} />
         <h6>

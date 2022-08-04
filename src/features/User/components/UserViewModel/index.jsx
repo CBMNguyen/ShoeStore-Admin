@@ -1,4 +1,5 @@
 import FormHeader from "components/FormHeader";
+import { STYLE_MODEL } from "constants/globals";
 import PropTypes from "prop-types";
 import React from "react";
 import { Badge, Col, ListGroup, ListGroupItem, Row } from "reactstrap";
@@ -12,14 +13,14 @@ UserViewModel.propTypes = {
 function UserViewModel(props) {
   const { data, closeModel } = props;
   return (
-    <div className="UserViewModel">
-      <div className="UserViewModel__main">
+    <div className="UserViewModel animation-fade-in" style={STYLE_MODEL}>
+      <div className="UserViewModel__main ">
         <FormHeader closeModel={closeModel} />
         <Row>
           <Col md="4">
             <img
-              className="img-thumbnail rounded img-fluid"
-              src={`${process.env.REACT_APP_API_URL}/${data.image}`}
+              className="img-thumbnail rounded img-fluid UserViewModel__avatar"
+              src={data.image}
               alt={data._id}
             />
           </Col>

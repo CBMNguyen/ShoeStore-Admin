@@ -68,11 +68,13 @@ function TableHeader(props) {
   return (
     <div className="TableHeader">
       <div className="TableHeader__add">
-        <i onClick={handleModelClick} className="zmdi zmdi-plus-circle" />
+        {name !== "User" && (
+          <i onClick={handleModelClick} className="zmdi zmdi-plus-circle" />
+        )}
       </div>
       <div className="TableHeader__filter">
         <Input
-          className={classNames("w-50", { "m-auto": !options })}
+          className="me-2 w-50"
           name="name"
           placeholder="Search Name ..."
           value={value}
@@ -80,7 +82,7 @@ function TableHeader(props) {
         />
         {options && (
           <Select
-            className="mx-2"
+            className="me-2"
             {...register(name)}
             options={[{ label: "All", value: "all" }, ...options]}
             placeholder={`Search ${name} ...`}
@@ -88,7 +90,11 @@ function TableHeader(props) {
           />
         )}
 
-        <Button onClick={handleResetFilter} className="btn btn-dark p-1 px-2">
+        <Button
+          onClick={handleResetFilter}
+          style={{ padding: "5px 0" }}
+          className="btn btn-dark px-2"
+        >
           Reset
         </Button>
       </div>
