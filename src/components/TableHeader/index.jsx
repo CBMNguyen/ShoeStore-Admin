@@ -1,6 +1,5 @@
-import classNames from "classnames";
 import PropTypes from "prop-types";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
 import { Button, Input } from "reactstrap";
@@ -63,6 +62,7 @@ function TableHeader(props) {
   const handleResetFilter = () => {
     if (!onResetFilter) return;
     onResetFilter();
+    setValue("");
   };
 
   return (

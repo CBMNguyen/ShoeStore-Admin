@@ -6,19 +6,20 @@ import UserList from "features/User/components/UserList";
 import UserViewModel from "features/User/components/UserViewModel";
 import { deleteUser, fetchUser } from "features/User/userSlice";
 import useModel from "hooks/useModel";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { getAge, showToastError, showToastSuccess } from "utils/common";
 
 function MainPage(props) {
-  const [filter, setFilter] = useState({
+  const initialFilter = {
     page: 1,
     limit: 12,
-
     name: "",
     age: 0,
-  });
+  };
+
+  const [filter, setFilter] = useState(initialFilter);
 
   const dispatch = useDispatch();
 
@@ -74,6 +75,10 @@ function MainPage(props) {
     setFilter({ ...filter, age });
   };
 
+  const handleResetFilter = () => {
+    setFilter(initialFilter);
+  };
+
   const handleUserDelete = async (userId) => {
     try {
       await showToastSuccess(dispatch(deleteUser(userId)));
@@ -89,6 +94,7 @@ function MainPage(props) {
     <div className="MainPage">
       <TableHeader
         filter={filter}
+        onResetFilter={handleResetFilter}
         name="User"
         onNameChange={handleNameChange}
         options={null}
@@ -105,7 +111,7 @@ function MainPage(props) {
 
       <TableFooter
         filter={filter}
-        totalRow={users.length}
+        totalRow={sortUsers.length}
         onPageChange={handlePageChange}
       />
 
