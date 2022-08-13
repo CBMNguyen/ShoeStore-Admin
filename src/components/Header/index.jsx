@@ -4,7 +4,7 @@ import brandLogo from "../../assets/images/brandLogo.png";
 import "./header.scss";
 
 const Header = (props) => {
-  const { data } = useSelector((state) => state.employee.auth);
+  const item = useSelector((state) => state.employee.auth);
   return (
     <div className="Header shadow rounded">
       <div className="Header__title">
@@ -20,11 +20,11 @@ const Header = (props) => {
             className="rounded-circle me-2"
             width={38}
             height={38}
-            src={data.imageUrl}
+            src={item.data.imageUrl}
             alt="admin"
           />
         </div>
-        <div>{`${data.firstname} ${data.lastname}`}</div>
+        <div>{`${item.data.firstname} ${item.data.lastname}`}</div>
       </div>
     </div>
   );

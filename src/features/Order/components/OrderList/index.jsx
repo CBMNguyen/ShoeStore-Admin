@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
 import { Table } from "reactstrap";
+import { getTotal } from "utils/common";
 import OrderItem from "../OrderItem";
 
 OrderList.propTypes = {
@@ -19,6 +20,8 @@ function OrderList(props) {
             <th>User</th>
             <th>Time</th>
             <th>Price</th>
+            <th>P.Method</th>
+            <th>Payment</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -26,14 +29,7 @@ function OrderList(props) {
         <tbody>
           {order.map((od, index) => {
             // total price of products
-            const total = od.products.reduce(
-              (sum, product) =>
-                sum +
-                product.originalPrice *
-                  product.selectedQuantity *
-                  (1 - product.promotionPercent),
-              0
-            );
+            const total = getTotal(od);
 
             return (
               <OrderItem

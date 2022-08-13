@@ -33,10 +33,15 @@ export const getOrderById = createAsyncThunk(
 
 export const updateOrder = createAsyncThunk(
   "order/updateOrder",
-  async ({ _id, state }, { rejectWithValue, fulfillWithValue }) => {
+  async ({ _id, ...data }, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const { message } = await orderApi.update(_id, { state });
-      return fulfillWithValue({ _id, state, message });
+      const { message } = await orderApi.update(_id, data);
+      return fulfillWithValue({
+        _id,
+        state: data.state,
+        payment: data.payment,
+        message,
+      });
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -78,13 +83,14 @@ const orderSlice = createSlice({
       state.error = action.payload.message;
     },
     [updateOrder.fulfilled]: (state, action) => {
-      const { _id } = action.payload;
+      const { _id, payment } = action.payload;
       state.loading = false;
       const index = state.order.findIndex((order) => order._id === _id);
       if (index === -1) return;
       state.order[index] = {
         ...state.order[index],
         state: action.payload.state,
+        payment: payment ? payment : false,
       };
       state.error = "";
     },

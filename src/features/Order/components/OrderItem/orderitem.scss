@@ -4,4 +4,8 @@
     display: flex;
     align-items: center;
   }
+
+  &__avatar {
+    object-fit: cover;
+  }
 }

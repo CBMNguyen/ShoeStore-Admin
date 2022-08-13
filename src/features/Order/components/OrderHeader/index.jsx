@@ -2,19 +2,21 @@ import PropTypes from "prop-types";
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
-import { Input } from "reactstrap";
+import { Button, Input } from "reactstrap";
 import "./orderheader.scss";
 
 OrderHeader.propTypes = {
   name: PropTypes.string.isRequired,
   options: PropTypes.array,
   onNameChange: PropTypes.func,
+  onResetFilter: PropTypes.func,
   onOptionsChange: PropTypes.func,
 };
 
 OrderHeader.defaultProps = {
   options: [],
   onNameChange: null,
+  onResetFilter: null,
   onOptionsChange: null,
   name: PropTypes.string.isRequired,
 };
@@ -23,7 +25,7 @@ function OrderHeader(props) {
   const [value, setValue] = useState("");
   const { register } = useForm();
 
-  const { onOptionsChange, onNameChange, options, name } = props;
+  const { onOptionsChange, onNameChange, options, name, onResetFilter } = props;
 
   const typingTimeoutRef = useRef(null);
 
@@ -47,6 +49,12 @@ function OrderHeader(props) {
     onOptionsChange(order);
   };
 
+  const handleResetFilter = () => {
+    if (!onResetFilter) return;
+    onResetFilter();
+    setValue("");
+  };
+
   return (
     <div className="OrderHeader">
       <header>
@@ -54,7 +62,7 @@ function OrderHeader(props) {
       </header>
 
       <div className="OrderHeader__filter">
-        <div>
+        <div className="me-2 w-50">
           <i className="zmdi zmdi-search" />
           <Input
             name="name"
@@ -66,12 +74,21 @@ function OrderHeader(props) {
 
         {options && (
           <Select
+            className="me-2"
             {...register(name)}
             options={[{ label: "All", value: "" }, ...options]}
             placeholder={`Search state ...`}
             onChange={(option) => handleOptionsChange(option.value)}
           />
         )}
+
+        <Button
+          onClick={handleResetFilter}
+          style={{ padding: "5px 0" }}
+          className="btn btn-dark px-2"
+        >
+          Reset
+        </Button>
       </div>
     </div>
   );

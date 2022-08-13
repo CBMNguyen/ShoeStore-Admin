@@ -13,12 +13,14 @@ import "./order.scss";
 function MainPage(props) {
   const dispatch = useDispatch();
 
-  const [filter, setFilter] = useState({
+  const initialFilter = {
     name: "",
     state: "",
     page: 1,
     limit: 9,
-  });
+  };
+
+  const [filter, setFilter] = useState(initialFilter);
 
   // handle fetchOrder update order state
 
@@ -59,10 +61,15 @@ function MainPage(props) {
     setFilter({ ...filter, page: 1, state });
   };
 
+  const handleResetFilter = () => {
+    setFilter(initialFilter);
+  };
+
   return (
     <div className="Order shadow">
       <OrderHeader
         name="order"
+        onResetFilter={handleResetFilter}
         options={ORDER_STATE_OPTIONS}
         onNameChange={handleNameChange}
         onOptionsChange={handleStateChange}
@@ -72,7 +79,7 @@ function MainPage(props) {
 
       <TableFooter
         filter={filter}
-        totalRow={order.length}
+        totalRow={filterOrder.length}
         onPageChange={handlePageChange}
       />
 

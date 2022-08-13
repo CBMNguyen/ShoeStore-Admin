@@ -9,9 +9,13 @@
     font-weight: bold;
   }
 
+  &__add {
+    flex: 1;
+  }
+
   &__filter {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     width: 480px;
     box-sizing: border-box;

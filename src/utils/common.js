@@ -196,16 +196,15 @@ export function dataURLtoFile(dataurl, filename) {
 
 // handle total price order
 
-export const orderPriceTotal = (order) => {
-  return order.products.reduce(
+export const getTotal = (order) =>
+  order.products.reduce(
     (sum, product) =>
       sum +
-      product.originalPrice *
+      product.salePrice *
         product.selectedQuantity *
         (1 - product.promotionPercent),
     0
   );
-};
 
 // handle total order every month
 
@@ -225,44 +224,44 @@ export const monthlyIncome = (orders) => {
     december,
   ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   orders.forEach((order) => {
-    if (order.state === "deliveried") {
+    if (order.state === "delivered") {
       const date = new Date(order.createdAt);
       switch (date.getMonth()) {
         case 0:
-          january += orderPriceTotal(order);
+          january += order.total;
           break;
         case 1:
-          february += orderPriceTotal(order);
+          february += order.total;
           break;
         case 2:
-          march += orderPriceTotal(order);
+          march += order.total;
           break;
         case 3:
-          april += orderPriceTotal(order);
+          april += order.total;
           break;
         case 4:
-          may += orderPriceTotal(order);
+          may += order.total;
           break;
         case 5:
-          june += orderPriceTotal(order);
+          june += order.total;
           break;
         case 6:
-          july += orderPriceTotal(order);
+          july += order.total;
           break;
         case 7:
-          august += orderPriceTotal(order);
+          august += order.total;
           break;
         case 8:
-          september += orderPriceTotal(order);
+          september += order.total;
           break;
         case 9:
-          october += orderPriceTotal(order);
+          october += order.total;
           break;
         case 10:
-          november += orderPriceTotal(order);
+          november += order.total;
           break;
         default:
-          december += orderPriceTotal(order);
+          december += order.total;
           break;
       }
     }
@@ -352,3 +351,13 @@ export const getImageUrlToFile = async (images) => {
   return imageUrlToArray;
 };
 // =================================================================
+export const getColorByState = (state) => {
+  switch (state) {
+    case "pending":
+      return "bg-info";
+    case "processing":
+      return "bg-danger";
+    default:
+      return "bg-success";
+  }
+};

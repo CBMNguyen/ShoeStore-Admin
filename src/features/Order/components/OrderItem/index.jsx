@@ -5,6 +5,7 @@ import React from "react";
 import { Badge } from "reactstrap";
 import { capitalizeFirstLetter } from "utils/common";
 import "./orderitem.scss";
+import momoImage from "../../../../assets/images/MoMo_Logo.png";
 
 OrderItem.propTypes = {
   item: PropTypes.object.isRequired,
@@ -32,7 +33,7 @@ function OrderItem(props) {
       <td>
         <div className="OrderItem__person">
           <img
-            className="rounded-circle"
+            className="rounded-circle OrderItem__avatar"
             src={item.user.image}
             alt={item.user._id}
             width={38}
@@ -55,10 +56,38 @@ function OrderItem(props) {
       </td>
 
       <td>
+        {item.paymentMethod === "momo" ? (
+          <img
+            src={momoImage}
+            className="OrderItem__avatar ms-4 rounded"
+            width={28}
+            height={28}
+            alt="momoLogo"
+          />
+        ) : (
+          <img
+            src="https://freepikpsd.com/file/2019/11/delivery-logo-png-Images.png"
+            className="OrderItem__avatar ms-2"
+            width={40}
+            height={28}
+            alt="momoLogo"
+          />
+        )}
+      </td>
+
+      <td>
+        {item.payment ? (
+          <i className="zmdi zmdi-check text-success ms-4"></i>
+        ) : (
+          <i className="zmdi zmdi-close text-danger ms-4"></i>
+        )}
+      </td>
+
+      <td>
         <Badge
           className={classNames({
             "bg-danger": item.state === "processing",
-            "bg-success": item.state === "deliveried",
+            "bg-success": item.state === "delivered",
             "bg-info": item.state === "pending",
           })}
         >

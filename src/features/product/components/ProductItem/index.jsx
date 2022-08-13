@@ -79,7 +79,7 @@ function ProductItem(props) {
         <Badge className="bg-success">{product.quantityStock}</Badge>
       </td>
       <td>
-        <Badge className="bg-warning">{product.originalPrice}$</Badge>
+        <Badge className="bg-warning">{product.salePrice}$</Badge>
       </td>
       <td>
         <i

@@ -2,10 +2,11 @@ import { fetchEmployee } from "features/Employee/employeeSlice";
 import { fetchOrder } from "features/Order/orderSlice";
 import { fetchProduct } from "features/product/productSlice";
 import { fetchUser } from "features/User/userSlice";
-import React, { useEffect } from "react";
+import { useMemo } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { monthlyIncome, orderPriceTotal } from "utils/common";
+import { monthlyIncome } from "utils/common";
 import BarChart from "../components/BarChart";
 import DashBoardHeader from "../components/DashBoardHeader";
 import RecentSaleTable from "../components/RecentSaleTable";
@@ -31,11 +32,11 @@ function MainPage(props) {
   // handle total price order
   let total = 0;
   order.forEach((order) => {
-    if (order.state === "deliveried") total += orderPriceTotal(order);
+    if (order.state === "delivered") total += order.total;
   });
 
   // handle total income every month
-  const MonthlyIncome = monthlyIncome(order);
+  const MonthlyIncome = useMemo(() => monthlyIncome(order), [order]);
 
   return (
     <div>

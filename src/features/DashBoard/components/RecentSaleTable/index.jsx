@@ -1,9 +1,8 @@
 import moment from "moment";
 import PropTypes from "prop-types";
-import React from "react";
 import { Link } from "react-router-dom";
-import { Table } from "reactstrap";
-import { capitalizeFirstLetter, orderPriceTotal } from "utils/common";
+import { Badge, Table } from "reactstrap";
+import { capitalizeFirstLetter, getColorByState } from "utils/common";
 import "./recentsaletable.scss";
 
 RecentSaleTable.propTypes = {
@@ -13,9 +12,12 @@ RecentSaleTable.propTypes = {
 function RecentSaleTable(props) {
   const { order } = props;
 
-  const sortOrderByDate = order.slice().sort((a, b) => {
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  }).slice(0, 7);
+  const sortOrderByDate = order
+    .slice()
+    .sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    })
+    .slice(0, 7);
 
   return (
     <div className="RecentSaleTable shadow">
@@ -40,10 +42,24 @@ function RecentSaleTable(props) {
         <tbody>
           {sortOrderByDate.slice(0, 7).map((od) => (
             <tr key={od._id}>
-              <td>{moment(new Date(od.createdAt), "YYYYMMDD").fromNow()}</td>
-              <td>{`${od.user.firstname} ${od.user.lastname}`}</td>
-              <td>{capitalizeFirstLetter(od.state)}</td>
-              <td>{orderPriceTotal(od)}$</td>
+              <td>
+                <Badge className="bg-secondary">
+                  {moment(new Date(od.createdAt), "YYYYMMDD").fromNow()}
+                </Badge>
+              </td>
+              <td>
+                <Badge className="bg-dark">
+                  {`${od.user.firstname} ${od.user.lastname}`}
+                </Badge>
+              </td>
+              <td>
+                <Badge className={getColorByState(od.state)}>
+                  {capitalizeFirstLetter(od.state)}
+                </Badge>
+              </td>
+              <td>
+                <Badge className="bg-warning">${od.total}</Badge>
+              </td>
             </tr>
           ))}
         </tbody>

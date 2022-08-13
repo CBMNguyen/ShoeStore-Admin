@@ -8,7 +8,7 @@ export const GENDER_OPTIONS = [
 export const ORDER_STATE_OPTIONS = [
   { value: "pending", label: "Pending" },
   { value: "processing", label: "Processing" },
-  { value: "deliveried", label: "Deliveried" },
+  { value: "delivered", label: "Delivered" },
 ];
 
 export const PRODUCT_TOAST_OPTIONS = {
