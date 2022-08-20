@@ -47,15 +47,25 @@ function SelectSizeAndQuantityList({
 
   const handleAddButtonClick = () => {
     if (options.length < sizeOptions.length) {
+      // get field input
+      var formEl = Array.from(document.forms[`Product${color.label}Form`]);
+      const sizeList = [];
+      formEl = formEl.filter((item) => item.value !== "");
+
+      for (var i = 0; i < formEl.length; i++) {
+        if ((i % 2 === 1) & (i !== 0)) {
+          sizeList.push({
+            size: formEl[i - 1].value,
+          });
+        }
+      }
+      // increase row
       const newOptions = options.concat(sizeOptions[options.length]);
       setOptions(newOptions);
+      // filter size List
       const newSizeOption = sizeOption.filter((item) =>
-        options.every((size) => {
-          if (size.value) {
-            return item.value !== size.value;
-          } else {
-            return item.value !== size?.size?._id;
-          }
+        sizeList.every(({ size }) => {
+          return item.value !== size;
         })
       );
       setOption(newSizeOption);

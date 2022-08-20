@@ -14,18 +14,20 @@ const Header = (props) => {
           </h2>{" "}
         </Link>
       </div>
-      <div className="Header__admin">
-        <div>
-          <img
-            className="rounded-circle me-2"
-            width={38}
-            height={38}
-            src={item.data.imageUrl}
-            alt="admin"
-          />
+      {item.token && (
+        <div className="Header__admin">
+          <div>
+            <img
+              className="rounded-circle me-2"
+              width={38}
+              height={38}
+              src={item.data.imageUrl}
+              alt="admin"
+            />
+          </div>
+          <div>{`${item.data.firstname} ${item.data.lastname}`}</div>
         </div>
-        <div>{`${item.data.firstname} ${item.data.lastname}`}</div>
-      </div>
+      )}
     </div>
   );
 };

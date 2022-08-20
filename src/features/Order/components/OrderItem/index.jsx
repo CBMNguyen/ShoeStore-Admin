@@ -39,7 +39,7 @@ function OrderItem(props) {
             width={38}
             height={38}
           />
-          <Badge className="bg-light text-dark ms-4">{`${item.user.firstname} ${item.user.lastname}`}</Badge>
+          <Badge className="bg-light text-dark ms-1">{`${item.user.firstname} ${item.user.lastname}`}</Badge>
         </div>
       </td>
 

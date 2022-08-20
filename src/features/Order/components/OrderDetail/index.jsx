@@ -19,10 +19,10 @@ function OrderDetail(props) {
   const dispatch = useDispatch();
   const { order, loading, closeModel } = props;
 
-  const handleConformClick = async (orderId) => {
+  const handleConformClick = async (orderId, payment) => {
     try {
       await showToastSuccess(
-        dispatch(updateOrder({ _id: orderId, state: "processing" }))
+        dispatch(updateOrder({ _id: orderId, state: "processing", payment }))
       );
       closeModel();
     } catch (error) {
@@ -192,7 +192,7 @@ function OrderDetail(props) {
           <div className="OrderDetail__btn">
             <Button
               className="text-light me-2"
-              onClick={() => handleConformClick(order._id)}
+              onClick={() => handleConformClick(order._id, order.payment)}
               disabled={order.state !== "pending"}
             >
               <div className="d-flex align-items-center">

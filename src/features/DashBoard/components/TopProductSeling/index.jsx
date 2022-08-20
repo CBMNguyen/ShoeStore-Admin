@@ -28,6 +28,11 @@ function TopProductSeling(props) {
                 <td>
                   <div className="d-flex align-items-center">
                     <img
+                      style={{
+                        objectFit: "cover",
+                        position: "relative",
+                        top: "-10px",
+                      }}
                       className="rounded"
                       width={45}
                       height={45}

@@ -202,7 +202,7 @@ export const getTotal = (order) =>
       sum +
       product.salePrice *
         product.selectedQuantity *
-        (1 - product.promotionPercent),
+        (1 - product.promotionPercent / 100),
     0
   );
 
