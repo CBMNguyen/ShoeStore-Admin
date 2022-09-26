@@ -72,23 +72,14 @@ function ProductViewModel(props) {
               <ListGroupItem>
                 <div>Sale Price:</div>
                 <div>
-                  <Badge className="bg-warning">{data.salePrice}$</Badge>
+                  <Badge className="bg-warning">${data.salePrice}</Badge>
                 </div>{" "}
-              </ListGroupItem>
-
-              <ListGroupItem>
-                <div>Free Ship: </div>
-                <div>
-                  <Badge className="bg-success">
-                    {data.isFreeShip ? "Free Ship" : "No Free Ship"}
-                  </Badge>
-                </div>
               </ListGroupItem>
 
               <ListGroupItem>
                 <div>Quantity: </div>
                 <div>
-                  <Badge className="bg-info rounded p-2">
+                  <Badge className="bg-success rounded p-2">
                     {data.quantityStock}
                   </Badge>
                 </div>
@@ -97,9 +88,27 @@ function ProductViewModel(props) {
               <ListGroupItem>
                 <div>Promotion Percent:</div>
                 <div>
-                  <Badge className="bg-secondary text-light">
+                  <Badge className="bg-info text-light">
                     {data.promotionPercent} %
                   </Badge>
+                </div>
+              </ListGroupItem>
+
+              <ListGroupItem>
+                <div>Material:</div>
+                <div
+                  style={{
+                    fontSize: "0.85rem",
+                    backgroundColor: "#e4eef5",
+                    borderRadius: "0.2rem",
+                    color: "black",
+                    padding: "0 0.4rem",
+                    fontWeight: "400",
+                    maxHeight: "280px",
+                    overflowY: "scroll",
+                  }}
+                >
+                  {data.material}
                 </div>
               </ListGroupItem>
 
@@ -126,7 +135,7 @@ function ProductViewModel(props) {
                 <div
                   style={{
                     maxHeight: "80px",
-                    overflowY: "scroll",
+                    overflowY: "auto",
                     width: "55%",
                   }}
                 >
@@ -192,7 +201,7 @@ function ProductViewModel(props) {
                     color: "black",
                     padding: "0 0.4rem",
                     fontWeight: "400",
-                    maxHeight: "240px",
+                    maxHeight: "280px",
                     overflowY: "scroll",
                   }}
                 >

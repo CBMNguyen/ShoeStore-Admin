@@ -1,9 +1,19 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import React from "react";
-import { Table } from "reactstrap";
+import React, { useState } from "react";
+import {
+  Badge,
+  Button,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Spinner,
+  Table,
+} from "reactstrap";
 import UserItem from "../UserItem";
 import "./userlist.scss";
+import brandLogo from "../../../../assets/images/brandLogo.png";
 
 UserList.propTypes = {
   filter: PropTypes.object.isRequired,
@@ -18,7 +28,14 @@ UserList.defaultProps = {
 };
 
 function UserList(props) {
-  const { users, filter, onAgeChange, showRemoveModel, showViewModel } = props;
+  const {
+    users,
+    filter,
+    onAgeChange,
+    showRemoveModel,
+    onLockUserClick,
+    loading,
+  } = props;
 
   const { age } = filter;
 
@@ -27,13 +44,27 @@ function UserList(props) {
     onAgeChange(age);
   };
 
+  const [modal, setModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState();
+
+  const toggle = () => setModal(!modal);
+
+  const handleLockUserClick = async () => {
+    if (!onLockUserClick) return;
+    await onLockUserClick(selectedUser);
+    toggle();
+  };
+
   return (
     <Table hover>
       <thead>
         <tr>
           <th>#</th>
+          <th>Avatar</th>
           <th>Name</th>
+          <th>Gender</th>
           <th>Email</th>
+          <th>Address</th>
           <th>Phone</th>
           <th>
             Age
@@ -54,6 +85,7 @@ function UserList(props) {
               />
             </span>
           </th>
+          <th>State</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -64,11 +96,46 @@ function UserList(props) {
             key={user._id}
             user={user}
             showRemoveModel={showRemoveModel}
-            showViewModel={showViewModel}
             filter={filter}
+            toggle={toggle}
+            setSelectedUser={setSelectedUser}
           />
         ))}
       </tbody>
+
+      <Modal isOpen={modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>
+          <h4 className="UserList__brand">
+            Shoes Store <img src={brandLogo} alt="brandLogo" />
+          </h4>
+        </ModalHeader>
+        <ModalBody>
+          Are you sure you want to{" "}
+          <code className="text-dark fw-bold">
+            {selectedUser?.state ? "Unlock " : "Block "}
+          </code>
+          <Badge className="bg-danger">{`${selectedUser?.firstname} ${selectedUser?.lastname}`}</Badge>{" "}
+          account?
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            disabled={loading}
+            color="primary"
+            size="sm"
+            onClick={handleLockUserClick}
+          >
+            Confirm {loading && <Spinner size="sm">{""}</Spinner>}
+          </Button>{" "}
+          <Button
+            disabled={loading}
+            color="secondary"
+            size="sm"
+            onClick={toggle}
+          >
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
     </Table>
   );
 }

@@ -1,6 +1,4 @@
 import PropTypes from "prop-types";
-import React from "react";
-import { Badge } from "reactstrap";
 import {
   capitalizeFirstLetter,
   dataURLtoFile,
@@ -11,7 +9,8 @@ import {
 EmployeeItem.propTypes = {
   showEditModel: PropTypes.func,
   showRemoveModel: PropTypes.func,
-  showViewModel: PropTypes.func,
+  setSelectedEmployee: PropTypes.func,
+  toggle: PropTypes.func,
   index: PropTypes.number.isRequired,
   employee: PropTypes.object.isRequired,
   filter: PropTypes.object.isRequired,
@@ -20,14 +19,16 @@ EmployeeItem.propTypes = {
 EmployeeItem.defaultProps = {
   showEditModel: null,
   showRemoveModel: null,
-  showViewModel: null,
+  setSelectedEmployee: null,
+  toggle: null,
 };
 
 function EmployeeItem(props) {
   const {
     showEditModel,
     showRemoveModel,
-    showViewModel,
+    setSelectedEmployee,
+    toggle,
     index,
     employee,
     filter,
@@ -50,43 +51,104 @@ function EmployeeItem(props) {
     showRemoveModel(employee);
   };
 
-  const handleViewClick = (employee) => {
-    if (!showViewModel) return;
-    showViewModel(employee);
-  };
-
   return (
-    <tr>
+    <tr style={{ verticalAlign: "middle", fontSize: "15px" }}>
       <th>{index + 1 + (page - 1) * limit}</th>
       <td>
-        <Badge className="bg-dark">{`${employee.firstname}  ${employee.lastname}`}</Badge>
+        {employee.image && (
+          <img
+            className="rounded-circle shadow border-2"
+            width={42}
+            height={42}
+            src={employee.image}
+            alt={employee.image}
+            style={{ objectFit: "cover" }}
+          />
+        )}
+
+        {!employee.image && (
+          <div
+            style={{ width: "42px", height: "42px" }}
+            className="d-flex align-items-center justify-content-center rounded-circle bg-dark text-white shadow border-2"
+          >
+            {employee.firstname[0]}
+          </div>
+        )}
       </td>
       <td>
-        <Badge style={{ backgroundColor: "deeppink" }}>{employee.email}</Badge>
+        <code className="bg-dark text-white fw-bold px-2 py-1 rounded-2">{`${employee.firstname}  ${employee.lastname}`}</code>
       </td>
       <td>
-        <Badge style={{ backgroundColor: "cyan" }}>{employee.phone}</Badge>
+        <code className="bg-secondary text-white fw-bold px-2 py-1 rounded-2">
+          {capitalizeFirstLetter(employee.gender)}
+        </code>
+      </td>
+      <td>
+        <code className="bg-primary text-white fw-bold px-2 py-1 rounded-2">
+          {employee.address}
+        </code>
+      </td>
+      <td>
+        <code
+          className="text-white fw-bold px-2 py-1 rounded-2"
+          style={{ backgroundColor: "deeppink" }}
+        >
+          {employee.email}
+        </code>
+      </td>
+      <td>
+        <code
+          className="text-white fw-bold px-2 py-1 rounded-2"
+          style={{ backgroundColor: "cyan" }}
+        >
+          {employee.phone}
+        </code>
       </td>
       <td>
         <span className="ps-2">
-          <Badge className="bg-success">{getAge(birthDate)}</Badge>
+          <code className="bg-success text-white fw-bold px-2 py-1 rounded-2">
+            {getAge(birthDate)}
+          </code>
         </span>
       </td>
       <td>
-        <Badge className="bg-warning">
+        <code className="bg-dark text-white fw-bold px-2 py-1 rounded-2">
           {capitalizeFirstLetter(employee.position["position"])}
-        </Badge>
+        </code>
+      </td>
+      <td>
+        <code className="bg-warning text-white fw-bold px-2 py-1 rounded-2">
+          ${employee.position.salary}
+        </code>
       </td>
 
       <td>
-        {" "}
+        <span className="p1-2">
+          <code
+            className={
+              employee.state
+                ? "bg-danger text-white fw-bold px-2 py-1 rounded-2"
+                : "bg-success text-white fw-bold px-2 py-1 rounded-2"
+            }
+          >
+            {employee.state ? "Locked" : "Active"}
+          </code>
+        </span>
+      </td>
+
+      <td>
         <i
-          onClick={() => handleViewClick(employee)}
-          className="zmdi zmdi-eye text-primary"
+          onClick={() => {
+            toggle();
+            setSelectedEmployee(employee);
+          }}
+          className={`zmdi zmdi-lock-${
+            employee.state ? "outline" : "open"
+          } text-secondary`}
         />
         <i
           onClick={() => handleEditClick(employee)}
-          className="zmdi zmdi-edit text-success ps-3"
+          className="zmdi zmdi-edit text-primary ps-3"
         />
         <i
           onClick={() => handleRemoveClick(employee)}

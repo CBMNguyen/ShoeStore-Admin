@@ -20,9 +20,9 @@ function RecentSaleTable(props) {
     .slice(0, 7);
 
   return (
-    <div className="RecentSaleTable shadow">
+    <div className="RecentSaleTable shadow rounded-2">
       <header className="d-flex justify-content-between">
-        <div>Recent Sales</div>
+        <div className="text-uppercase">Recent Orders</div>
         <div>
           {" "}
           <Link to="/order">See All</Link>
@@ -40,7 +40,7 @@ function RecentSaleTable(props) {
         </thead>
 
         <tbody>
-          {sortOrderByDate.slice(0, 7).map((od) => (
+          {sortOrderByDate.slice(0, 8).map((od) => (
             <tr key={od._id}>
               <td>
                 <Badge className="bg-secondary">

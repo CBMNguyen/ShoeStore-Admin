@@ -92,7 +92,7 @@ function Size(props) {
             .map((s, i) => (
               <tr key={s._id}>
                 <th>
-                  <span className="ps-1">{i}</span>
+                  <span className="ps-1">{i + 1}</span>
                 </th>
                 <td>
                   <div className="ps-1">{s.size}</div>

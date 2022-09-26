@@ -1,0 +1,16 @@
+.ReviewList {
+  &__brand {
+    font-family: "Pacifico", cursive;
+    // font-size: 24px;
+    margin-bottom: 0;
+    user-select: none;
+
+    & img {
+      position: relative;
+      top: -2px;
+      width: 20px;
+      height: 20px;
+      object-fit: cover;
+    }
+  }
+}

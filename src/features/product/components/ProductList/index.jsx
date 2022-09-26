@@ -1,9 +1,19 @@
 import classNames from "classnames";
 import PropTypes from "prop-types";
-import React from "react";
-import { Table } from "reactstrap";
+import React, { useState } from "react";
+import {
+  Badge,
+  Button,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Spinner,
+  Table,
+} from "reactstrap";
 import ProductItem from "../ProductItem";
 import "./productlist.scss";
+import brandLogo from "../../../../assets/images/brandLogo.png";
 
 ProductList.propTypes = {
   products: PropTypes.array,
@@ -30,6 +40,8 @@ function ProductList(props) {
     showViewModel,
     onPriceChange,
     onQuantityChange,
+    loading,
+    onToggleProductClick,
   } = props;
 
   const handlePriceChange = (price) => {
@@ -40,6 +52,17 @@ function ProductList(props) {
   const handleQuantityChange = (quantity) => {
     if (!onQuantityChange) return;
     onQuantityChange(quantity);
+  };
+
+  const [modal, setModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState();
+
+  const toggle = () => setModal(!modal);
+
+  const handleToggleProductClick = async () => {
+    if (!onToggleProductClick) return;
+    await onToggleProductClick(selectedProduct);
+    toggle();
   };
 
   return (
@@ -88,6 +111,8 @@ function ProductList(props) {
               />
             </span>
           </th>
+          <th>State</th>
+
           <th>Actions</th>
         </tr>
       </thead>
@@ -101,9 +126,45 @@ function ProductList(props) {
             showDeleteModel={showDeleteModel}
             showUpdateModel={showUpdateModel}
             showViewModel={showViewModel}
+            toggle={toggle}
+            setSelectedProduct={setSelectedProduct}
           />
         ))}
       </tbody>
+
+      <Modal isOpen={modal} toggle={toggle}>
+        <ModalHeader toggle={toggle}>
+          <h4 className="ProductList__brand">
+            Shoes Store <img src={brandLogo} alt="brandLogo" />
+          </h4>
+        </ModalHeader>
+        <ModalBody>
+          Are you sure you want to{" "}
+          <code className="text-dark fw-bold">
+            {selectedProduct?.state ? "Show " : "Hide "}
+          </code>
+          <Badge className="bg-danger">{`${selectedProduct?.name}`}</Badge>{" "}
+          product?
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            disabled={loading}
+            color="primary"
+            size="sm"
+            onClick={handleToggleProductClick}
+          >
+            Confirm {loading && <Spinner size="sm">{""}</Spinner>}
+          </Button>{" "}
+          <Button
+            disabled={loading}
+            color="secondary"
+            size="sm"
+            onClick={toggle}
+          >
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
     </Table>
   );
 }

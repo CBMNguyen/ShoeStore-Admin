@@ -16,6 +16,12 @@ import productReducer from "../features/product/productSlice";
 import categoryReducer from "../features/Scc/categorySlice";
 import colorReducer from "../features/Scc/colorSlice";
 import positionReducer from "../features/Scc/positionSlice";
+import importOrderReducer from "../features/ImportOrder/importOrderSlice";
+import supplierReducer from "../features/Supplier/supplierSlice";
+import discountReducer from "../features/Discount/discountSlice";
+import discountTypeReducer from "../features/Scc/discountTypeSlice";
+import roleReducer from "../features/Role/roleSlice";
+import reviewReducer from "../features/Review/reviewSlice";
 import sizeReducer from "../features/Scc/sizeSlice";
 import userReducer from "../features/User/userSlice";
 import orderReducer from "../features/Order/orderSlice";
@@ -41,6 +47,12 @@ const rootReducer = combineReducers({
   employee: persistReducer(employeePersistConfig, employeeReducer),
   user: userReducer,
   position: positionReducer,
+  importOrder: importOrderReducer,
+  supplier: supplierReducer,
+  discount: discountReducer,
+  discountType: discountTypeReducer,
+  role: roleReducer,
+  review: reviewReducer,
   order: orderReducer,
 });
 

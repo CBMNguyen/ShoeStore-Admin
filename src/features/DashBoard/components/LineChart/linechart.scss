@@ -1,0 +1,18 @@
+.LineChart {
+  position: relative;
+  width: 97%;
+  margin: 1rem auto;
+  margin-bottom: 0;
+  padding: 0.2rem;
+  background-color: white;
+
+  &__filter {
+    display: flex;
+    align-items: center;
+
+    position: absolute;
+    top: 8px;
+    right: 0;
+    margin: 2px 10px;
+  }
+}

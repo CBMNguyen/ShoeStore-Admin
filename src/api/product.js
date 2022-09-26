@@ -21,6 +21,16 @@ const productApi = {
     return axiosClient.patch(url, data);
   },
 
+  updateState: (productId, data) => {
+    const url = `/products/state/${productId}`;
+    return axiosClient.patch(url, data);
+  },
+
+  updateQuantity: (productId, data) => {
+    const url = `/products/quantity/${productId}`;
+    return axiosClient.patch(url, data);
+  },
+
   delete: (productId) => {
     const url = `/products/${productId}`;
     return axiosClient.delete(url);

@@ -8,6 +8,7 @@
   }
 
   & #btn {
+    z-index: 2;
     left: 1.2rem;
     top: 1.1rem;
     font-size: 35px;
@@ -17,7 +18,7 @@
   }
 
   & #cancel {
-    z-index: 1111;
+    z-index: 1;
     left: -240px;
     top: 22px;
     font-size: 30px;

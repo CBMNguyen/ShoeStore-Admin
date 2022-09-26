@@ -1,6 +1,7 @@
 import Loading from "components/Loading";
 import TableFooter from "components/TableFooter";
 import TableHeader from "components/TableHeader";
+import { PRODUCT_TOAST_OPTIONS } from "constants/globals";
 import ProductAddModel from "features/product/components/ProductAddModel";
 import ProductDeleteModel from "features/product/components/ProductDeleteModel";
 import ProductList from "features/product/components/ProductList";
@@ -10,6 +11,7 @@ import {
   deleteProduct,
   fetchProduct,
   updateProduct,
+  updateProductState,
 } from "features/product/productSlice";
 import { fetchCategory } from "features/Scc/categorySlice";
 import { fetchColor } from "features/Scc/colorSlice";
@@ -18,6 +20,7 @@ import useModel from "hooks/useModel";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   capitalizeFirstLetter,
   colourNameToHex,
@@ -157,7 +160,7 @@ function MainPage(props) {
 
     formData.append("category", data.category.value);
     formData.append("description", data.description);
-    formData.append("isFreeShip", data.isFreeShip);
+    formData.append("material", data.material);
     formData.append("name", data.name);
     formData.append("originalPrice", data.originalPrice);
     formData.append("promotionPercent", data.promotionPercent);
@@ -203,6 +206,22 @@ function MainPage(props) {
     }
   };
 
+  const handleToggleProductClick = async (data) => {
+    try {
+      await dispatch(
+        updateProductState({ id: data._id, formData: { state: !data.state } })
+      );
+      toast(
+        `Successfully ${!data.state ? "Hide" : "Show"} ${data.name} ${
+          data.lastname
+        } account.`,
+        { ...PRODUCT_TOAST_OPTIONS }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return products.length === 0 ? (
     <Loading />
   ) : (
@@ -224,6 +243,8 @@ function MainPage(props) {
         showViewModel={viewModel.showModel}
         onPriceChange={handlePriceChange}
         onQuantityChange={handleQuantityChange}
+        onToggleProductClick={handleToggleProductClick}
+        loading={loading}
       />
 
       <TableFooter

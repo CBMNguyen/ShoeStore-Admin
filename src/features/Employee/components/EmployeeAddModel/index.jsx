@@ -16,6 +16,7 @@ import {
   Label,
   Row,
   Spinner,
+  Table,
 } from "reactstrap";
 import { capitalizeFirstLetter } from "utils/common";
 import * as yup from "yup";
@@ -34,23 +35,27 @@ EmployeeAddModel.defaultProps = {
 };
 
 function EmployeeAddModel(props) {
-  const { model, closeModel, onSubmit, positionOptions, loading } = props;
+  const { model, closeModel, onSubmit, positionOptions, loading, roles } =
+    props;
   const defaultValues = !model.data
     ? {
         firstname: "",
         lastname: "",
         email: "",
+        password: "",
         phone: "",
         gender: "",
         birthdate: "",
         position: "",
         image: null,
         address: "",
+        roles: [],
       }
     : {
         firstname: model.data.firstname,
         lastname: model.data.lastname,
         email: model.data.email,
+        password: model.data.password,
         phone: model.data.phone,
         gender: {
           label: capitalizeFirstLetter(model.data.gender),
@@ -63,6 +68,7 @@ function EmployeeAddModel(props) {
         },
         image: model.data.image,
         address: model.data.address,
+        roles: model.data.roles || [],
       };
 
   const schema = yup.object().shape({
@@ -73,6 +79,13 @@ function EmployeeAddModel(props) {
       .matches(
         /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
         "Please enter correct email!"
+      )
+      .required("This field is require."),
+    password: yup
+      .string()
+      .matches(
+        /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}?/,
+        "Password must be at least 8 characters with one uppercase letter, one lowercase letter, and one special character"
       )
       .required("This field is require."),
     phone: yup
@@ -95,7 +108,6 @@ function EmployeeAddModel(props) {
   } = useForm({ defaultValues, resolver: yupResolver(schema) });
 
   const onFormSubmit = async (data) => {
-    data.birthdate.setDate(data.birthdate.getDate() + 1);
     if (!onSubmit) return;
     await onSubmit(data);
   };
@@ -105,7 +117,7 @@ function EmployeeAddModel(props) {
       <Form onSubmit={handleSubmit(onFormSubmit)}>
         <FormHeader closeModel={closeModel} />
         <Row>
-          <Col md={6}>
+          <Col md={4}>
             <InputField
               name="firstname"
               control={control}
@@ -114,12 +126,22 @@ function EmployeeAddModel(props) {
             />
           </Col>
 
-          <Col md={6}>
+          <Col md={4}>
             <InputField
               name="lastname"
               control={control}
               label="Last Name"
               errors={errors}
+            />
+          </Col>
+
+          <Col md={4}>
+            <SelectField
+              name="gender"
+              control={control}
+              label="Gender"
+              errors={errors}
+              options={GENDER_OPTIONS}
             />
           </Col>
 
@@ -135,20 +157,20 @@ function EmployeeAddModel(props) {
 
           <Col md={6}>
             <InputField
-              name="phone"
+              name="password"
               control={control}
-              label="Phone"
+              label="Password"
               errors={errors}
+              type="password"
             />
           </Col>
 
           <Col md={6}>
-            <SelectField
-              name="gender"
+            <InputField
+              name="phone"
               control={control}
-              label="Gender"
+              label="Phone"
               errors={errors}
-              options={GENDER_OPTIONS}
             />
           </Col>
 
@@ -189,13 +211,44 @@ function EmployeeAddModel(props) {
             </FormGroup>
           </Col>
 
-          <Col>
+          <Col md={12}>
             <InputField
               name="address"
               control={control}
               label="Address"
               errors={errors}
             />
+          </Col>
+
+          <Col>
+            <Table className="mt-3">
+              <thead>
+                <tr>
+                  {roles.map(({ role }) => (
+                    <th className="text-center" key={role}>
+                      <code className="fs-6">
+                        {capitalizeFirstLetter(role)}
+                      </code>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {roles.map(({ _id, role }, index) => (
+                    <td className="text-center" key={role}>
+                      <input
+                        style={{ cursor: "pointer" }}
+                        className="form-check-input mb-3"
+                        {...register(`roles.${index}]`)}
+                        value={_id}
+                        type="checkbox"
+                      />
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </Table>
           </Col>
         </Row>
         <button
@@ -206,7 +259,6 @@ function EmployeeAddModel(props) {
           {loading && (
             <Spinner
               color="light"
-              size="md"
               style={{ position: "absolute", right: "1rem", top: "1rem" }}
             >
               {" "}

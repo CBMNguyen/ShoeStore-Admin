@@ -102,7 +102,7 @@ function Position(props) {
             .map((position, i) => (
               <tr key={position._id}>
                 <th>
-                  <span className="ps-1">{i}</span>
+                  <span className="ps-1">{i + 1}</span>
                 </th>
                 <td>{capitalizeFirstLetter(position["position"])}</td>
                 <td className="ps-2">{position["salary"]} $</td>

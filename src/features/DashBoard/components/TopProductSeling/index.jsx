@@ -10,9 +10,9 @@ TopProductSeling.propTypes = {
 function TopProductSeling(props) {
   const { products } = props;
   return (
-    <div className="TopProductSeling shadow">
+    <div className="TopProductSeling shadow rounded-2">
       <header className="d-flex justify-content-between">
-        <div>Top Seling Product</div>
+        <div className="text-uppercase">Top Seling Product</div>
         <div>
           <Link to="/products">See All</Link>
         </div>
@@ -21,11 +21,15 @@ function TopProductSeling(props) {
       <Table borderless>
         <tbody>
           {products
+            .slice()
+            .sort((a, b) => a.quantityStock - b.quantityStock)
             .slice(0, 5)
-            .sort((a, b) => a.salePrice - b.salePrice)
             .map((product) => (
-              <tr key={product._id}>
-                <td>
+              <tr
+                key={product._id}
+                style={{ borderBottom: "1px solid #dedede" }}
+              >
+                <td style={{ overflow: "hidden" }}>
                   <div className="d-flex align-items-center">
                     <img
                       style={{

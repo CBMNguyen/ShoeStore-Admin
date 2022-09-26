@@ -1,15 +1,15 @@
-import InputField from "custom-fields/InputField";
-import React from "react";
-import { Form, Spinner } from "reactstrap";
-import { useForm } from "react-hook-form";
-import "./login.scss";
-import { Button } from "reactstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { showToastError, showToastSuccess } from "utils/common";
+import { PRODUCT_TOAST_OPTIONS } from "constants/globals";
+import InputField from "custom-fields/InputField";
 import { employeeLogin } from "features/Employee/employeeSlice";
+import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Button, Form, Spinner } from "reactstrap";
+import { showToastSuccess } from "utils/common";
+import * as yup from "yup";
+import "./login.scss";
 
 const defaultValues = { email: "", password: "" };
 
@@ -39,7 +39,7 @@ function Login(props) {
       await showToastSuccess(dispatch(employeeLogin(data)));
       history.push("/");
     } catch (error) {
-      showToastError(error);
+      toast(error.message, { ...PRODUCT_TOAST_OPTIONS });
     }
   };
 

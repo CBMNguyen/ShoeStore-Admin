@@ -1,6 +1,4 @@
 import PropTypes from "prop-types";
-import React from "react";
-import { Badge } from "reactstrap";
 import { capitalizeFirstLetter } from "utils/common";
 
 ProductItem.propTypes = {
@@ -26,6 +24,8 @@ function ProductItem(props) {
     showUpdateModel,
     showViewModel,
     page,
+    toggle,
+    setSelectedProduct,
   } = props;
 
   const handleShowDeleteModel = (product) => {
@@ -44,12 +44,16 @@ function ProductItem(props) {
   };
 
   return (
-    <tr>
-      <td style={{ verticalAlign: "middle" }}>
-        <Badge className="bg-secondary">{index + 1 + (page - 1) * 8}</Badge>
+    <tr style={{ fontSize: "15px", verticalAlign: "middle" }}>
+      <td>
+        <code className="bg-secondary px-2 py-1 text-white rounded-2 fw-bold">
+          {index + 1 + (page - 1) * 8}
+        </code>
       </td>
       <td>
-        <Badge className="bg-dark">{product.name}</Badge>
+        <code className="bg-dark px-2 py-1 text-white rounded-2 fw-bold">
+          {product.name}
+        </code>
       </td>
       <td>
         <div style={{ width: "58px", height: "58px", overflow: "hidden" }}>
@@ -71,16 +75,48 @@ function ProductItem(props) {
         </div>
       </td>
       <td>
-        <Badge style={{ backgroundColor: "deeppink" }}>
+        <code
+          className="px-2 py-1 text-white rounded-2 fw-bold"
+          style={{ backgroundColor: "deeppink" }}
+        >
           {capitalizeFirstLetter(product.category.name)}
-        </Badge>
-      </td>
-      <td className="ps-4">
-        <Badge className="bg-success">{product.quantityStock}</Badge>
+        </code>
       </td>
       <td>
-        <Badge className="bg-warning">{product.salePrice}$</Badge>
+        <code
+          style={{ backgroundColor: "cyan" }}
+          className="ms-3 px-2 py-1 text-white rounded-2 fw-bold"
+        >
+          {product.quantityStock}
+        </code>
       </td>
+      <td>
+        <code className="bg-warning px-2 py-1 text-white rounded-2 fw-bold">
+          ${product.salePrice}
+        </code>
+      </td>
+
+      <td>
+        <span
+          onClick={() => {
+            toggle();
+            setSelectedProduct(product);
+          }}
+          className="p1-2"
+          style={{ cursor: "pointer" }}
+        >
+          <code
+            className={
+              product.state
+                ? "bg-danger px-2 py-1 text-white rounded-2 fw-bold"
+                : "bg-success px-2 py-1 text-white rounded-2 fw-bold"
+            }
+          >
+            {product.state ? "Hide" : "Show"}
+          </code>
+        </span>
+      </td>
+
       <td>
         <i
           onClick={() => handleShowViewModel(product)}

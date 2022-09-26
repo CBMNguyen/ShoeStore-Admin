@@ -12,14 +12,21 @@ DashBoardHeader.propTypes = {
 };
 
 function DashBoardHeader(props) {
-  const { employee, user, products, total } = props;
+  const { employee, user, monthlyIncome } = props;
   return (
     <Row className="DashBoardHeader">
       <Col md={3}>
-        <Link to="/order" className="DashBoardHeader__income shadow">
+        <Link to="/order" className="DashBoardHeader__revenue shadow">
           <div>
-            <header>Total Income</header>
-            {<div>{total.toFixed(2)}$</div>}
+            <header className="text-uppercase">Total Revenue</header>
+            {
+              <div>
+                $
+                {monthlyIncome[0]
+                  .reduce((sum, item) => (sum += Number(item)), 0)
+                  .toFixed(2)}
+              </div>
+            }
           </div>
           <div>
             <i className="zmdi zmdi-shopping-cart"></i>
@@ -28,9 +35,28 @@ function DashBoardHeader(props) {
       </Col>
 
       <Col md={3}>
+        <Link to="/order" className="DashBoardHeader__income shadow">
+          <div>
+            <header className="text-uppercase">Total Income</header>
+            {
+              <div>
+                $
+                {monthlyIncome[1]
+                  .reduce((sum, item) => (sum += Number(item)), 0)
+                  .toFixed(2)}
+              </div>
+            }
+          </div>
+          <div>
+            <i className="zmdi zmdi-money-box"></i>
+          </div>
+        </Link>
+      </Col>
+
+      <Col md={3}>
         <Link to="employee" className="DashBoardHeader__employee shadow">
           <div>
-            <header>Total Employee</header>
+            <header className="text-uppercase">Employees</header>
             <div>{employee.length}</div>
             <div></div>
           </div>
@@ -43,7 +69,7 @@ function DashBoardHeader(props) {
       <Col md={3}>
         <Link to="/user" className="DashBoardHeader__user shadow">
           <div>
-            <header>Total User</header>
+            <header className="text-uppercase">Users</header>
             <div>{user.length}</div>
             <div></div>
           </div>
@@ -53,18 +79,33 @@ function DashBoardHeader(props) {
         </Link>
       </Col>
 
-      <Col md={3}>
-        <Link to="/products" className="DashBoardHeader__product shadow">
-          <div>
-            <header>Total Product</header>
-            <div>{products.length}</div>
-            <div></div>
-          </div>
-          <div>
-            <i className="zmdi zmdi-shopping-basket" />
-          </div>
-        </Link>
-      </Col>
+      {/* <Row className="mt-3">
+        <Col md={4}>
+          <Link to="employee" className="DashBoardHeader__employee shadow">
+            <div>
+              <header className="text-uppercase">Total Revenue</header>
+              <div>{employee.length}</div>
+              <div></div>
+            </div>
+            <div>
+              <i className="zmdi zmdi-money-box"></i>
+            </div>
+          </Link>
+        </Col>
+
+        <Col md={4}>
+          <Link to="/products" className="DashBoardHeader__product shadow">
+            <div>
+              <header className="text-uppercase">Profit</header>
+              <div>{products.length}</div>
+              <div></div>
+            </div>
+            <div>
+              <i className="zmdi zmdi-card-giftcard"></i>
+            </div>
+          </Link>
+        </Col>
+      </Row> */}
     </Row>
   );
 }

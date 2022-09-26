@@ -17,7 +17,7 @@ function ProtectedRoute(props) {
           jwt.verify(auth.token, process.env.REACT_APP_JWT_KEY);
           return <Component />;
         } catch (error) {
-          toast.error("🧦 Please check login.", { ...PRODUCT_TOAST_OPTIONS });
+          toast("Please check login.", { ...PRODUCT_TOAST_OPTIONS });
           return (
             <Redirect
               to={{ pathname: "/login", state: { from: props.location } }}

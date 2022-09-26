@@ -155,6 +155,7 @@ export function colourNameToHex(colour) {
 }
 
 export function capitalizeFirstLetter(string) {
+  if (!string) return "";
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
@@ -208,77 +209,260 @@ export const getTotal = (order) =>
 
 // handle total order every month
 
-export const monthlyIncome = (orders) => {
+export const monthlyIncome = (orders, year) => {
   let [
-    january,
-    february,
-    march,
-    april,
-    may,
-    june,
-    july,
-    august,
-    september,
-    october,
-    november,
-    december,
+    januaryRevenue,
+    februaryRevenue,
+    marchRevenue,
+    aprilRevenue,
+    mayRevenue,
+    juneRevenue,
+    julyRevenue,
+    augustRevenue,
+    septemberRevenue,
+    octoberRevenue,
+    novemberRevenue,
+    decemberRevenue,
   ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  orders.forEach((order) => {
-    if (order.state === "delivered") {
-      const date = new Date(order.createdAt);
-      switch (date.getMonth()) {
-        case 0:
-          january += order.total;
-          break;
-        case 1:
-          february += order.total;
-          break;
-        case 2:
-          march += order.total;
-          break;
-        case 3:
-          april += order.total;
-          break;
-        case 4:
-          may += order.total;
-          break;
-        case 5:
-          june += order.total;
-          break;
-        case 6:
-          july += order.total;
-          break;
-        case 7:
-          august += order.total;
-          break;
-        case 8:
-          september += order.total;
-          break;
-        case 9:
-          october += order.total;
-          break;
-        case 10:
-          november += order.total;
-          break;
-        default:
-          december += order.total;
-          break;
+
+  let [
+    januaryCost,
+    februaryCost,
+    marchCost,
+    aprilCost,
+    mayCost,
+    juneCost,
+    julyCost,
+    augustCost,
+    septemberCost,
+    octoberCost,
+    novemberCost,
+    decemberCost,
+  ] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  orders
+    .filter((order) => new Date(order.createdAt).getFullYear() === year)
+    .forEach((order, year) => {
+      if (order.state === "delivered") {
+        const date = new Date(order.createdAt);
+        switch (date.getMonth()) {
+          case 0:
+            januaryRevenue += order.total - order.transportFee;
+            januaryCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case 1:
+            februaryRevenue += order.total - order.transportFee;
+            februaryCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case 2:
+            marchRevenue += order.total - order.transportFee;
+            marchCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case 3:
+            aprilRevenue += order.total - order.transportFee;
+            aprilCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case 4:
+            mayRevenue += order.total - order.transportFee;
+            mayCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case 5:
+            juneRevenue += order.total - order.transportFee;
+            juneCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case 6:
+            julyRevenue += order.total - order.transportFee;
+            julyCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case 7:
+            augustRevenue += order.total - order.transportFee;
+            augustCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case 8:
+            septemberRevenue += order.total - order.transportFee;
+            septemberCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case 9:
+            octoberRevenue += order.total - order.transportFee;
+            octoberCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case 10:
+            novemberRevenue += order.total - order.transportFee;
+            novemberCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          default:
+            decemberRevenue += order.total - order.transportFee;
+            decemberCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+        }
       }
-    }
-  });
+    });
+
   return [
-    january.toFixed(2),
-    february.toFixed(2),
-    march.toFixed(2),
-    april.toFixed(2),
-    may.toFixed(2),
-    june.toFixed(2),
-    july.toFixed(2),
-    august.toFixed(2),
-    september.toFixed(2),
-    october.toFixed(2),
-    november.toFixed(2),
-    december.toFixed(2),
+    [
+      januaryRevenue.toFixed(2),
+      februaryRevenue.toFixed(2),
+      marchRevenue.toFixed(2),
+      aprilRevenue.toFixed(2),
+      mayRevenue.toFixed(2),
+      juneRevenue.toFixed(2),
+      julyRevenue.toFixed(2),
+      augustRevenue.toFixed(2),
+      septemberRevenue.toFixed(2),
+      octoberRevenue.toFixed(2),
+      novemberRevenue.toFixed(2),
+      decemberRevenue.toFixed(2),
+    ],
+    [
+      (januaryRevenue - januaryCost).toFixed(2),
+      (februaryRevenue - februaryCost).toFixed(2),
+      (marchRevenue - marchCost).toFixed(2),
+      (aprilRevenue - aprilCost).toFixed(2),
+      (mayRevenue - mayCost).toFixed(2),
+      (juneRevenue - juneCost).toFixed(2),
+      (julyRevenue - julyCost).toFixed(2),
+      (augustRevenue - augustCost).toFixed(2),
+      (septemberRevenue - septemberCost).toFixed(2),
+      (octoberRevenue - octoberCost).toFixed(2),
+      (novemberRevenue - novemberCost).toFixed(2),
+      (decemberRevenue - decemberCost).toFixed(2),
+    ],
+    [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
+  ];
+};
+
+// handle total order every quarter
+
+export const quarterlyIncome = (orders, year) => {
+  let [
+    quarterOneRevenue,
+    quarterTwoRevenue,
+    quarterThreeRevenue,
+    quarterFourRevenue,
+  ] = [0, 0, 0, 0];
+
+  let [quarterOneCost, quarterTwoCost, quarterThreeCost, quarterFourCost] = [
+    0, 0, 0, 0,
+  ];
+
+  orders
+    .filter((order) => new Date(order.createdAt).getFullYear() === year)
+    .forEach((order) => {
+      if (order.state === "delivered") {
+        const date = new Date(order.createdAt);
+        const month = date.getMonth() + 1;
+        switch (date.getMonth()) {
+          case month <= 3:
+            quarterOneRevenue += order.total - order.transportFee;
+            quarterOneCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case month <= 6:
+            quarterTwoRevenue += order.total - order.transportFee;
+            quarterTwoCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          case month <= 9:
+            quarterThreeRevenue += order.total - order.transportFee;
+            quarterThreeCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+          default:
+            quarterFourRevenue += order.total - order.transportFee;
+            quarterFourCost += order.products.reduce(
+              (sum, order) =>
+                (sum += order.currentOriginalPrice * order.selectedQuantity),
+              0
+            );
+            break;
+        }
+      }
+    });
+
+  return [
+    [
+      quarterOneRevenue.toFixed(2),
+      quarterTwoRevenue.toFixed(2),
+      quarterThreeRevenue.toFixed(2),
+      quarterFourRevenue.toFixed(2),
+    ],
+    [
+      (quarterOneRevenue - quarterOneCost).toFixed(2),
+      (quarterTwoRevenue - quarterTwoCost).toFixed(2),
+      (quarterThreeRevenue - quarterThreeCost).toFixed(2),
+      (quarterFourRevenue - quarterFourCost).toFixed(2),
+    ],
+    ["Quarter One", "Quarter Two", "Quarter Three", "Quarter Four"],
   ];
 };
 
@@ -350,14 +534,22 @@ export const getImageUrlToFile = async (images) => {
 
   return imageUrlToArray;
 };
-// =================================================================
+
+export const formatDate = (dateStr) => {
+  const date = new Date(dateStr);
+  const day = `0${date.getDay()}`.slice(-2);
+  const month = `0${date.getMonth() + 1}`.slice(-2);
+  const year = `${date.getFullYear()}`;
+  const hour = `0${date.getHours()}`.slice(-2);
+  const minutes = `0${date.getMinutes()}`.slice(-2);
+  const seconds = `0${date.getSeconds()}`.slice(-2);
+  return `${day}/${month}/${year} - ${hour}:${minutes}:${seconds}`;
+};
+
 export const getColorByState = (state) => {
-  switch (state) {
-    case "pending":
-      return "bg-info";
-    case "processing":
-      return "bg-danger";
-    default:
-      return "bg-success";
-  }
+  if (state === "pending") return "bg-info";
+  if (state === "confirmed") return "bg-dark";
+  if (state === "shipping") return "bg-warning";
+  if (state === "delivered") return "bg-success";
+  if (state === "cancelled") return "bg-danger";
 };

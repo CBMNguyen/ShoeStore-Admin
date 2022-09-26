@@ -6,11 +6,11 @@ import { Badge } from "reactstrap";
 import { capitalizeFirstLetter } from "utils/common";
 import "./orderitem.scss";
 import momoImage from "../../../../assets/images/MoMo_Logo.png";
+import deliveredLogo from "../../../../assets/images/delivery-logo.png";
 
 OrderItem.propTypes = {
   item: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
-  total: PropTypes.number.isRequired,
   showModel: PropTypes.func,
 };
 
@@ -19,11 +19,12 @@ OrderItem.defaultProps = {
 };
 
 function OrderItem(props) {
-  const { item, total, index, showModel } = props;
+  const { item, index, toggle, setSelectedOrder } = props;
 
   const handleViewClick = (data) => {
-    if (!showModel) return;
-    showModel(data);
+    if (!toggle || !setSelectedOrder) return;
+    setSelectedOrder(data);
+    toggle();
   };
 
   return (
@@ -32,14 +33,24 @@ function OrderItem(props) {
 
       <td>
         <div className="OrderItem__person">
-          <img
-            className="rounded-circle OrderItem__avatar"
-            src={item.user.image}
-            alt={item.user._id}
-            width={38}
-            height={38}
-          />
-          <Badge className="bg-light text-dark ms-1">{`${item.user.firstname} ${item.user.lastname}`}</Badge>
+          {item.user.image && (
+            <img
+              className="rounded-circle OrderItem__avatar shadow border-1"
+              src={item.user.image}
+              alt={item.user._id}
+              width={40}
+              height={40}
+            />
+          )}
+          {!item.user.image && (
+            <div
+              style={{ width: "40px", height: "40px", backgroundColor: "#000" }}
+              className="d-flex align-items-center justify-content-center rounded-circle text-white shadow border-1"
+            >
+              {item.user.firstname[0]}
+            </div>
+          )}
+          <code className="text-dark fw-bold ms-2">{`${item.user.firstname} ${item.user.lastname}`}</code>
         </div>
       </td>
 
@@ -52,11 +63,11 @@ function OrderItem(props) {
       </td>
 
       <td>
-        <Badge className="bg-warning">{total}$</Badge>
+        <Badge className="bg-warning">${item.total.toFixed(2)}</Badge>
       </td>
 
       <td>
-        {item.paymentMethod === "momo" ? (
+        {item.paymentMethod ? (
           <img
             src={momoImage}
             className="OrderItem__avatar ms-4 rounded"
@@ -66,7 +77,7 @@ function OrderItem(props) {
           />
         ) : (
           <img
-            src="https://freepikpsd.com/file/2019/11/delivery-logo-png-Images.png"
+            src={deliveredLogo}
             className="OrderItem__avatar ms-2"
             width={40}
             height={28}
@@ -84,9 +95,37 @@ function OrderItem(props) {
       </td>
 
       <td>
+        <div className="d-flex align-items-center">
+          {!item.employeeId && <Badge color="secondary">Waiting...</Badge>}
+          {item.employeeId && item?.employeeId?.image && (
+            <img
+              className="rounded-circle OrderItem__avatar shadow border-1"
+              src={item.employeeId.image}
+              alt={item.employeeId._id}
+              width={38}
+              height={38}
+            />
+          )}
+          {item.employeeId && !item?.employeeId?.image && (
+            <div
+              style={{ width: "38px", height: "38px", backgroundColor: "#000" }}
+              className="d-flex align-items-center justify-content-center rounded-circle text-white shadow border-1"
+            >
+              {item?.employeeId?.firstname[0]}
+            </div>
+          )}
+          {item.employeeId && (
+            <code className="text-dark fw-bold ms-2">{`${item?.employeeId?.firstname} ${item?.employeeId?.lastname}`}</code>
+          )}
+        </div>
+      </td>
+
+      <td>
         <Badge
           className={classNames({
-            "bg-danger": item.state === "processing",
+            "bg-dark": item.state === "confirmed",
+            "bg-warning": item.state === "shipping",
+            "bg-danger": item.state === "cancelled",
             "bg-success": item.state === "delivered",
             "bg-info": item.state === "pending",
           })}

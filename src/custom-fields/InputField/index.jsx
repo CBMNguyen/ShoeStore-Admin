@@ -54,6 +54,7 @@ function InputField(props) {
               disabled={disabled}
               placeholder={placeholder}
               invalid={showError}
+              required
             />
             {showError && (
               <FormFeedback>{errors[name]["message"]}</FormFeedback>

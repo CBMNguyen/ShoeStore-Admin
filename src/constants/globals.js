@@ -7,9 +7,19 @@ export const GENDER_OPTIONS = [
 
 export const ORDER_STATE_OPTIONS = [
   { value: "pending", label: "Pending" },
-  { value: "processing", label: "Processing" },
+  { value: "confirmed", label: "Confirmed" },
+  { value: "shipping", label: "Shipping" },
   { value: "delivered", label: "Delivered" },
+  { value: "cancelled", label: "Cancelled" },
 ];
+
+export const ORDER_STATE = {
+  pending: "pending",
+  confirmed: "confirmed",
+  shipping: "shipping",
+  delivered: "delivered",
+  cancelled: "cancelled",
+};
 
 export const PRODUCT_TOAST_OPTIONS = {
   autoClose: 2000,

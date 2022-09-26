@@ -1,227 +1,284 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { STYLE_MODEL } from "constants/globals";
-import { Button, Col, FormGroup, Label, Row, Spinner, Table } from "reactstrap";
-import { Input } from "reactstrap";
-import "./orderdetail.scss";
-import FormHeader from "components/FormHeader";
-import { useDispatch } from "react-redux";
-import { updateOrder } from "features/Order/orderSlice";
-import { getTotal, showToastError, showToastSuccess } from "utils/common";
-import momoImage from "../../../../assets/images/MoMo_Logo.png";
+import {
+  Badge,
+  Col,
+  Container,
+  FormGroup,
+  Input,
+  Label,
+  Row,
+} from "reactstrap";
+import {
+  capitalizeFirstLetter,
+  formatDate,
+  getColorByState,
+} from "utils/common";
+import GHNImage from "../../../../assets/images/GHN.webp";
+import classNames from "classnames";
+import { ORDER_STATE } from "constants/globals";
+import "./orderDetailModal.scss";
 
-OrderDetail.propTypes = {
-  order: PropTypes.object.isRequired,
-  closeModel: PropTypes.func.isRequired,
-};
-
-function OrderDetail(props) {
-  const dispatch = useDispatch();
-  const { order, loading, closeModel } = props;
-
-  const handleConformClick = async (orderId, payment) => {
-    try {
-      await showToastSuccess(
-        dispatch(updateOrder({ _id: orderId, state: "processing", payment }))
-      );
-      closeModel();
-    } catch (error) {
-      showToastError(error);
-    }
-  };
-
-  const handleCompleteClick = async (orderId) => {
-    try {
-      await showToastSuccess(
-        dispatch(
-          updateOrder({ _id: orderId, state: "delivered", payment: true })
-        )
-      );
-      closeModel();
-    } catch (error) {
-      showToastError(error);
-    }
-  };
-
+function OrderDetailModal({ order }) {
   return (
-    <div style={STYLE_MODEL} className="animation-fade-in">
-      <div className="OrderDetail">
-        <FormHeader closeModel={closeModel} />
+    <div className="OrderDetailModal">
+      <Container className="p-2 rounded-1">
+        <Row className="shadow py-3 mb-4 rounded-2 mt-3">
+          <div className="d-flex justify-content-between">
+            <h4 className="text-uppercase mb-2">Contact Info</h4>
+            {order.employeeId && (
+              <h4 className="text-uppercase mb-2">Employee Info</h4>
+            )}
+          </div>
+          <Col md={2}>
+            <FormGroup floating>
+              <Input value={order.fullname} readOnly valid />
+              <Label>Full Name</Label>
+            </FormGroup>
+          </Col>
 
-        <Row>
-          <Col md={6}>
-            <FormGroup>
-              <Label>Receiver</Label>
-              <Input defaultValue={order.user.orderAddress.fullName} />
+          <Col md={2}>
+            <FormGroup floating>
+              <Input readOnly value={order.email} valid />
+              <Label>Email</Label>
             </FormGroup>
           </Col>
-          <Col md={6}>
-            <FormGroup>
+
+          <Col md={2}>
+            <FormGroup floating>
+              <Input readOnly value={order.phone} valid />
               <Label>Phone</Label>
-              <Input defaultValue={order.user.orderAddress.phone} />
             </FormGroup>
           </Col>
+
           <Col md={6}>
-            <FormGroup>
-              <Label>City</Label>
-              <Input defaultValue={order.user.orderAddress.city} />
-            </FormGroup>
+            <Row>
+              <Col md={order.employeeId ? 8 : 12}>
+                <FormGroup floating>
+                  <Input readOnly value={order.address.split("#")[0]} valid />
+
+                  <Label>Address</Label>
+                </FormGroup>
+              </Col>
+              {order.employeeId && (
+                <Col md={4}>
+                  <FormGroup floating>
+                    <Input
+                      readOnly
+                      value={
+                        capitalizeFirstLetter(order.employeeId.firstname) +
+                        " " +
+                        capitalizeFirstLetter(order.employeeId.lastname)
+                      }
+                      valid
+                    />
+
+                    <Label>Employee Name</Label>
+                  </FormGroup>
+                </Col>
+              )}
+            </Row>
           </Col>
-          <Col md={6}>
-            <FormGroup>
-              <Label>District</Label>
-              <Input defaultValue={order.user.orderAddress.district} />
-            </FormGroup>
+        </Row>
+
+        {/* dasd */}
+
+        <Row className="mb-4 pt-3 py-4 shadow rounded-2">
+          <h4 className="text-uppercase mb-2">Order Info</h4>
+
+          <Col md={3}>
+            <div className="text-center mb-2">
+              <i
+                className="zmdi zmdi-calendar-check fs-1"
+                style={{ color: "deeppink" }}
+              ></i>
+              <h4 className="text-uppercase text-secondary">Order Date</h4>
+
+              <code
+                className=" d-block mt-4 fs-6 fw-bold"
+                style={{ color: "deeppink" }}
+              >
+                {formatDate(order.createdAt)}
+              </code>
+            </div>
           </Col>
-          <Col md={6}>
-            <FormGroup>
-              <Label>Commune</Label>
-              <Input defaultValue={order.user.orderAddress.commune} />
-            </FormGroup>
-          </Col>
-          <Col md={6}>
-            <FormGroup>
-              <Label>Description</Label>
-              <Input
-                defaultValue={order.user.orderAddress.description}
-                type="textarea"
+          <Col md={3}>
+            <div className="text-center mb-3">
+              <i className="zmdi zmdi-truck fs-1 text-success"></i>
+              <h4 className="text-uppercase text-secondary">
+                delivery service
+              </h4>
+
+              <img
+                style={{
+                  width: "100%",
+                  height: "40px",
+                  objectFit: "contain",
+                  position: "relative",
+                  top: "8px",
+                }}
+                src={GHNImage}
+                alt="GHMAvatarPicture"
               />
-            </FormGroup>
+            </div>
           </Col>
-          <Col md={6}>
-            <FormGroup
-              style={{
-                position: "relative",
-                top: "-20px",
-              }}
-            >
-              <Input
-                defaultChecked={order.user.orderAddress.isFullDay}
-                type="checkbox"
-              />
-              <Label className="ms-2 ">Delivery every day of the week</Label>
-            </FormGroup>
+          <Col md={3}>
+            <div className="text-center mb-2">
+              <i className="zmdi zmdi-brightness-5 fs-1 text-info"></i>
+
+              <h4 className="text-uppercase text-secondary">Order State</h4>
+
+              <code className="d-block mt-4 text-info fs-6 fw-bold">
+                <Badge className={getColorByState(order.state)}>
+                  {capitalizeFirstLetter(order.state)}
+                </Badge>
+              </code>
+            </div>
           </Col>
-          <Col md={12}>
-            <div className="OrderDetail__table">
-              <Table className="table table-hovered table-bordered">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Image</th>
-                    <th>Product</th>
-                    <th className="text-center">Size</th>
-                    <th className="text-center">Quantity</th>
-                    <th className="text-center">Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {order.products.map((product, index) => (
-                    <tr key={product._id}>
-                      <td>{index + 1}</td>
-                      <td
-                        className="text-center"
-                        style={{ overflow: "hidden" }}
-                      >
-                        {
-                          <img
-                            style={{
-                              position: "relative",
-                              top: "-12px",
-                              width: "48px",
-                              height: "48px",
-                              objectFit: "cover",
-                            }}
-                            src={
-                              product.productDetail.find(
-                                ({ color }) =>
-                                  color.color === product.selectedColor
-                              ).images[0]
-                            }
-                            alt={`productimage${index}`}
-                          />
-                        }
-                      </td>
-                      <td>{product.name}</td>
-                      <td className="text-center">{product.selectedSize}</td>
-                      <td>
-                        <div className="ms-4 text-center">
-                          {product.selectedQuantity}
-                        </div>
-                      </td>
-                      <td className="text-center">{`$${(
-                        product.selectedQuantity *
-                        product.salePrice *
-                        ((100 - product.promotionPercent) / 100)
-                      ).toFixed(2)}`}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
+          <Col md={3}>
+            <div className="text-center mb-2">
+              <i className="zmdi zmdi-money fs-1 text-warning"></i>
+
+              <h4 className="text-uppercase text-secondary">Total Amount</h4>
+
+              <code className="d-block mt-4 fs-6 text-warning fw-bold">
+                ${order.total.toFixed(2)}
+              </code>
             </div>
           </Col>
         </Row>
-        <div className="d-flex align-items-center">
-          <div className="d-flex align-items-center justify-content-between w-75">
-            <h6>Total: ${getTotal(order)}</h6>
-            <h6>Payment Method:</h6>
-            {order.paymentMethod === "momo" ? (
-              <img
-                src={momoImage}
-                className=" ms-4 rounded"
-                width={28}
-                height={28}
-                alt="momoLogo"
-              />
-            ) : (
-              <img
-                src="https://freepikpsd.com/file/2019/11/delivery-logo-png-Images.png"
-                className=" ms-2"
-                width={40}
-                height={28}
-                alt="momoLogo"
-              />
-            )}
-            <h6>Payment</h6>
-            {order.payment ? (
-              <i className="zmdi zmdi-check text-success ms-4"></i>
-            ) : (
-              <i className="zmdi zmdi-close text-danger ms-4"></i>
-            )}
-          </div>
-          <div className="OrderDetail__btn">
-            <Button
-              className="text-light me-2"
-              onClick={() => handleConformClick(order._id, order.payment)}
-              disabled={order.state !== "pending"}
+
+        <Row className="pt-3 pb-3 shadow rounded-2">
+          <h4 className="text-uppercase mb-3">order process</h4>
+
+          <Col md={3} className="px-0">
+            <div
+              className={classNames(
+                "OrderDetailModal__stepContainer OrderDetailModal__stepContainer--first",
+                {
+                  "OrderDetailModal__stepContainer--active":
+                    order.state !== ORDER_STATE.cancelled,
+                }
+              )}
             >
-              <div className="d-flex align-items-center">
-                <span>Comfirm</span>
-                {loading && order.state === "pending" && (
-                  <div>
-                    <Spinner className="spinner-border-sm ms-1"> </Spinner>
-                  </div>
-                )}
+              <div className="OrderDetailModal__stepIcon">
+                <i className="zmdi zmdi-spinner text-white fs-4"></i>
               </div>
-            </Button>
-            <Button
-              onClick={() => handleCompleteClick(order._id)}
-              disabled={order.state !== "processing"}
+            </div>
+
+            <h6 className="text-center mt-3">
+              <code className="fs-6 text-secondary fw-bolder">Pending</code>
+            </h6>
+          </Col>
+          <Col md={3} className="px-0">
+            <div
+              className={classNames("OrderDetailModal__stepContainer", {
+                "OrderDetailModal__stepContainer--active":
+                  order.state !== ORDER_STATE.cancelled &&
+                  order.state !== ORDER_STATE.pending,
+              })}
             >
-              <div className="d-flex align-items-center">
-                <span>Complete</span>
-                {loading && order.state === "processing" && (
-                  <div>
-                    <Spinner className="spinner-border-sm ms-1"> </Spinner>
-                  </div>
-                )}
+              <div className="OrderDetailModal__stepIcon">
+                <i className="zmdi zmdi-calendar-check text-white fs-4"></i>
               </div>
-            </Button>
-          </div>
-        </div>
-      </div>
+            </div>
+
+            <h6 className="text-center mt-3">
+              <code className="fs-6 text-secondary fw-bolder">Confirmed</code>
+            </h6>
+          </Col>
+          <Col md={3} className="px-0">
+            <div
+              className={classNames("OrderDetailModal__stepContainer", {
+                "OrderDetailModal__stepContainer--active":
+                  order.state === ORDER_STATE.shipping ||
+                  order.state === ORDER_STATE.delivered,
+              })}
+            >
+              <div className="OrderDetailModal__stepIcon">
+                <i className="zmdi zmdi-truck text-white fs-4"></i>
+              </div>
+            </div>
+
+            <h6 className="text-center mt-3">
+              <code className="fs-6 text-secondary fw-bolder">Shipping</code>
+            </h6>
+          </Col>
+          <Col md={3} className="px-0">
+            <div
+              className={classNames(
+                "OrderDetailModal__stepContainer OrderDetailModal__stepContainer--last",
+                {
+                  "OrderDetailModal__stepContainer--active":
+                    order.state === ORDER_STATE.delivered,
+                }
+              )}
+            >
+              <div className="OrderDetailModal__stepIcon">
+                <i className="zmdi zmdi-card-giftcard text-white fs-4"></i>
+              </div>
+            </div>
+
+            <h6 className="text-center mt-3">
+              <code className="fs-6 text-secondary fw-bolder">Delivered</code>
+            </h6>
+          </Col>
+        </Row>
+        <Row className="pt-3 mt-4 shadow rounded-2">
+          <h4 className="text-uppercase mb-3">order products</h4>
+
+          {order?.products?.map((product, index) => (
+            <div
+              key={index}
+              className="d-flex pb-4 mb-4"
+              style={{ borderBottom: "1px solid #dedede" }}
+            >
+              <div className="position-relative">
+                <img
+                  className="rounded-2 img-thumbnail img-fluid"
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    objectFit: "cover",
+                  }}
+                  src={
+                    order.updateProduct[index].productDetail.find(
+                      ({ color }) => color.color === product.selectedColor
+                    )?.images[0]
+                  }
+                  alt="img"
+                />
+
+                <Badge
+                  className="bg-secondary rounded-pill position-absolute"
+                  style={{ top: "-10px", right: "-10px" }}
+                >
+                  {product.selectedQuantity}
+                </Badge>
+              </div>
+              <div className="flex-grow-1 ms-4">
+                <Badge className="bg-secondary">{product._id.name}</Badge>
+                <h6>
+                  <Badge className="bg-dark">
+                    {capitalizeFirstLetter(product?._id?.category?.name)}
+                  </Badge>
+                </h6>
+                <div>
+                  <Badge className="bg-success">{product.selectedSize}</Badge>
+                </div>
+              </div>
+              <div className="my-auto">
+                <Badge className="bg-warning">
+                  $
+                  {product._id.salePrice *
+                    (1 - product._id.promotionPercent / 100) *
+                    product.selectedQuantity}
+                </Badge>
+              </div>
+            </div>
+          ))}
+        </Row>
+      </Container>
     </div>
   );
 }
 
-export default OrderDetail;
+export default OrderDetailModal;

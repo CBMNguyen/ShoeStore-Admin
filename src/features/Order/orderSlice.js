@@ -33,13 +33,33 @@ export const getOrderById = createAsyncThunk(
 
 export const updateOrder = createAsyncThunk(
   "order/updateOrder",
-  async ({ _id, ...data }, { rejectWithValue, fulfillWithValue }) => {
+  async (id, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const { message } = await orderApi.update(_id, data);
+      const data = await orderApi.update(id);
+      return fulfillWithValue({ ...data, _id: id });
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const updateStateOrder = createAsyncThunk(
+  "order/updateStateOrder",
+  async (
+    { _id, state, payment, employee },
+    { rejectWithValue, fulfillWithValue }
+  ) => {
+    try {
+      const { message } = await orderApi.updateState(_id, {
+        state,
+        payment,
+        employeeId: employee.employeeId,
+      });
       return fulfillWithValue({
         _id,
-        state: data.state,
-        payment: data.payment,
+        state,
+        employee,
+        payment,
         message,
       });
     } catch (error) {
@@ -74,7 +94,6 @@ const orderSlice = createSlice({
     },
 
     // handle update order
-
     [updateOrder.pending]: (state) => {
       state.loading = true;
     },
@@ -83,15 +102,31 @@ const orderSlice = createSlice({
       state.error = action.payload.message;
     },
     [updateOrder.fulfilled]: (state, action) => {
-      const { _id, payment } = action.payload;
+      const { _id } = action.payload;
       state.loading = false;
       const index = state.order.findIndex((order) => order._id === _id);
       if (index === -1) return;
-      state.order[index] = {
-        ...state.order[index],
-        state: action.payload.state,
-        payment: payment ? payment : false,
-      };
+      state.order[index].state = "cancelled";
+      state.error = "";
+    },
+
+    // handle update order state
+
+    [updateStateOrder.pending]: (state) => {
+      state.loading = true;
+    },
+    [updateStateOrder.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+    },
+    [updateStateOrder.fulfilled]: (state, action) => {
+      const { _id, state: orderState, payment, employee } = action.payload;
+      state.loading = false;
+      const index = state.order.findIndex((order) => order._id === _id);
+      if (index === -1) return;
+      state.order[index].state = orderState;
+      state.order[index].payment = payment;
+      state.order[index].employeeId = employee;
       state.error = "";
     },
   },

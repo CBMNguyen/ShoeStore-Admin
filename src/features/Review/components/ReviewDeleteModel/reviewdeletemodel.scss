@@ -1,0 +1,17 @@
+.ReviewDeleteModel {
+  &__main {
+    position: relative;
+    width: 550px;
+    padding: 1.5rem;
+    border-radius: 0.3rem;
+
+    background-color: #fff;
+    font-size: 1.05rem;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+}

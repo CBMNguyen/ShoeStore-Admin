@@ -11,9 +11,9 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(
   async (config) => {
-    const data = localStorage.getItem("persist:employee");
-    if (data) {
-      const { token } = JSON.parse(JSON.parse(data).auth);
+    const data = JSON.parse(localStorage.getItem("persist:employee"));
+    if (data?.auth) {
+      const { token } = JSON.parse(data.auth);
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;

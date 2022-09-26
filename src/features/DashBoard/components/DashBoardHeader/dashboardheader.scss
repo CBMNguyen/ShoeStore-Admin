@@ -11,7 +11,7 @@
   &__income,
   &__employee,
   &__user,
-  &__product {
+  &__revenue {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -35,17 +35,26 @@
   &__income i,
   &__employee i,
   &__user i,
-  &__product i {
+  &__revenue i {
     border-radius: 0.65rem;
   }
 
+  &__revenue {
+    border-left: 4px solid deeppink;
+    transition: all 0.2s ease-in-out 0s;
+  }
+  &__revenue i {
+    color: deeppink;
+    background-color: rgba(255, 20, 147, 0.2);
+  }
+
   &__income {
-    border-left: 4px solid #3f6ad8;
+    border-left: 4px solid orange;
     transition: all 0.2s ease-in-out 0s;
   }
   &__income i {
-    color: #3f6ad8;
-    background-color: rgba(63, 106, 216, 0.2);
+    color: orange;
+    background-color: hsla(39, 100%, 50%, 0.2);
   }
 
   &__employee {
@@ -58,28 +67,18 @@
   }
 
   &__user {
-    border-left: 4px solid orange;
+    border-left: 4px solid #3f6ad8;
     transition: all 0.2s ease-in-out 0s;
   }
   &__user i {
-    color: orange;
-    background-color: hsla(39, 100%, 50%, 0.2);
-    transition: all 0.2s ease-in-out 0s;
-  }
-
-  &__product {
-    border-left: 4px solid #d92550;
-    transition: all 0.2s ease-in-out 0s;
-  }
-  &__product i {
-    color: #d92550;
-    background-color: rgba(217, 37, 80, 0.2);
+    color: #3f6ad8;
+    background-color: rgba(63, 106, 216, 0.2);
   }
 
   &__income:hover,
   &__employee:hover,
   &__user:hover,
-  &__product:hover {
+  &__revenue:hover {
     cursor: pointer;
     transform: scale(1.05);
   }

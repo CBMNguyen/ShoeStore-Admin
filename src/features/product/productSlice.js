@@ -43,6 +43,18 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
+export const updateProductState = createAsyncThunk(
+  "product/updateProductState",
+  async ({ id, formData }, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const data = await productApi.updateState(id, formData);
+      return fulfillWithValue({ id, state: data.state });
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const deleteProduct = createAsyncThunk(
   "product/deleteProduct",
   async (productId, { rejectWithValue, fulfillWithValue }) => {
@@ -103,6 +115,24 @@ const productSlice = createSlice({
       );
       if (index === -1) return;
       state.products[index] = productUpdated;
+      state.error = "";
+    },
+
+    // handle update state product
+    [updateProductState.pending]: (state) => {
+      state.loading = true;
+    },
+    [updateProductState.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.payload.message;
+    },
+    [updateProductState.fulfilled]: (state, action) => {
+      state.loading = false;
+      const index = state.products.findIndex(
+        (product) => product._id === action.payload.id
+      );
+      if (index === -1) return;
+      state.products[index].state = action.payload.state;
       state.error = "";
     },
 

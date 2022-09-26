@@ -19,6 +19,18 @@ export const fetchUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk(
+  "user/updateUser",
+  async ({ userId, state }, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      await userApi.update(userId, { state });
+      return fulfillWithValue({ userId, state });
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 export const deleteUser = createAsyncThunk(
   "user/deleteUser",
   async (userId, { rejectWithValue, fulfillWithValue }) => {
@@ -44,6 +56,27 @@ const userSlice = createSlice({
     [fetchUser.fulfilled]: (state, action) => {
       state.loading = false;
       state.user = action.payload.users;
+    },
+
+    // handle update user
+    [updateUser.pending]: (state) => {
+      state.loading = true;
+    },
+    [updateUser.rejected]: (state, action) => {
+      state.loading = false;
+      state.error = action.error;
+    },
+    [updateUser.fulfilled]: (state, action) => {
+      state.user = state.user.map((user) => {
+        if (user._id === action.payload.userId) {
+          user.state = action.payload.state;
+          return user;
+        } else {
+          return user;
+        }
+      });
+      state.loading = false;
+      state.error = "";
     },
 
     // handle delete user

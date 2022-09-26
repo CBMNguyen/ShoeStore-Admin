@@ -1,10 +1,11 @@
+import roleApi from "api/role";
 import Loading from "components/Loading";
 import TableFooter from "components/TableFooter";
 import TableHeader from "components/TableHeader";
+import { PRODUCT_TOAST_OPTIONS } from "constants/globals";
 import EmployeeAddModel from "features/Employee/components/EmployeeAddModel";
 import EmployeeDeleteModel from "features/Employee/components/EmployeeDeleteModel";
 import EmployeeList from "features/Employee/components/EmployeeList";
-import EmployeeViewModel from "features/Employee/components/EmployeeViewModel";
 import {
   createEmployee,
   deleteEmployee,
@@ -13,9 +14,10 @@ import {
 } from "features/Employee/employeeSlice";
 import { fetchPosition } from "features/Scc/positionSlice";
 import useModel from "hooks/useModel";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   capitalizeFirstLetter,
   getAge,
@@ -33,6 +35,7 @@ function MainPage(props) {
     name: "",
   };
 
+  const [roles, setRoles] = useState([]);
   const [filter, setFilter] = useState(initialFilter);
 
   const dispatch = useDispatch();
@@ -41,6 +44,19 @@ function MainPage(props) {
     dispatch(fetchEmployee());
     dispatch(fetchPosition());
   }, [dispatch]);
+
+  useEffect(() => {
+    try {
+      const fetchRoles = async () => {
+        const data = await roleApi.getAll();
+        setRoles(data.roles);
+      };
+
+      fetchRoles();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const employeeState = useSelector((state) => state.employee);
   const positions = useSelector((state) => state.position.position);
@@ -114,16 +130,19 @@ function MainPage(props) {
   };
 
   const handleEmployeeAddForm = async (data) => {
+    data.roles = data.roles.map((role) => (role ? role : undefined));
     const formData = new FormData();
     formData.append("firstname", data.firstname);
     formData.append("lastname", data.lastname);
     formData.append("email", data.email);
+    formData.append("password", data.password);
     formData.append("phone", data.phone);
     formData.append("gender", data.gender.value);
     formData.append("birthdate", data.birthdate.toISOString());
     formData.append("position", data.position.value);
     formData.append("image", data.image);
     formData.append("address", data.address);
+    formData.append("roles", JSON.stringify(data.roles));
 
     if (!model.data) {
       try {
@@ -153,11 +172,28 @@ function MainPage(props) {
     }
   };
 
+  const handleLockEmployeeClick = async (data) => {
+    try {
+      await dispatch(
+        updateEmployee({ _id: data._id, employee: { state: !data.state } })
+      );
+      toast(
+        `Successfully ${!data.state ? "locked" : "unlock"} ${data.firstname} ${
+          data.lastname
+        } account.`,
+        { ...PRODUCT_TOAST_OPTIONS }
+      );
+      viewModel.closeModel();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleResetFilter = () => {
     setFilter(initialFilter);
   };
 
-  return employees.length === 0 ? (
+  return loading && employees.length === 0 ? (
     <Loading />
   ) : (
     <div className="MainPage">
@@ -178,6 +214,8 @@ function MainPage(props) {
         showRemoveModel={removeModel.showModel}
         showViewModel={viewModel.showModel}
         onAgeChange={handleAgeChange}
+        onLockEmployeeClick={handleLockEmployeeClick}
+        loading={loading}
       />
 
       <TableFooter
@@ -191,6 +229,7 @@ function MainPage(props) {
           loading={loading}
           onSubmit={handleEmployeeAddForm}
           model={model}
+          roles={roles}
           closeModel={closeModel}
           positionOptions={POSITION_OPTIONS}
         />
@@ -202,13 +241,6 @@ function MainPage(props) {
           data={removeModel.model.data}
           onRemoveClick={handleEmployeeDelete}
           closeModel={removeModel.closeModel}
-        />
-      )}
-
-      {viewModel.model.show && (
-        <EmployeeViewModel
-          data={viewModel.model.data}
-          closeModel={viewModel.closeModel}
         />
       )}
     </div>

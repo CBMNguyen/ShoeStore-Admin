@@ -2,7 +2,15 @@ import FormHeader from "components/FormHeader";
 import { STYLE_MODEL } from "constants/globals";
 import PropTypes from "prop-types";
 import React from "react";
-import { Badge, Col, ListGroup, ListGroupItem, Row } from "reactstrap";
+import {
+  Badge,
+  Button,
+  Col,
+  ListGroup,
+  ListGroupItem,
+  Row,
+  Spinner,
+} from "reactstrap";
 import { capitalizeFirstLetter } from "utils/common";
 import "./employeeviewmodel.scss";
 
@@ -12,7 +20,7 @@ EmployeeViewModel.propTypes = {
 };
 
 function EmployeeViewModel(props) {
-  const { data, closeModel } = props;
+  const { data, closeModel, onLockEmployee, loading } = props;
   return (
     <div className="EmployeeViewModel" style={STYLE_MODEL}>
       <div className="EmployeeViewModel__main">
@@ -43,17 +51,30 @@ function EmployeeViewModel(props) {
 
               <ListGroupItem>
                 <div>Phone: </div>
-                <Badge style={{ backgroundColor: "green" }}>{data.phone}</Badge>
+                <Badge style={{ backgroundColor: "cyan" }}>{data.phone}</Badge>
               </ListGroupItem>
 
               <ListGroupItem>
                 <div>Gender: </div>
-                <Badge style={{ backgroundColor: "blue" }}>{data.gender}</Badge>
+                <Badge style={{ backgroundColor: "orange" }}>
+                  {data.gender}
+                </Badge>
+              </ListGroupItem>
+
+              <ListGroupItem>
+                <div>State: </div>
+                <Badge
+                  style={{
+                    backgroundColor: data.state ? "red" : "green",
+                  }}
+                >
+                  {data.state ? "Locked" : "Active"}
+                </Badge>
               </ListGroupItem>
 
               <ListGroupItem>
                 <div>Date of Birth: </div>
-                <Badge style={{ backgroundColor: "orange" }}>
+                <Badge style={{ backgroundColor: "purple" }}>
                   {new Date(data.birthdate).toUTCString()}
                 </Badge>
               </ListGroupItem>
@@ -88,6 +109,32 @@ function EmployeeViewModel(props) {
             </ListGroup>
           </Col>
         </Row>
+
+        <div className="float-end mt-3">
+          <Button
+            onClick={() => onLockEmployee(data)}
+            disabled={loading}
+            color={data.state ? "primary" : "danger"}
+            className="rounded-1 text-uppercase"
+          >
+            <code className="text-white">
+              {data.state ? "unlock employee" : "lock employee"}
+            </code>
+            {loading && (
+              <Spinner size="sm" className="ms-2">
+                {""}
+              </Spinner>
+            )}
+          </Button>
+          <Button
+            onClick={closeModel}
+            color="secondary"
+            disabled={loading}
+            className="rounded-1 text-uppercase ms-2"
+          >
+            <code className="text-white">Close</code>
+          </Button>
+        </div>
       </div>
     </div>
   );

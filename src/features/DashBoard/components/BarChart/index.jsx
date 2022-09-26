@@ -1,93 +1,72 @@
-import PropTypes from "prop-types";
 import React from "react";
-import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
 import "./barchart.scss";
 
-BarChart.propTypes = {
-  monthlyIncome: PropTypes.array.isRequired,
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "top",
+    },
+    title: {
+      display: true,
+      text: "Monthly Profit Growth Statistics",
+    },
+  },
 };
 
-function BarChart(props) {
-  const { monthlyIncome } = props;
+const labels = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+export const data = {
+  labels,
+  datasets: [
+    {
+      label: "",
+      data: labels.map(() => 1000),
+      backgroundColor: "rgba(255, 99, 132, 0.5)",
+    },
+  ],
+};
+
+export function BarChart() {
   return (
-    <div className="BarChart shadow">
-      <Line
-        width={1000}
-        height={150}
-        options={{
-          maintainAspectRadio: false,
-
-          animations: {
-            tension: {
-              duration: 2000,
-              easing: "linear",
-              from: 1,
-              to: 0,
-              loop: true,
-            },
-          },
-
-          scales: {
-            y: {
-              // defining min and max so hiding the dataset does not change scale range
-              min: 0,
-              max: 10000,
-            },
-          },
-
-          plugins: {
-            legend: {
-              display: true,
-              labels: {
-                boxWidth: 40,
-                boxHeight: 1,
-                color: "black",
-              },
-            },
-          },
-        }}
-        data={{
-          labels: [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-          ],
-
-          datasets: [
-            {
-              label: "Monthly Income",
-              data: monthlyIncome,
-              borderColor: [
-                "black",
-                "red",
-                "green",
-                "blue",
-                "yellow",
-                "cyan",
-                "deeppink",
-                "orange",
-                "pink",
-                "purple",
-                "brown",
-                "Lavender",
-              ],
-
-              borderWidth: 4,
-            },
-          ],
-        }}
-      />
-    </div>
+    <Bar
+      className="BarChart"
+      width={1000}
+      height={150}
+      options={options}
+      data={data}
+    />
   );
 }
-
-export default BarChart;

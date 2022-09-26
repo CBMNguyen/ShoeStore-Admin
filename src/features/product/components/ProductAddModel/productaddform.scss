@@ -2,6 +2,9 @@
   &__form {
     position: relative;
     width: 800px;
+    max-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 1rem;
     border-radius: 0.3rem;
 
@@ -11,11 +14,13 @@
 
   &__textarea {
     resize: none;
+    height: 90px;
+    overflow-y: auto;
   }
 
   &__detail {
-    max-height: 320px;
-    overflow-y: scroll;
+    max-height: 500px;
+    overflow-y: auto;
   }
 
   &__btn {

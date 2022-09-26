@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
 .Header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -12,7 +16,7 @@
     color: black;
 
     & img {
-      border: 1px solid deeppink;
+      border: 2px solid #dedede;
     }
   }
 

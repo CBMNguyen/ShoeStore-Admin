@@ -1,10 +1,18 @@
+import { logout } from "features/Employee/employeeSlice";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { Button } from "reactstrap";
 import brandLogo from "../../assets/images/brandLogo.png";
 import "./header.scss";
 
 const Header = (props) => {
-  const item = useSelector((state) => state.employee.auth);
+  const auth = useSelector((state) => state.employee?.auth);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
   return (
     <div className="Header shadow rounded">
       <div className="Header__title">
@@ -14,18 +22,32 @@ const Header = (props) => {
           </h2>{" "}
         </Link>
       </div>
-      {item.token && (
+      {auth?.token && (
         <div className="Header__admin">
           <div>
             <img
-              className="rounded-circle me-2"
-              width={38}
-              height={38}
-              src={item.data.imageUrl}
+              className="rounded-circle me-2 shadow"
+              width={40}
+              height={40}
+              src={auth.data.imageUrl}
               alt="admin"
             />
           </div>
-          <div>{`${item.data.firstname} ${item.data.lastname}`}</div>
+          <code className="text-dark fw-bold rounded-2 ">{`${auth.data.firstname} ${auth.data.lastname}`}</code>
+
+          <Button
+            onClick={handleLogout}
+            color="info"
+            size="sm"
+            className="ms-3 "
+          >
+            <code
+              className="text-white text-uppercase fw-bold"
+              style={{ letterSpacing: "1px" }}
+            >
+              Logout
+            </code>
+          </Button>
         </div>
       )}
     </div>

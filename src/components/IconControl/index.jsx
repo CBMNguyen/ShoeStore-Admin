@@ -11,8 +11,16 @@ function IconControl(props) {
         id="check"
       />
       <label className="IconControl" htmlFor="check">
-        <i className="zmdi zmdi-menu" id="btn" />
-        <i className="zmdi zmdi-close" id="cancel" />
+        <i
+          className="zmdi zmdi-menu"
+          id="btn"
+          style={{ position: "fixed", top: "18px" }}
+        />
+        <i
+          className="zmdi zmdi-close"
+          id="cancel"
+          style={{ position: "fixed", top: "22px" }}
+        />
       </label>
     </React.Fragment>
   );

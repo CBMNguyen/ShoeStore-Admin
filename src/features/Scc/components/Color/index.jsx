@@ -7,7 +7,7 @@ import {
 import useModel from "hooks/useModel";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Badge, Table } from "reactstrap";
+import { Table } from "reactstrap";
 import { showToastError, showToastSuccess } from "utils/common";
 import DeleteModel from "../DeleteModel";
 import SccModel from "../SccModel";
@@ -88,18 +88,24 @@ function Color(props) {
           {color.map((c, i) => (
             <tr key={c._id}>
               <th>
-                <span className="ps-1">{i}</span>
+                <span className="ps-1">{i + 1}</span>
               </th>
               <td>
-                <Badge
-                  style={{
-                    backgroundColor: `${c.color}`,
-                    fontWeight: "bolder",
-                  }}
-                  className={c.color === "white" ? "text-dark" : ""}
-                >
-                  {c.color}
-                </Badge>
+                <span>
+                  <code
+                    style={{
+                      backgroundColor: `${c.color}`,
+                      fontWeight: "bolder",
+                    }}
+                    className={
+                      c.color === "white"
+                        ? "text-dark py-1 px-2 rounded-2 shadow"
+                        : "text-white py-1 px-2 rounded-2 shadow"
+                    }
+                  >
+                    {c.color}
+                  </code>
+                </span>
               </td>
               <td width={100}>
                 <i

@@ -1,14 +1,15 @@
 import Loading from "components/Loading";
 import TableFooter from "components/TableFooter";
 import TableHeader from "components/TableHeader";
+import { PRODUCT_TOAST_OPTIONS } from "constants/globals";
 import UserDeleteModel from "features/User/components/UserDeleteModel";
 import UserList from "features/User/components/UserList";
-import UserViewModel from "features/User/components/UserViewModel";
-import { deleteUser, fetchUser } from "features/User/userSlice";
+import { deleteUser, fetchUser, updateUser } from "features/User/userSlice";
 import useModel from "hooks/useModel";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { toast } from "react-toastify";
 import { getAge, showToastError, showToastSuccess } from "utils/common";
 
 function MainPage(props) {
@@ -33,7 +34,6 @@ function MainPage(props) {
   const { loading } = userState;
 
   const removeModel = useModel();
-  const viewModel = useModel();
 
   // handle Pagination and filter equal redux
 
@@ -88,7 +88,21 @@ function MainPage(props) {
     }
   };
 
-  return users.length === 0 ? (
+  const handleLockUserClick = async (data) => {
+    try {
+      await dispatch(updateUser({ userId: data._id, state: !data.state }));
+      toast(
+        `Successfully ${!data.state ? "locked" : "unlock"} ${data.firstname} ${
+          data.lastname
+        } account.`,
+        { ...PRODUCT_TOAST_OPTIONS }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return loading && users.length === 0 ? (
     <Loading />
   ) : (
     <div className="MainPage">
@@ -102,11 +116,12 @@ function MainPage(props) {
       />
 
       <UserList
+        loading={loading}
         filter={filter}
         users={sortUsers.slice(start, end)}
         onAgeChange={handleAgeChange}
         showRemoveModel={removeModel.showModel}
-        showViewModel={viewModel.showModel}
+        onLockUserClick={handleLockUserClick}
       />
 
       <TableFooter
@@ -121,13 +136,6 @@ function MainPage(props) {
           data={removeModel.model.data}
           onRemoveClick={handleUserDelete}
           closeModel={removeModel.closeModel}
-        />
-      )}
-
-      {viewModel.model.show && (
-        <UserViewModel
-          data={viewModel.model.data}
-          closeModel={viewModel.closeModel}
         />
       )}
     </div>

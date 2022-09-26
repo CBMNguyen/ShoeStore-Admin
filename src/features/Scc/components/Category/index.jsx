@@ -93,7 +93,7 @@ function Category(props) {
           {categories.map((c, i) => (
             <tr key={c._id}>
               <th>
-                <span className="ps-1">{i}</span>
+                <span className="ps-1">{i + 1}</span>
               </th>
               <td>
                 <div>{capitalizeFirstLetter(c.name)}</div>

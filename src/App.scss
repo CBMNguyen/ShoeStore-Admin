@@ -53,3 +53,20 @@ input[type="file"]:disabled {
     cursor: default;
   }
 }
+
+.close {
+  border: none;
+  background-color: transparent;
+  transition: all 0.3s ease-in-out;
+
+  & span {
+    font-size: 40px;
+    line-height: 40px;
+    color: #ccc;
+  }
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+  }
+}

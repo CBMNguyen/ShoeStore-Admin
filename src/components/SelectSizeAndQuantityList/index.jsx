@@ -188,7 +188,11 @@ function SelectSizeAndQuantityList({
                         }
                       }}
                       type="button"
-                      style={{ backgroundColor: "#ccc" }}
+                      style={{
+                        backgroundColor: "#ccc",
+                        position: "relative",
+                        top: "-5px",
+                      }}
                       disabled={mode === screenMode.view}
                       className="SelectSizeAndQuantityList__button ms-2 mt-4"
                     >
@@ -204,7 +208,6 @@ function SelectSizeAndQuantityList({
             <FormGroup>
               <Input
                 defaultValue={images}
-                className="mt-1"
                 type="file"
                 disabled={mode === screenMode.view}
                 onChange={(e) => {

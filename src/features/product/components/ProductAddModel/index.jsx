@@ -1,7 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import SelectSizeAndQuantityList from "components/SelectSizeAndQuantityList";
 import { STYLE_MODEL } from "constants/globals";
-import CheckBoxField from "custom-fields/CheckBoxField";
 import InputField from "custom-fields/InputField";
 import SelectField from "custom-fields/SelectField";
 import SelectFieldCustom from "custom-fields/SelectFieldCustom";
@@ -9,7 +8,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import "react-toastify/dist/ReactToastify.css";
-import { Col, Form, Row, Spinner } from "reactstrap";
+import { Col, Container, Form, Label, Row, Spinner } from "reactstrap";
 import { capitalizeFirstLetter, colourNameToHex } from "utils/common";
 import * as yup from "yup";
 import FormHeader from "../../../../components/FormHeader";
@@ -49,7 +48,6 @@ function ProductAddForm(props) {
         category: null,
         originalPrice: 100,
         promotionPercent: 0,
-        isFreeShip: false,
         color: [
           {
             label: "Black",
@@ -57,6 +55,7 @@ function ProductAddForm(props) {
             color: "#000000",
           },
         ],
+        material: "",
         description: "",
       }
     : {
@@ -67,12 +66,12 @@ function ProductAddForm(props) {
         },
         originalPrice: model.data.originalPrice,
         promotionPercent: model.data.promotionPercent,
-        isFreeShip: model.data.isFreeShip,
         color: model.data.productDetail.map(({ color }) => ({
           label: capitalizeFirstLetter(color.color),
           value: color._id,
           color: colourNameToHex(color.color),
         })),
+        material: model.data.material,
         description: model.data.description,
       };
 
@@ -87,9 +86,9 @@ function ProductAddForm(props) {
       .min(0)
       .max(100)
       .required("This field is required."),
-    isFreeShip: yup.bool().default(false),
 
     color: yup.array().required("This field is required.").nullable(),
+    material: yup.string().required("This field is required."),
     description: yup.string().required("This field is required."),
   });
 
@@ -134,152 +133,153 @@ function ProductAddForm(props) {
     <div className="ProductAddForm animation-fade-in" style={STYLE_MODEL}>
       (
       <Form className="ProductAddForm__form" onSubmit={handleSubmit(onSubmit)}>
-        {/* Form Header */}
-        <FormHeader closeModel={closeModel} />
-        <Row>
-          {/*  Product - Input Name */}
-          <Col md={6}>
-            <InputField
-              control={control}
-              errors={errors}
-              name="name"
-              label="Name"
-              placeholder="Enter name"
-            />
-          </Col>
+        <Container>
+          <Row>
+            {/* Form Header */}
+            <FormHeader closeModel={closeModel} />
+            <Row>
+              {/* Product - Select Category */}
+              <Col md={6}>
+                <SelectField
+                  setValue={setValue}
+                  control={control}
+                  errors={errors}
+                  name="category"
+                  label="Category"
+                  placeholder="Select category ..."
+                  options={categoryOptions}
+                />
+              </Col>
 
-          {/* Product - Select Category */}
-          <Col md={6}>
-            <SelectField
-              setValue={setValue}
-              control={control}
-              errors={errors}
-              name="category"
-              label="Category"
-              placeholder="Select category ..."
-              options={categoryOptions}
-            />
-          </Col>
-        </Row>
+              {/*  Product - Input Name */}
+              <Col md={6}>
+                <InputField
+                  control={control}
+                  errors={errors}
+                  name="name"
+                  label="Name"
+                  placeholder="Enter name"
+                />
+              </Col>
+            </Row>
 
-        <Row>
-          {/* Product - Input Price */}
-          <Col md={6}>
-            <InputField
-              control={control}
-              errors={errors}
-              name="originalPrice"
-              label="Price"
-              type="number"
-              placeholder="Enter number"
-            />
-          </Col>
+            <Row>
+              {/* Product - Input Price */}
+              <Col md={3}>
+                <InputField
+                  control={control}
+                  errors={errors}
+                  name="originalPrice"
+                  label="Price"
+                  type="number"
+                  placeholder="Enter number"
+                />
+              </Col>
 
-          {/* Product - Input Promotion Percent */}
-          <Col md={6}>
-            <InputField
-              control={control}
-              errors={errors}
-              name="promotionPercent"
-              label="Promotion Percent"
-              type="number"
-              placeholder="Enter Promotion Percent"
-              min={1}
-            />
-          </Col>
-        </Row>
+              {/* Product - Input Promotion Percent */}
+              <Col md={3}>
+                <InputField
+                  control={control}
+                  errors={errors}
+                  name="promotionPercent"
+                  label="Promotion Percent"
+                  type="number"
+                  placeholder="Enter Promotion Percent"
+                  min={1}
+                />
+              </Col>
 
-        <Row>
-          {/* Product - CheckBox FreeShip */}
-          <Col md={6} className="mt-4">
-            <div className="d-flex">
-              <CheckBoxField
-                setValue={setValue}
-                control={control}
-                errors={errors}
-                name="isFreeShip"
-                label="FreeShip"
-                type="checkbox"
-                className="me-1"
-              />
+              {/* Product - Input Color */}
+              <Col md={6}>
+                <SelectFieldCustom
+                  isMulti={true}
+                  defaultValue={defaultValues.color}
+                  setValue={setValue}
+                  name="color"
+                  control={control}
+                  errors={errors}
+                  label="Color"
+                  placeholder="Select color ..."
+                  options={colorOptions}
+                />
+              </Col>
+            </Row>
+
+            <Row>
+              {/* Product - Textarea */}
+              <Col md={6}>
+                <InputField
+                  control={control}
+                  errors={errors}
+                  className="ProductAddForm__textarea"
+                  name="description"
+                  label="Description"
+                  type="textarea"
+                />
+              </Col>
+
+              <Col md={6}>
+                <InputField
+                  control={control}
+                  errors={errors}
+                  className="ProductAddForm__textarea"
+                  name="material"
+                  label="Material"
+                  type="textarea"
+                />
+              </Col>
+            </Row>
+
+            <div className="ProductAddForm__detail">
+              <Row>
+                <Label>Product Detail</Label>
+                {colors.map((color, index) => (
+                  <Col md={6} key={index}>
+                    {/* Handle Select Size And Quantity */}
+                    <SelectSizeAndQuantityList
+                      data={
+                        model.data && model.data.productDetail[index]
+                          ? model.data.productDetail[index].sizeAndQuantity
+                          : null
+                      }
+                      currentImages={
+                        model.data && model.data.productDetail[index]
+                          ? model.data.productDetail[index].images
+                          : null
+                      }
+                      color={color}
+                      onSaveSelectSizeAndQuantityList={
+                        handleSaveSelectSizeAndQuantityList
+                      }
+                      onClearSelectSizeAndQuantityList={
+                        handleClearSelectSizeAndQuantityList
+                      }
+                      sizeOptions={sizeOptions}
+                    />
+                  </Col>
+                ))}
+              </Row>
             </div>
-          </Col>
 
-          {/* Product - Input Color */}
-          <Col md={6}>
-            <SelectFieldCustom
-              isMulti={true}
-              defaultValue={defaultValues.color}
-              setValue={setValue}
-              name="color"
-              control={control}
-              errors={errors}
-              label="Color"
-              placeholder="Select color ..."
-              options={colorOptions}
-            />
-          </Col>
-        </Row>
-
-        <div className="ProductAddForm__detail">
-          {colors.map((color, index) => (
-            <div key={index}>
-              {/* Handle Select Size And Quantity */}
-              <SelectSizeAndQuantityList
-                data={
-                  model.data && model.data.productDetail[index]
-                    ? model.data.productDetail[index].sizeAndQuantity
-                    : null
-                }
-                currentImages={
-                  model.data && model.data.productDetail[index]
-                    ? model.data.productDetail[index].images
-                    : null
-                }
-                color={color}
-                onSaveSelectSizeAndQuantityList={
-                  handleSaveSelectSizeAndQuantityList
-                }
-                onClearSelectSizeAndQuantityList={
-                  handleClearSelectSizeAndQuantityList
-                }
-                sizeOptions={sizeOptions}
-              />
-            </div>
-          ))}
-        </div>
-
-        <Row>
-          {/* Product - Textarea */}
-          <Col md={12}>
-            <InputField
-              control={control}
-              errors={errors}
-              className="ProductAddForm__textarea"
-              name="description"
-              label="Description"
-              type="textarea"
-            />
-          </Col>
-        </Row>
-
-        <button
-          className="ProductAddForm__btn mt-4"
-          disabled={loading}
-          type="submit"
-        >
-          {loading && (
-            <Spinner
-              color="light"
-              size="md"
-              style={{ position: "absolute", right: "1rem", top: "1rem" }}
+            <button
+              className="ProductAddForm__btn mt-4"
+              disabled={loading}
+              type="submit"
             >
-              {" "}
-            </Spinner>
-          )}
+              {loading && (
+                <Spinner
+                  color="light"
+                  size="md"
+                  style={{ position: "absolute", right: "1rem", top: "1rem" }}
+                >
+                  {" "}
+                </Spinner>
+              )}
 
-          {!model.data ? "Submit" : "Update"}
-        </button>
+              {!model.data ? "Submit" : "Update"}
+            </button>
+          </Row>
+        </Container>
       </Form>
       )
     </div>
