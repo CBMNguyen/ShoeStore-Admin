@@ -62,6 +62,7 @@ function MainPage(props) {
   const positions = useSelector((state) => state.position.position);
 
   const employees = employeeState.employee;
+  const auth = employeeState.auth;
   const { loading } = employeeState;
 
   // Options React - Select
@@ -93,7 +94,9 @@ function MainPage(props) {
     );
   });
 
-  let sortEmployees = filterEmployees;
+  let sortEmployees = filterEmployees.filter(
+    (employee) => auth?.data?.isAdmin || !employee.isAdmin
+  );
 
   // sort employee increase age
   filter["age"] === 1 &&

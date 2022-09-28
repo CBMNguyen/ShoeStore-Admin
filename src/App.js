@@ -2,6 +2,9 @@ import Header from "components/Header";
 import IconControl from "components/IconControl";
 import Loading from "components/Loading";
 import NotFound from "components/NotFound";
+import ProtectedOrderRoute from "components/ProtectedOrderRoute";
+import ProtectedProductRoute from "components/ProtectedProductRoute";
+import ProtectedEmployeeRoute from "components/ProtectedEmployeeRoute";
 import ProtectedRoute from "components/ProtectedRoute";
 import SideBar from "components/SideBar";
 import Login from "features/Employee/components/Login";
@@ -9,6 +12,9 @@ import React, { Suspense } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "./App.scss";
+import ProtectedReviewRoute from "components/ProtectedReviewRoute";
+import ProtectedImportRoute from "components/ProtectedImportRoute";
+import ProtectedDashboardRoute from "components/ProtectedDashboardRoute";
 
 function App() {
   const Product = React.lazy(() => import("./features/product"));
@@ -33,17 +39,23 @@ function App() {
             <Header />
             <Switch>
               <Redirect exact from="/" to="/dashboard" />
-              <ProtectedRoute path="/dashboard" component={DashBoard} />
-              <ProtectedRoute path="/products" component={Product} />
+              <ProtectedDashboardRoute
+                path="/dashboard"
+                component={DashBoard}
+              />
+              <ProtectedProductRoute path="/products" component={Product} />
               <ProtectedRoute path="/scc" component={Scc} />
               <ProtectedRoute path="/supplier" component={Supplier} />
               <ProtectedRoute path="/role" component={Role} />
               <ProtectedRoute path="/discount" component={Discount} />
-              <ProtectedRoute path="/review" component={Review} />
-              <ProtectedRoute path="/employee" component={Employee} />
+              <ProtectedReviewRoute path="/review" component={Review} />
+              <ProtectedEmployeeRoute path="/employee" component={Employee} />
               <ProtectedRoute path="/user" component={User} />
-              <ProtectedRoute path="/order" component={Order} />
-              <ProtectedRoute path="/importOrder" component={ImportOrder} />
+              <ProtectedOrderRoute path="/order" component={Order} />
+              <ProtectedImportRoute
+                path="/importOrder"
+                component={ImportOrder}
+              />
               <Route path="/login" component={Login} />
               <Route component={NotFound} />
             </Switch>

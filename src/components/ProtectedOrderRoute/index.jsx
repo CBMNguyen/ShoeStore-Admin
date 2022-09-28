@@ -1,21 +1,23 @@
 import { PRODUCT_TOAST_OPTIONS } from "constants/globals";
+import { ORDER_ROLE } from "constants/roles";
 import jwt from "jsonwebtoken";
 import React from "react";
 import { useSelector } from "react-redux";
 import { Redirect, Route, useRouteMatch } from "react-router-dom";
 import { toast } from "react-toastify";
 
-function ProtectedRoute(props) {
+function ProtectedOrderRoute(props) {
   const { auth } = useSelector((state) => state.employee);
   const { component: Component, ...rest } = props;
   const match = useRouteMatch();
+
   return (
     <Route
       {...rest}
       render={(props) => {
         try {
           jwt.verify(auth.token, process.env.REACT_APP_JWT_KEY);
-          if (!auth.data.isAdmin) {
+          if (!(auth.data.roles.includes(ORDER_ROLE) || auth.data.isAdmin)) {
             toast("You do not have permission to access this endpoint.", {
               ...PRODUCT_TOAST_OPTIONS,
             });
@@ -39,4 +41,4 @@ function ProtectedRoute(props) {
   );
 }
 
-export default ProtectedRoute;
+export default ProtectedOrderRoute;

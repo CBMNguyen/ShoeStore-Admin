@@ -1,7 +1,7 @@
 import { logout } from "features/Employee/employeeSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Button } from "reactstrap";
 import brandLogo from "../../assets/images/brandLogo.png";
 import "./header.scss";
@@ -9,9 +9,11 @@ import "./header.scss";
 const Header = (props) => {
   const auth = useSelector((state) => state.employee?.auth);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleLogout = () => {
     dispatch(logout());
+    history.replace("/login");
   };
   return (
     <div className="Header shadow rounded">
@@ -29,8 +31,9 @@ const Header = (props) => {
               className="rounded-circle me-2 shadow"
               width={40}
               height={40}
-              src={auth.data.imageUrl}
+              src={auth.data.image}
               alt="admin"
+              style={{ objectFit: "cover" }}
             />
           </div>
           <code className="text-dark fw-bold rounded-2 ">{`${auth.data.firstname} ${auth.data.lastname}`}</code>

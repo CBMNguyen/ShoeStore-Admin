@@ -44,8 +44,13 @@ function LineChart({ data, filter, setFilter }) {
           <option value={1}>Bar</option>
         </Input>
 
-        <Button color="info" size="sm" className="text-white">
-          filter
+        <Button
+          onClick={() => setFilter({ year: 2022, type: 0, chartType: 0 })}
+          color="info"
+          size="sm"
+          className="text-white"
+        >
+          Reset
         </Button>
       </div>
       {filter.chartType === 0 && (
@@ -62,14 +67,6 @@ function LineChart({ data, filter, setFilter }) {
                 from: 1,
                 to: 0,
                 loop: true,
-              },
-            },
-
-            scales: {
-              y: {
-                // defining min and max so hiding the dataset does not change scale range
-                min: 0,
-                max: 300,
               },
             },
 
@@ -134,14 +131,6 @@ function LineChart({ data, filter, setFilter }) {
                 from: 1,
                 to: 0,
                 loop: true,
-              },
-            },
-
-            scales: {
-              y: {
-                // defining min and max so hiding the dataset does not change scale range
-                min: 0,
-                max: 300,
               },
             },
 

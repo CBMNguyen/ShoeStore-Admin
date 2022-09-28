@@ -312,6 +312,14 @@ function MainPage(props) {
                   className="zmdi zmdi-edit text-primary ps-3"
                 />
                 <i
+                  style={{
+                    display:
+                      (!importOrder.state &&
+                        auth.data.employeeId === importOrder.employeeId._id) ||
+                      auth.data.isAdmin
+                        ? "inline"
+                        : "none",
+                  }}
                   onClick={() => {
                     toggleDeleteModal();
                     setSelectedImportOrder(importOrder);
@@ -352,9 +360,17 @@ function MainPage(props) {
                         disabled
                         name="employeeId"
                         value={
-                          capitalizeFirstLetter(auth.data.firstname) +
+                          capitalizeFirstLetter(
+                            selectedImportOrder
+                              ? selectedImportOrder.employeeId.firstname
+                              : auth.data.firstname
+                          ) +
                           " " +
-                          capitalizeFirstLetter(auth.data.lastname)
+                          capitalizeFirstLetter(
+                            selectedImportOrder
+                              ? selectedImportOrder.employeeId.lastname
+                              : auth.data.lastname
+                          )
                         }
                       />
                       <Label for="employeeId">Employee</Label>
@@ -366,6 +382,12 @@ function MainPage(props) {
                         name="supplierId"
                         type="select"
                         onChange={(e) => setSupplier(e.target.value)}
+                        disabled={
+                          selectedImportOrder?.state ||
+                          (selectedImportOrder &&
+                            selectedImportOrder?.employeeId?._id !==
+                              auth?.data?.employeeId)
+                        }
                       >
                         {suppliers.map((supplier) => (
                           <option key={supplier._id} value={supplier._id}>
@@ -389,7 +411,12 @@ function MainPage(props) {
                         id="content"
                         type="textarea"
                         name="content"
-                        rows="10"
+                        disabled={
+                          selectedImportOrder?.state ||
+                          (selectedImportOrder &&
+                            selectedImportOrder?.employeeId?._id !==
+                              auth?.data?.employeeId)
+                        }
                         value={content}
                         onChange={(e) => setContent(e.target.value)}
                       />
@@ -408,6 +435,12 @@ function MainPage(props) {
                 <Input
                   value={searchName}
                   onChange={(e) => setSearchName(e.target.value)}
+                  disabled={
+                    selectedImportOrder?.state ||
+                    (selectedImportOrder &&
+                      selectedImportOrder?.employeeId?._id !==
+                        auth?.data?.employeeId)
+                  }
                 />
                 <InputGroupText className="text-white bg-info">
                   <i className="zmdi zmdi-search"></i>
@@ -588,6 +621,12 @@ function MainPage(props) {
                             >
                               <InputGroupText>#</InputGroupText>
                               <Input
+                                disabled={
+                                  selectedImportOrder?.state ||
+                                  (selectedImportOrder &&
+                                    selectedImportOrder?.employeeId?._id !==
+                                      auth?.data?.employeeId)
+                                }
                                 type="number"
                                 min={0}
                                 id={productDetailItem.color._id + item.size._id}
@@ -654,6 +693,12 @@ function MainPage(props) {
                             $
                           </InputGroupText>
                           <Input
+                            disabled={
+                              selectedImportOrder?.state ||
+                              (selectedImportOrder &&
+                                selectedImportOrder?.employeeId?._id !==
+                                  auth?.data?.employeeId)
+                            }
                             min={0}
                             type="number"
                             value={product.originalPrice}
@@ -686,6 +731,12 @@ function MainPage(props) {
                           outline
                           color="danger d-block m-auto"
                           style={{ position: "relative", top: "-4px" }}
+                          disabled={
+                            selectedImportOrder?.state ||
+                            (selectedImportOrder &&
+                              selectedImportOrder?.employeeId?._id !==
+                                auth?.data?.employeeId)
+                          }
                         >
                           <i
                             onClick={() =>
@@ -728,11 +779,19 @@ function MainPage(props) {
             </code>
           </div>
           <Button
+            style={{
+              display:
+                selectedImportOrder && auth.data.isAdmin ? "block" : "none",
+            }}
             color="danger"
             className="text-white fw-bold shadow"
             size="sm"
             onClick={handleAcceptImportOrder}
-            disabled={loading || currentImportOrders.length === 0}
+            disabled={
+              loading ||
+              currentImportOrders.length === 0 ||
+              selectedImportOrder?.state
+            }
           >
             Accept Import Order
             {loading && (
@@ -742,11 +801,22 @@ function MainPage(props) {
             )}
           </Button>{" "}
           <Button
+            style={{
+              display:
+                !selectedImportOrder ||
+                selectedImportOrder?.employeeId?._id === auth?.data?.employeeId
+                  ? "block"
+                  : "none",
+            }}
             color="info"
             className="text-white fw-bold shadow"
             size="sm"
             onClick={handleAddImportOrder}
-            disabled={loading || currentImportOrders.length === 0}
+            disabled={
+              loading ||
+              currentImportOrders.length === 0 ||
+              selectedImportOrder?.state
+            }
           >
             {!selectedImportOrder ? "Confirm" : "Update"}
             {loading && (

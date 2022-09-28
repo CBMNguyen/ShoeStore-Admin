@@ -74,7 +74,7 @@ const employeeSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
-      state.auth.token = "";
+      state.auth = {};
     },
   },
   extraReducers: {
