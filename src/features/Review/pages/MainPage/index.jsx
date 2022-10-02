@@ -32,6 +32,7 @@ function MainPage(props) {
   };
 
   const reviewState = useSelector((state) => state.review);
+  const { auth } = useSelector((state) => state.employee);
 
   const reviews = reviewState.review;
 
@@ -77,6 +78,7 @@ function MainPage(props) {
       </div>
       <ReviewList
         loading={loading}
+        auth={auth}
         reviews={reviews.slice(start, end)}
         showRemoveModel={removeModel.showModel}
         onCheckStateClick={handleCheckStateClick}

@@ -25,6 +25,11 @@ const discountApi = {
     const url = `/discount/${discountId}`;
     return axiosClient.delete(url);
   },
+
+  sendMail: (data) => {
+    const url = `/discount/sendMail`;
+    return axiosClient.post(url, data);
+  },
 };
 
 export default discountApi;

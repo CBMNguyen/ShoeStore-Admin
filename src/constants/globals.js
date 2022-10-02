@@ -44,3 +44,20 @@ export const STYLE_MODEL = {
 
   backgroundColor: "rgba(0, 0, 0, 0.5)",
 };
+
+export const STAR_COLORS = {
+  1: "#f44336",
+  2: "#FF5722",
+  3: "#FF9800",
+  4: "#FFC107",
+  5: "#FFEB3B",
+};
+
+export const STAR_MEANINGS = {
+  0: "No Rating 🚫",
+  1: "Terrible 🤮",
+  2: "Mediocre 😒",
+  3: "Average 😐",
+  4: "Solid 🙂",
+  5: "Fantastic 🔥",
+};

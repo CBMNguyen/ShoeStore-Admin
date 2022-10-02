@@ -2,6 +2,7 @@ function ReviewItem({
   review,
   index,
   toggle,
+  toggleReview,
   setSelectedReview,
   showRemoveModel,
 }) {
@@ -89,6 +90,13 @@ function ReviewItem({
             className="zmdi zmdi-close-circle text-secondary"
           ></i>
         )}
+        <i
+          onClick={() => {
+            setSelectedReview(review);
+            toggleReview();
+          }}
+          className="zmdi zmdi-comment-text text-info ms-2"
+        ></i>
         <i
           onClick={() => showRemoveModel(review)}
           className="zmdi zmdi-delete text-danger ps-2"

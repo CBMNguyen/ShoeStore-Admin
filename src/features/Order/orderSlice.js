@@ -46,7 +46,7 @@ export const updateOrder = createAsyncThunk(
 export const updateStateOrder = createAsyncThunk(
   "order/updateStateOrder",
   async (
-    { _id, state, payment, employee },
+    { _id, state, payment, employee, order },
     { rejectWithValue, fulfillWithValue }
   ) => {
     try {
@@ -54,6 +54,7 @@ export const updateStateOrder = createAsyncThunk(
         state,
         payment,
         employeeId: employee.employeeId,
+        order,
       });
       return fulfillWithValue({
         _id,

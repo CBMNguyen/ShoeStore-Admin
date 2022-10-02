@@ -7,6 +7,7 @@ import {
   REVIEW_ROLE,
 } from "constants/roles";
 import { fetchOrder } from "features/Order/orderSlice";
+import { fetchReviews } from "features/Review/reviewSlice";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
@@ -18,13 +19,16 @@ const SideBar = (props) => {
   const dispatch = useDispatch();
   const { order: orders } = useSelector((state) => state.order);
   const { auth } = useSelector((state) => state.employee);
+  const { review: reviews } = useSelector((state) => state.review);
+
   useEffect(() => {
     dispatch(fetchOrder());
+    dispatch(fetchReviews());
   }, [dispatch]);
 
   return (
     <div className="SideBar">
-      {!auth.data && (
+      {!auth?.data && (
         <div>
           <header>
             {" "}
@@ -34,7 +38,7 @@ const SideBar = (props) => {
           </header>
         </div>
       )}
-      {auth.data && (
+      {auth?.data && (
         <ul>
           <header>
             {" "}
@@ -104,6 +108,13 @@ const SideBar = (props) => {
             <NavLink className="SideBar__link" to="/review">
               <i className="zmdi zmdi-star-outline"></i>
               <code>Review Management</code>
+
+              <code
+                style={{ fontSize: "14px" }}
+                className="text-white fw-bold ms-3 px-2 py-1 rounded-2 bg-warning"
+              >
+                {reviews.filter((review) => !review.state).length}
+              </code>
             </NavLink>
           </li>
           <li style={{ display: auth.data.isAdmin ? "block" : "none" }}>

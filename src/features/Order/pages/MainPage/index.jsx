@@ -83,6 +83,7 @@ function MainPage(props) {
               : selectedStateOrder === ORDER_STATE.delivered
               ? true
               : false,
+            order: selectedOrder,
           })
         );
       } else {
