@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 const initialState = {
   employee: [],
   error: "",
-  auth: null,
+  auth: {},
   loading: false,
 };
 
