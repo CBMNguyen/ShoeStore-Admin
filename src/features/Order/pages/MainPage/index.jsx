@@ -143,7 +143,12 @@ function MainPage(props) {
       />
 
       <OrderList
-        order={filterOrder.slice(start, end)}
+        order={filterOrder
+          .slice(start, end)
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )}
         setSelectedOrder={setSelectedOrder}
         toggle={toggle}
       />

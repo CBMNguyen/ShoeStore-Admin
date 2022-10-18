@@ -148,6 +148,10 @@ function MainPage(props) {
           return {
             _id,
             originalPrice: selectedImportOrder.products[index].originalPrice,
+            salePrice:
+              parseFloat(selectedImportOrder.products[index].originalPrice) +
+              parseFloat(selectedImportOrder.products[index].originalPrice) *
+                0.1,
             quantityStock:
               quantityStock + selectedImportOrder.products[index].quantityStock,
             productDetail: productDetail.map(

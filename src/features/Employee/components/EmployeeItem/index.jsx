@@ -137,15 +137,23 @@ function EmployeeItem(props) {
       </td>
 
       <td>
-        <i
-          onClick={() => {
-            toggle();
-            setSelectedEmployee(employee);
-          }}
-          className={`zmdi zmdi-lock-${
-            employee.state ? "outline" : "open"
-          } text-secondary`}
-        />
+        {!employee.isAdmin && (
+          <i
+            onClick={() => {
+              toggle();
+              setSelectedEmployee(employee);
+            }}
+            className={`zmdi zmdi-lock-${
+              employee.state ? "outline" : "open"
+            } text-secondary`}
+          />
+        )}
+        {employee.isAdmin && (
+          <i
+            className="zmdi zmdi-lock-open text-secondary"
+            style={{ cursor: "no-drop" }}
+          />
+        )}
         <i
           onClick={() => handleEditClick(employee)}
           className="zmdi zmdi-edit text-primary ps-3"
