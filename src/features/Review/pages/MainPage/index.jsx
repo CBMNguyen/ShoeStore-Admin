@@ -79,7 +79,12 @@ function MainPage(props) {
       <ReviewList
         loading={loading}
         auth={auth}
-        reviews={reviews.slice(start, end)}
+        reviews={reviews
+          .slice(start, end)
+          .sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )}
         showRemoveModel={removeModel.showModel}
         onCheckStateClick={handleCheckStateClick}
       />
