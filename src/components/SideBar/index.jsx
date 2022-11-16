@@ -55,7 +55,7 @@ const SideBar = (props) => {
           <li
             style={{
               display:
-                auth.data.isAdmin || auth.data.roles.includes(ORDER_ROLE)
+                auth?.data?.isAdmin || auth?.data?.roles?.includes(ORDER_ROLE)
                   ? "block"
                   : "none",
             }}
@@ -83,7 +83,7 @@ const SideBar = (props) => {
           <li
             style={{
               display:
-                auth.data.isAdmin || auth.data.roles.includes(PRODUCT_ROLE)
+                auth?.data?.isAdmin || auth?.data?.roles?.includes(PRODUCT_ROLE)
                   ? "block"
                   : "none",
             }}
@@ -100,7 +100,7 @@ const SideBar = (props) => {
           <li
             style={{
               display:
-                auth.data.isAdmin || auth.data.roles.includes(REVIEW_ROLE)
+                auth?.data?.isAdmin || auth?.data?.roles?.includes(REVIEW_ROLE)
                   ? "block"
                   : "none",
             }}
@@ -129,7 +129,7 @@ const SideBar = (props) => {
               <code>Role Management</code>
             </NavLink>
           </li>
-          <li style={{ display: auth.data.isAdmin ? "block" : "none" }}>
+          <li style={{ display: auth?.data?.isAdmin ? "block" : "none" }}>
             <NavLink className="SideBar__link" to="/user">
               <i className="zmdi zmdi-account" />
               <code style={{ position: "relative", top: "-1px" }}>
@@ -140,7 +140,8 @@ const SideBar = (props) => {
           <li
             style={{
               display:
-                auth.data.isAdmin || auth.data.roles.includes(EMPLOYEE_ROLE)
+                auth?.data?.isAdmin ||
+                auth?.data?.roles?.includes(EMPLOYEE_ROLE)
                   ? "block"
                   : "none",
             }}
@@ -152,7 +153,7 @@ const SideBar = (props) => {
               </code>
             </NavLink>
           </li>
-          <li style={{ display: auth.data.isAdmin ? "block" : "none" }}>
+          <li style={{ display: auth?.data?.isAdmin ? "block" : "none" }}>
             <NavLink className="SideBar__link" to="/scc">
               <i className="zmdi zmdi-apps" />
               <code style={{ position: "relative", top: "-1px" }}>
@@ -163,7 +164,7 @@ const SideBar = (props) => {
           <li
             style={{
               display:
-                auth.data.isAdmin || auth.data.roles.includes(IMPORT_ROLE)
+                auth?.data?.isAdmin || auth?.data?.roles?.includes(IMPORT_ROLE)
                   ? "block"
                   : "none",
             }}
@@ -175,7 +176,7 @@ const SideBar = (props) => {
               </code>
             </NavLink>
           </li>
-          <li style={{ display: auth.data.isAdmin ? "block" : "none" }}>
+          <li style={{ display: auth?.data?.isAdmin ? "block" : "none" }}>
             <NavLink className="SideBar__link" to="/supplier">
               <i className="zmdi zmdi-city-alt"></i>
               <code style={{ position: "relative", top: "-1px" }}>
